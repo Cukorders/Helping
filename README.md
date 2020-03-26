@@ -10,6 +10,6 @@
 
 ---
 - 💪 정승재
-> 정승재의 .[Git](https://github.com/sjj995)
+> 정승재의 [Git](https://github.com/sjj995)
 
 - 💪
