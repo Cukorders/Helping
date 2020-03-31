@@ -22,4 +22,4 @@
 > 이소명의 [Git](https://github.com/LeeSoMyoung)
 
 - 💪 박성연
-> 박성연의 [Git]
+> 박성연의 [Git](https://github.com/parksy1001)
