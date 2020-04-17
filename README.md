@@ -5,7 +5,7 @@
 - 팀명 : 쿠코더스
 
 - 주제 : 너의 부름
-- Lang : React Native / Node js
+- Settings : Android Studio 10 /  Firebase / DB(논의중)
 
 ### 😊 Members
 
