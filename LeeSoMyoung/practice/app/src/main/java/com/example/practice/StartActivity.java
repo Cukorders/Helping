@@ -13,14 +13,14 @@ public class StartActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_start);
 
-        findViewById(R.id.bt_signUp).setOnClickListener(OnClickListener);
+        findViewById(R.id.bt_okay).setOnClickListener(OnClickListener);
         findViewById(R.id.bt_signin).setOnClickListener(OnClickListener);
     }
 
     View.OnClickListener OnClickListener=new View.OnClickListener(){
         public void onClick(View v){
             switch(v.getId()){ // 이렇게 작성하는 이유 => 확장성 때문
-                case R.id.bt_signUp:
+                case R.id.bt_okay:
                     startSignUpActivity();
                     break;
                 case R.id.bt_signin:

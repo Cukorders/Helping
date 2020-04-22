@@ -3,6 +3,7 @@ package com.example.practice;
 import androidx.appcompat.app.AppCompatActivity;
 import android.app.Activity;
 import android.content.Intent;
+import android.net.Uri;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
@@ -13,6 +14,7 @@ import android.widget.Toast;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.auth.UserInfo;
 
 public class MainActivity extends AppCompatActivity {
     FloatingActionButton fab_plus,fab_write,fab_info;
@@ -24,8 +26,18 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        if(FirebaseAuth.getInstance().getCurrentUser()==null){
+        FirebaseUser user=FirebaseAuth.getInstance().getCurrentUser();
+
+        if(user==null){
             startStartActivity();
+        }else{
+            for(UserInfo profile:user.getProviderData()){
+                String providerId=profile.getProviderId();
+                String uid=profile.getUid();
+                String name=profile.getDisplayName();
+                String email=profile.getEmail();
+                Uri photoUrl=profile.getPhotoUrl();
+            }
         }
         fab_plus=(FloatingActionButton) findViewById(R.id.fab_plus);
         fab_write=(FloatingActionButton) findViewById(R.id.fab_write);
@@ -34,6 +46,7 @@ public class MainActivity extends AppCompatActivity {
         FabClose= AnimationUtils.loadAnimation(getApplicationContext(),R.anim.fab_close);
         FabClockwise= AnimationUtils.loadAnimation(getApplicationContext(),R.anim.rotate_clockwise);
         FabAntiClockwise= AnimationUtils.loadAnimation(getApplicationContext(),R.anim.rotate_anticlockwise);
+
         fab_plus.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -50,6 +63,7 @@ public class MainActivity extends AppCompatActivity {
                 startUserInfo();
             }
         });
+
     }
     private void open(){
         fab_write.startAnimation(FabOpen);

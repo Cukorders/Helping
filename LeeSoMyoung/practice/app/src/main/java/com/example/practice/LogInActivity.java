@@ -27,7 +27,7 @@ public class LogInActivity extends AppCompatActivity {
 
         mAuth=FirebaseAuth.getInstance();
 
-        findViewById(R.id.bt_signUp).setOnClickListener(OnClickListener);
+        findViewById(R.id.bt_okay).setOnClickListener(OnClickListener);
     }
     
     public void onStart(){
@@ -40,7 +40,7 @@ public class LogInActivity extends AppCompatActivity {
     View.OnClickListener OnClickListener=new View.OnClickListener(){
         public void onClick(View v){
             switch(v.getId()){
-                case R.id.bt_signUp:
+                case R.id.bt_okay:
                     signIn();
                     break;
             }

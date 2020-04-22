@@ -24,6 +24,7 @@
     <activity android:name=".StartActivity">
     </activity>
     <activity android:name=".UserInfoActivity"></activity>
-    </application>
+    <activity android:name=".AddUserInfoActivity"></activity>
+</application>
 
 </manifest>
