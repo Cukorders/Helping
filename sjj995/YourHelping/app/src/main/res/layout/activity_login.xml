@@ -6,15 +6,6 @@
     android:paddingLeft="15dp"
     android:paddingRight="15dp"
     >
-
-    <TextView
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_gravity="center"
-        android:gravity="center"
-        android:text="LOGIN"
-        >
-    </TextView>
     <ImageView
         android:layout_width="match_parent"
         android:layout_height="200dp"
@@ -29,7 +20,7 @@
         <com.google.android.material.textfield.TextInputEditText
             android:layout_width="match_parent"
             android:layout_height="50dp"
-            android:text="ID"
+            android:hint="ID"
             >
         </com.google.android.material.textfield.TextInputEditText>
     </com.google.android.material.textfield.TextInputLayout>
@@ -39,7 +30,7 @@
         <com.google.android.material.textfield.TextInputEditText
             android:layout_width="match_parent"
             android:layout_height="50dp"
-            android:text="PASSWORD"
+            android:hint="PASSWORD"
             >
         </com.google.android.material.textfield.TextInputEditText>
     </com.google.android.material.textfield.TextInputLayout>
@@ -47,11 +38,11 @@
     <Button
         android:layout_width="match_parent"
         android:layout_height="50dp"
-        android:background="@drawable/bin_button_ashgreen"
+        android:background="@drawable/bin_button_click_action"
         android:textColor="@color/colorWhite"
         android:text="login"
         android:layout_marginTop="20dp"
-        android:layout_marginBottom="5dp"
+        android:layout_marginBottom="10dp"
         >
     </Button>
 
@@ -59,8 +50,10 @@
     <Button
         android:layout_width="match_parent"
         android:layout_height="50dp"
-        android:background="@drawable/bin_button_stroke"
-        android:text="Create Account"></Button>
+        android:background="@drawable/bin_button_click_action"
+        android:text="Create Account"
+        >
+    </Button>
 
     <LinearLayout
         android:layout_width="match_parent"

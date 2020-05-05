@@ -7,39 +7,45 @@
     android:paddingRight="15dp"
     >
 
-    <TextView
+    <com.google.android.material.textfield.TextInputLayout
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_gravity="center"
-        android:gravity="center"
-        android:text="profileInfo"
-        >
-    </TextView>
-    <EditText
+        android:layout_height="wrap_content">
+        <com.google.android.material.textfield.TextInputEditText
+            android:layout_width="match_parent"
+            android:layout_height="50dp"
+            android:hint="아이디"
+            >
+        </com.google.android.material.textfield.TextInputEditText>
+    </com.google.android.material.textfield.TextInputLayout>
+    <com.google.android.material.textfield.TextInputLayout
         android:layout_width="match_parent"
-        android:layout_height="50dp"
-        android:hint="아이디"
-        >
-    </EditText>
-    <EditText
+        android:layout_height="wrap_content">
+        <com.google.android.material.textfield.TextInputEditText
+            android:layout_width="match_parent"
+            android:layout_height="50dp"
+            android:hint="비밀번호"
+            >
+        </com.google.android.material.textfield.TextInputEditText>
+    </com.google.android.material.textfield.TextInputLayout>
+    //TODO SEX -> BUTTON SELECT
+    <com.google.android.material.textfield.TextInputLayout
         android:layout_width="match_parent"
-        android:layout_height="50dp"
-        android:hint="비밀번호"
-        >
-    </EditText>
-    <EditText
-        android:layout_width="match_parent"
-        android:layout_height="50dp"
-        android:hint="이름"
-        >
-    </EditText>
+        android:layout_height="wrap_content">
+        <com.google.android.material.textfield.TextInputEditText
+            android:layout_width="match_parent"
+            android:layout_height="50dp"
+            android:hint="이름"
+            >
+        </com.google.android.material.textfield.TextInputEditText>
+    </com.google.android.material.textfield.TextInputLayout>
+    //TODO SEX -> BUTTON
     <EditText
         android:layout_width="match_parent"
         android:layout_height="50dp"
         android:hint="성별"
         >
     </EditText>
-
+    //TODO NUMBER -> https://firebase.google.com/docs/auth/android/phone-auth?hl=ko
     <EditText
         android:layout_width="match_parent"
         android:layout_height="50dp"
@@ -54,50 +60,14 @@
     </EditText>
 
     <Button
-        android:layout_width="match_parent"
-        android:layout_height="50dp"
-        android:background="@drawable/bin_button_ashgreen"
-        android:textColor="@color/colorWhite"
-        android:text="회원가입완료"
-        android:layout_marginTop="20dp"
-        android:layout_marginBottom="5dp"
-        >
-    </Button>
-
-
-
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:orientation="horizontal"
-        android:weightSum="10"
-        >
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:gravity="center"
-            android:layout_weight="5"
-            android:text="Find ID"
-            android:textSize="12sp"
-            android:layout_marginTop="5dp"
-            >
-        </TextView>
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:gravity="center"
-            android:layout_weight="5"
-            android:text="Find Password"
-            android:textColor="@color/colorLogo"
-            android:textSize="12sp"
-            android:layout_marginTop="5dp"
-            >
-
-        </TextView>
-
-    </LinearLayout>
-
-
-
+    android:layout_width="match_parent"
+    android:layout_height="50dp"
+    android:background="@drawable/bin_button_click_action"
+    android:textColor="@color/colorWhite"
+    android:text="회원가입 완료"
+    android:layout_marginTop="20dp"
+    android:layout_marginBottom="10dp"
+    >
+</Button>
 
 </LinearLayout>
