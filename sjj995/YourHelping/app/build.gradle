@@ -26,7 +26,8 @@ android {
 dependencies {
     implementation fileTree(dir: 'libs', include: ['*.jar'])
 
-
+    //TODO kakao map
+    implementation files('libs/libDaumMapAndroid.jar')
 
     //TODO compat core
 

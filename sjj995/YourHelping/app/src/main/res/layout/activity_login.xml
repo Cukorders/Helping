@@ -61,28 +61,30 @@
         android:orientation="horizontal"
         android:weightSum="10"
         >
-        <TextView
+        <Button
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:gravity="center"
             android:layout_weight="5"
             android:text="Find ID"
+            android:background="transparent"
             android:textSize="12sp"
             android:layout_marginTop="5dp"
             >
-        </TextView>
-        <TextView
+        </Button>
+        <Button
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:gravity="center"
             android:layout_weight="5"
+            android:background="transparent"
             android:text="Find Password"
             android:textColor="@color/colorLogo"
             android:textSize="12sp"
             android:layout_marginTop="5dp"
             >
 
-        </TextView>
+        </Button>
 
     </LinearLayout>
 
