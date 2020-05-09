@@ -2,6 +2,7 @@ package com.example.yourhelping;
 
 import android.os.Bundle;
 import net.daum.mf.map.api.MapView;
+import androidx.appcompat.app.AppCompatActivity;
 
 //TODO kakao map view or kakao doromyung juso search or both
 
