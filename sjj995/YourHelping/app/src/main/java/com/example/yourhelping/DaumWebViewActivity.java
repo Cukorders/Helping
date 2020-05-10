@@ -16,5 +16,5 @@ public class DaumWebViewActivity extends AppCompatActivity {
         MapView mapView = new MapView(this);
         ViewGroup mapViewContainer = findViewById(R.id.map_view);
         mapViewContainer.addView(mapView);
-    }
+
 }
