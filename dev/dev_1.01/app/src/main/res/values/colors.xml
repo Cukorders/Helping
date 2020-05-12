@@ -4,9 +4,11 @@
     <color name="colorPrimaryDark">#3700B3</color>
     <color name="colorAccent">#03DAC5</color>
     <color name="colorLogo">#70D398</color>
-    <color name="colorGradientStart">#84fab0</color>
-    <color name="colorGradientEnd">#8fd3f4</color>
+    <color name="colorGradientStart">#dcb0ed</color>
+    <color name="colorGradientMid">#B9BCC3</color>
+    <color name="colorGradientEnd">#99c99c</color>
     <color name="colorBlack">#000000</color>
     <color name="colorWhite">#FFFFFF</color>
     <color name="colorGrayButton">#e2ebf0</color>
+    <color name="colorGrayButtonPush">#868f96</color>
 </resources>

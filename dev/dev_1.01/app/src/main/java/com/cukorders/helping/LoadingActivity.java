@@ -1,15 +1,18 @@
 package com.cukorders.helping;
 
+import android.content.Intent;
 import android.os.Bundle;
 
+import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 
 public class LoadingActivity extends AppCompatActivity {
 
     @Override
-    protected void onCreate(Bundle savedInstanceState) {
+    protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.loading);
-        startLoading();
+
+        startActivity(new Intent(getApplicationContext(),MainActivity.class));
+        finish();
     }
 }
