@@ -1,0 +1,102 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:paddingLeft="15dp"
+    android:paddingRight="15dp"
+    >
+    <ImageView
+        android:layout_width="match_parent"
+        android:layout_height="200dp"
+        android:src="@drawable/logo_charcter"
+        android:layout_marginBottom="15dp"
+        />
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:weightSum="10"
+        >
+        //TODO 중복확인할 수 있는 기능
+        <EditText
+            android:layout_width="match_parent"
+            android:hint="닉네임"
+            android:layout_height="50dp"
+            android:layout_weight="2"
+            >
+        </EditText>
+        <Button
+            android:layout_width="match_parent"
+            android:layout_height="44dp"
+            android:layout_weight="8"
+            android:background="@drawable/select_button"
+            android:textColor="@color/colorBlack"
+            android:text="중복확인"
+            >
+        </Button>
+
+    </LinearLayout>
+
+    <EditText
+        android:layout_width="match_parent"
+        android:hint="이름"
+        android:layout_height="50dp"
+        >
+    </EditText>>
+
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:weightSum="10"
+        >
+        //TODO 성별 중에 남자 여자 선택할 수 있는 버튼
+        // 선택하고 나서 버튼색 바뀌고 고정될 수 있게
+        <EditText
+            android:layout_width="match_parent"
+            android:hint="성별"
+            android:layout_height="50dp"
+            android:enabled="false"
+            android:layout_weight="2"
+            >
+        </EditText>
+        <Button
+            android:layout_width="match_parent"
+            android:layout_height="44dp"
+            android:layout_weight="4"
+            android:background="@drawable/select_button"
+            android:textColor="@color/colorBlack"
+            android:text="남자"
+            android:layout_marginRight="3dp"
+            >
+        </Button>
+        <Button
+            android:layout_width="match_parent"
+            android:layout_height="44dp"
+            android:background="@drawable/select_button"
+            android:layout_weight="4"
+            android:textColor="@color/colorBlack"
+            android:text="여자"
+            android:layout_marginLeft="3dp"
+            >
+        </Button>
+    </LinearLayout>
+
+
+
+
+    <Button
+        android:layout_width="match_parent"
+        android:layout_height="50dp"
+        android:background="@drawable/gps_button_shape"
+        android:textColor="@color/colorWhite"
+        android:text="회원가입 완료"
+        android:layout_marginTop="20dp"
+        android:layout_marginBottom="10dp"
+        >
+    </Button>
+
+</LinearLayout>
