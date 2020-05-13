@@ -10,7 +10,7 @@ public class LoadingActivity extends AppCompatActivity {
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
+            super.onCreate(savedInstanceState);
 
         startActivity(new Intent(getApplicationContext(),MainActivity.class));
         finish();
