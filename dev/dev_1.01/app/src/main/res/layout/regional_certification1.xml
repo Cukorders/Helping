@@ -24,7 +24,6 @@
         android:layout_marginBottom="10dp"
         android:weightSum="1">
 
-        //TODO 뒤  로   가  기   버  튼   기  능  넣  기
         <ImageButton
             android:id="@+id/GobackButton"
             android:layout_width="30dp"
