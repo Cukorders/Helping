@@ -10,7 +10,6 @@
         android:roundIcon="@drawable/logo_charcter"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
-
         <meta-data
             android:name="com.google.android.geo.API_KEY"
             android:value="AIzaSyA9CPuZCP0dwE7PvX9R3IECiL3AzEYW7D8" />
