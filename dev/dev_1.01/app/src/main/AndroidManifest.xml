@@ -10,6 +10,11 @@
         android:roundIcon="@drawable/logo_charcter"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
+
+        <meta-data
+            android:name="com.google.android.geo.API_KEY"
+            android:value="AIzaSyA9CPuZCP0dwE7PvX9R3IECiL3AzEYW7D8" />
+
         <activity
             android:name=".LoadingActivity"
             android:screenOrientation="unspecified"
@@ -20,6 +25,8 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
+        <activity android:name=".RegionActivity"></activity>
+        <activity android:name=".ChooseTheRegionActivity"></activity>
     </application>
 
 </manifest>
