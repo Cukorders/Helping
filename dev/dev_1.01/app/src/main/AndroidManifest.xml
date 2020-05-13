@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-    package="com.cukorders.helping">
+    package="com.cukorders.helping"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
 
     <application
         android:usesCleartextTraffic="true"
