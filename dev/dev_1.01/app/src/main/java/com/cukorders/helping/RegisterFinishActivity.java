@@ -14,6 +14,8 @@ public class RegisterFinishActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.finish_newprofile);
         Handler handler = new Handler();
+
+        // 가입 완료 시 2.5초 동안 가입 완료 화면 표시 후 main 화면으로 자동으로 넘어간다.
         handler.postDelayed(new Runnable() {
             @Override
             public void run() {
