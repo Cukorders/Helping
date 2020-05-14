@@ -12,16 +12,13 @@ public class RegisterFinishActivity extends AppCompatActivity {
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.regional_certification2);
+        setContentView(R.layout.finish_newprofile);
         Handler handler = new Handler();
+
+        // 가입 완료 시 2.5초 동안 가입 완료 화면 표시 후 main 화면으로 자동으로 넘어간다.
         handler.postDelayed(new Runnable() {
             @Override
             public void run() {
-                /* TODO
-                유저 정보를 받아왔을 시 => Main으로 이동(아래 코드)
-                유저 정보를 받아오지 못했을 시 => 로그인 및 회원가입 화면으로 전환
-                **/
-
                 Intent intent=new Intent(getApplicationContext(),MainActivity.class);
                 startActivity(intent);
                 finish();
