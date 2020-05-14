@@ -1,20 +1,23 @@
 package com.cukorders.helping;
 
+import android.Manifest;
 import android.content.Intent;
+import android.content.pm.PackageManager;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.content.ContextCompat;
 
 import com.google.android.gms.maps.GoogleMap;
 
 public class RegionActivity  extends AppCompatActivity {
 
    private TextView result;
-   GoogleMap map; // 구글 맵 api를 따 옴.
-
+   private final int PERMISSIONS_REQUEST_RESULT=1;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -64,5 +67,12 @@ public class RegionActivity  extends AppCompatActivity {
         /* TODO
         주변 지역 정보 불러와서 표시될 수 있도록 한다.*/
 
+        //사용자에게 GPS 위치 정보 권한 요청
+
+        int permssionCheck = ContextCompat.checkSelfPermission(this,Manifest.permission.ACCESS_FINE_LOCATION);
+        int permissionCheck2=ContextCompat.checkSelfPermission(this,Manifest.permission.ACCESS_COARSE_LOCATION);
+
+
     }
+
 }

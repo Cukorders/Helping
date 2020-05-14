@@ -20,31 +20,30 @@
         android:weightSum="10"
         >
         //TODO 중복확인할 수 있는 기능
+
         <EditText
+            android:id="@+id/nickname"
             android:layout_width="match_parent"
-            android:hint="닉네임"
             android:layout_height="50dp"
             android:layout_weight="2"
-            >
-        </EditText>
+            android:hint="닉네임"></EditText>
+
         <Button
+            android:id="@+id/check"
             android:layout_width="match_parent"
             android:layout_height="44dp"
             android:layout_weight="8"
             android:background="@drawable/select_button"
-            android:textColor="@color/colorBlack"
             android:text="중복확인"
-            >
-        </Button>
+            android:textColor="@color/colorBlack"></Button>
 
     </LinearLayout>
 
     <EditText
+        android:id="@+id/name"
         android:layout_width="match_parent"
-        android:hint="이름"
         android:layout_height="50dp"
-        >
-    </EditText>>
+        android:hint="이름"></EditText>>
 
 
     <LinearLayout
@@ -55,14 +54,14 @@
         >
         //TODO 성별 중에 남자 여자 선택할 수 있는 버튼
         // 선택하고 나서 버튼색 바뀌고 고정될 수 있게
+
         <EditText
+            android:id="@+id/gender"
             android:layout_width="match_parent"
-            android:hint="성별"
             android:layout_height="50dp"
-            android:enabled="false"
             android:layout_weight="2"
-            >
-        </EditText>
+            android:enabled="false"
+            android:hint="성별"></EditText>
 
         <Button
             android:id="@+id/male"
