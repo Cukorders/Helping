@@ -12,8 +12,8 @@ import com.google.android.gms.maps.GoogleMap;
 
 public class RegionActivity  extends AppCompatActivity {
 
-    private TextView result;
-    GoogleMap map; // 구글 맵 api를 따 옴.
+   // private TextView result;
+   // GoogleMap map; // 구글 맵 api를 따 옴.
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -21,7 +21,7 @@ public class RegionActivity  extends AppCompatActivity {
         setContentView(R.layout.regional_certification1);
 
         // 현 위치를 입력하고 검색을 눌렀을 때
-        result=(TextView) findViewById(R.id.search_result);
+     //   result=(TextView) findViewById(R.id.search_result);
 
         // 버튼들이 클릭됐을 때=> OnClickListener 실행 : 확장성을 위해 OnClickListener 함수를 switch-case문으로 작성하였다.
         findViewById(R.id.buttonGpsSearch).setOnClickListener(OnClickListener);
