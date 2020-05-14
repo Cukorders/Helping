@@ -7,12 +7,12 @@ import android.os.Handler;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 
-public class LoadingActivity extends AppCompatActivity {
+public class RegisterFinishActivity extends AppCompatActivity {
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
-            super.onCreate(savedInstanceState);
-        setContentView(R.layout.loading);
+        super.onCreate(savedInstanceState);
+        setContentView(R.layout.regional_certification2);
         Handler handler = new Handler();
         handler.postDelayed(new Runnable() {
             @Override
