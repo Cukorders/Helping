@@ -1,23 +1,35 @@
 package com.cukorders.helping;
 
 import android.Manifest;
+import android.app.Activity;
+import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.PackageManager;
+import android.location.Location;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
 
+import com.google.android.gms.location.FusedLocationProviderClient;
+import com.google.android.gms.location.LocationServices;
 import com.google.android.gms.maps.GoogleMap;
+import com.google.android.gms.tasks.OnSuccessListener;
 
 public class RegionActivity  extends AppCompatActivity {
 
    private TextView result;
    private final int PERMISSIONS_REQUEST_RESULT=1;
+   Context context=this;
+   private FusedLocationProviderClient mFusedLocationClient;
+   private Double latittude,longitude; // 사용자의 현 위치(경도, 위도)
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -31,6 +43,8 @@ public class RegionActivity  extends AppCompatActivity {
         findViewById(R.id.SearchGpsButton).setOnClickListener(OnClickListener);
         findViewById(R.id.GobackButton).setOnClickListener(OnClickListener);
 
+        // 위치 권한 요청을 하기 위한 FusedLocationClient 불러옴
+        mFusedLocationClient= LocationServices.getFusedLocationProviderClient(this);
 
     }
 
@@ -69,10 +83,55 @@ public class RegionActivity  extends AppCompatActivity {
 
         //사용자에게 GPS 위치 정보 권한 요청
 
-        int permssionCheck = ContextCompat.checkSelfPermission(this,Manifest.permission.ACCESS_FINE_LOCATION);
-        int permissionCheck2=ContextCompat.checkSelfPermission(this,Manifest.permission.ACCESS_COARSE_LOCATION);
+        if (ContextCompat.checkSelfPermission((Activity)context,
+                Manifest.permission.ACCESS_COARSE_LOCATION)
+                != PackageManager.PERMISSION_GRANTED) { //위치 권한이 없을 때
+            if (ActivityCompat.shouldShowRequestPermissionRationale((Activity)context,
+                    Manifest.permission.ACCESS_COARSE_LOCATION)) {
+                new AlertDialog.Builder(this) // 다음 기능을 위해 위치 권한 설정을 묻는 창
+                        .setTitle("위치 권한 설정")
+                        .setMessage("현 위치 정보를 불러오기 위해서는 위치 권한 설정을 해야합니다.")
+                        .setPositiveButton("OK", new DialogInterface.OnClickListener() {
+                            @Override
+                            public void onClick(DialogInterface dialogInterface, int i) {
+                                ActivityCompat.requestPermissions((Activity)context,
+                                        new String[]{Manifest.permission.ACCESS_COARSE_LOCATION},
+                                        PERMISSIONS_REQUEST_RESULT);
+                            }
+                        })
+                        .setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
+                            @Override
+                            public void onClick(DialogInterface dialogInterface, int i) {
+                                dialogInterface.dismiss();
+                                result.setText("위치 정보를 불러올 수 없습니다.");
+                            }
+                        })
+                        .create()
+                        .show();
 
 
+            } else {
+                // 위치 권한을 요청
+                ActivityCompat.requestPermissions((Activity)context,
+                        new String[]{Manifest.permission.ACCESS_COARSE_LOCATION},
+                        PERMISSIONS_REQUEST_RESULT);
+
+            }
+        } else { // 위치 권한을 가지고 있을 때
+            mFusedLocationClient.getLastLocation()
+                    .addOnSuccessListener(this, new OnSuccessListener<Location>() {
+                        @Override
+                        public void onSuccess(Location location) {
+                            // 위치를 불러온다
+                            if (location != null) {
+                                latittude = location.getLatitude();
+                                longitude = location.getLongitude(); // 현재 사용자의 경도와 위도를 불러온다.
+
+                            }
+                        }
+                    });
+
+        }
     }
 
 }
