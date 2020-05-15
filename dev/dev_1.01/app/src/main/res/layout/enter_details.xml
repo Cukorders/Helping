@@ -12,7 +12,6 @@
     <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="130dp"
-        android:weightSum="1"
         >
         <ImageButton
             android:id="@+id/profilebutton"
@@ -20,7 +19,7 @@
             android:layout_width="match_parent"
             android:src="@drawable/profile128"
             android:gravity="center"
-            android:background="transparent"
+            android:background="@android:color/transparent"
             >
         </ImageButton>
 
@@ -32,8 +31,10 @@
             android:layout_alignParentBottom="true"
             android:layout_marginRight="110dp"
             android:layout_marginBottom="0dp"
-            android:background="transparent"
-            app:srcCompat="@drawable/camera" />
+            android:background="@android:color/transparent"
+            app:srcCompat="@drawable/camera"
+            >
+        </ImageButton>
     </RelativeLayout>
 
 
