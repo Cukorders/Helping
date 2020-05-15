@@ -3,21 +3,55 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
-    android:background="@color/colorLogo"
+    android:background="transparent"
     android:paddingLeft="15dp"
     android:paddingRight="15dp"
-    android:gravity="center"
     >
     <ImageView
+        android:layout_marginTop="50dp"
         android:layout_width="match_parent"
         android:layout_height="200dp"
         android:src="@drawable/logo_charcter"/>
+    <ImageView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:src="@drawable/people"
+        android:layout_gravity="center" />
     <TextView
         android:id="@+id/version"
+        android:layout_marginTop="30dp"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:gravity="center_horizontal"
+        android:textColor="@color/colorBlack"
+        android:text="우리 동네 심부름 매칭"
+        android:textSize="24sp"
+        android:textStyle="bold"/>
+    <TextView
+        android:layout_marginTop="10dp"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:gravity="center_horizontal"
+        android:text="너의 부름은 동네 심부름 매칭 서비스에요."
+        android:textSize="18sp"
+        android:textStyle="bold"/>
+    <TextView 
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:gravity="center_horizontal"
+        android:text= "내 동네를 설정하고 시작해보세요!"
+        android:textSize="18sp"
+        android:textStyle="bold"/>
+
+    <Button
+        android:layout_marginTop="50dp"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:text="내 지역 설정하고 시작하기"
         android:textColor="@color/colorWhite"
-        android:text="Tm cukorders 1.0.1.v "/>
+        android:textSize="24sp"
+        android:background="@drawable/gps_button_shape"
+        />
 
 </LinearLayout>
