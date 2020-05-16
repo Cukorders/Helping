@@ -33,7 +33,7 @@ public class LoadingActivity extends AppCompatActivity {
     };
 
     private void goNextPage(){
-        Intent intent=new Intent(this,RegionActivity.class);
+        Intent intent=new Intent(this,MainActivity.class);
         startActivity(intent);
     }
 }

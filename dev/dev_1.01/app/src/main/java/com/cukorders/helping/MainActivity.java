@@ -49,7 +49,25 @@ public class MainActivity extends AppCompatActivity {
             }
         });
 */
+        findViewById(R.id.myMission).setOnClickListener(onClickListener);
+        findViewById(R.id.currentMission).setOnClickListener(onClickListener);
     }
+
+    View.OnClickListener onClickListener=new View.OnClickListener() {
+        @Override
+        public void onClick(View v) {
+            switch(v.getId()){
+                case R.id.myMission:
+
+                    break;
+
+                case R.id.currentMission:
+
+                    break;
+            }
+        }
+    };
+
     private void open(){
         fab_write.startAnimation(FabOpen);
         fab_info.startAnimation(FabOpen);
