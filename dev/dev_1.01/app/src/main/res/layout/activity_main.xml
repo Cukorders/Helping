@@ -5,13 +5,15 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
+    android:background="@color/colorWhite"
     tools:context=".MainActivity">
 
     <ImageView
-        android:id="@+id/Logo"
-        android:layout_width="100dp"
+        android:id="@+id/imageView2"
+        android:layout_width="match_parent"
         android:layout_height="100dp"
-        android:layout_gravity="center"
+        android:background="@color/colorLogo"
+        android:backgroundTint="@color/colorLogo"
         app:srcCompat="@drawable/logo" />
 
     <FrameLayout
@@ -38,6 +40,7 @@
             android:layout_gravity="bottom|end"
             android:layout_marginRight="16dp"
             android:layout_marginBottom="100dp"
+            android:backgroundTint="@color/colorLogo"
             android:elevation="6dp"
             android:src="@android:drawable/ic_menu_edit"
             android:visibility="invisible"
@@ -52,6 +55,7 @@
             android:layout_gravity="bottom|end"
             android:layout_marginRight="16dp"
             android:layout_marginBottom="180dp"
+            android:backgroundTint="@color/colorLogo"
             android:elevation="6dp"
             android:src="@android:drawable/ic_menu_my_calendar"
             android:visibility="invisible"
