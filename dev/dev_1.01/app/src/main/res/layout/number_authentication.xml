@@ -10,8 +10,21 @@
     <ImageView
         android:layout_width="match_parent"
         android:layout_height="200dp"
+        android:src="@drawable/logo"
         android:layout_marginBottom="15dp"
-        android:src="@drawable/logo" />
+        />
+
+    <TextView
+        android:id="@+id/login_form_feedback"
+        style="@style/Base.Widget.MaterialComponents.TextView"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:gravity="center"
+        android:orientation="vertical"
+        android:text="전화번호를 입력해주세요"
+        android:textColor="@color/colorError"
+        android:textSize="18sp"
+        android:visibility="invisible"></TextView>
 
     //TODO NUMBER -> https://firebase.google.com/docs/auth/android/phone-auth?hl=ko
     <LinearLayout
@@ -23,21 +36,22 @@
         >
 
         <EditText
-            android:id="@+id/phoneNumber"
+            android:id="@+id/phoneEditText"
             android:layout_width="match_parent"
             android:layout_height="50dp"
             android:layout_weight="3"
-            android:foregroundGravity="center"
-            android:hint="전화번호"></EditText>
+            android:hint="전화번호"
+            android:visibility="visible"></EditText>
 
         <Button
-            android:id="@+id/get"
+            android:id="@+id/sendBtn"
             android:layout_width="match_parent"
             android:layout_height="44dp"
             android:layout_weight="7"
-            android:background="@drawable/select_button"
+            android:background="@drawable/primary_btn_bg"
             android:text="인증번호 받기"
-            android:textColor="@color/colorBlack"></Button>
+            android:textColor="@color/colorBlack"
+            android:visibility="visible"></Button>
 
 
 
@@ -48,36 +62,42 @@
         android:orientation="horizontal"
         android:weightSum="10"
         android:layout_marginTop="4dp"
+        android:id="@+id/codelayout"
         >
 
         <EditText
-            android:id="@+id/authNumber"
+            android:id="@+id/codeEditText"
             android:layout_width="match_parent"
             android:layout_height="50dp"
             android:layout_weight="3"
-            android:foregroundGravity="center"
-            android:hint="인증번호"></EditText>
+            android:hint="인증번호"
+            android:visibility="invisible"></EditText>
 
         <Button
-            android:id="@+id/check"
+            android:id="@+id/codeBtn"
             android:layout_width="match_parent"
             android:layout_height="44dp"
             android:layout_weight="7"
-            android:background="@drawable/select_button"
+            android:background="@drawable/primary_btn_bg"
             android:text="인증 확인"
-            android:textColor="@color/colorBlack"></Button>
+            android:textColor="@color/colorBlack"
+            android:visibility="invisible"></Button>
 
     </LinearLayout>
 
 
     <Button
-        android:id="@+id/bt_login"
+        android:id="@+id/LoginBtn"
         android:layout_width="match_parent"
         android:layout_height="50dp"
         android:layout_marginTop="20dp"
         android:layout_marginBottom="10dp"
-        android:background="@drawable/select_button"
-        android:text="너의 부름 이용하기"
-        android:textColor="@color/colorBlack"></Button>
+        android:background="@drawable/primary_btn_bg"
+        android:text="로그인하기"
+        android:textColor="@color/colorBlack"
+        android:textSize="18sp"
+        android:visibility="invisible"></Button>
+
+
 
 </LinearLayout>

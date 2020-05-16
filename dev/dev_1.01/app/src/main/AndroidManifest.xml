@@ -13,6 +13,7 @@
         android:theme="@style/AppTheme">
         <meta-data
             android:name="com.google.android.geo.API_KEY"
+            android:resource="@drawable/primary_btn_bg"
             android:value="AIzaSyA9CPuZCP0dwE7PvX9R3IECiL3AzEYW7D8" />
         <activity
             android:name=".LoadingActivity"
