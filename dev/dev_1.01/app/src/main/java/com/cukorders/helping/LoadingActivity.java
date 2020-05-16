@@ -3,6 +3,9 @@ package com.cukorders.helping;
 import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
+import android.view.View;
+import android.view.WindowManager;
+import android.widget.Button;
 
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
@@ -11,21 +14,26 @@ public class LoadingActivity extends AppCompatActivity {
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
-            super.onCreate(savedInstanceState);
+        super.onCreate(savedInstanceState);
         setContentView(R.layout.loading);
-        Handler handler = new Handler();
-        handler.postDelayed(new Runnable() {
-            @Override
-            public void run() {
-                /* TODO
-                유저 정보를 받아왔을 시 => Main으로 이동(아래 코드)
-                유저 정보를 받아오지 못했을 시 => 로그인 및 회원가입 화면으로 전환
-                **/
 
-                Intent intent=new Intent(getApplicationContext(),MainActivity.class);
-                startActivity(intent);
-                finish();
+        findViewById(R.id.StartButton).setOnClickListener(OnClickListener);
+
+    }
+
+    View.OnClickListener OnClickListener=new View.OnClickListener() {
+        @Override
+        public void onClick(View v) {
+            switch(v.getId()){
+                case R.id.StartButton:
+                    goNextPage();
+                    break;
             }
-        },2500);
+        }
+    };
+
+    private void goNextPage(){
+        Intent intent=new Intent(this,MainActivity.class);
+        startActivity(intent);
     }
 }
