@@ -18,6 +18,7 @@ public class RegisterActivity extends AppCompatActivity {
         setContentView(R.layout.enter_details);
 
         // 클릭 가능한 버튼들 설정 => OnClickListener에서 클릭됐을 시 action 정의
+        
         findViewById(R.id.bt_finish).setOnClickListener(OnClickListener);
         findViewById(R.id.check).setOnClickListener(OnClickListener);
         findViewById(R.id.male).setOnClickListener(OnClickListener);
