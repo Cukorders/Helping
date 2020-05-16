@@ -10,9 +10,8 @@
     <ImageView
         android:layout_width="match_parent"
         android:layout_height="200dp"
-        android:src="@drawable/logo"
         android:layout_marginBottom="15dp"
-        />
+        android:src="@drawable/logo" />
 
     //TODO NUMBER -> https://firebase.google.com/docs/auth/android/phone-auth?hl=ko
     <LinearLayout
@@ -22,13 +21,14 @@
         android:weightSum="10"
         android:layout_marginTop="2dp"
         >
+
         <EditText
+            android:id="@+id/phoneNumber"
             android:layout_width="match_parent"
             android:layout_height="50dp"
-            android:hint="전화번호"
             android:layout_weight="3"
-            >
-        </EditText>
+            android:foregroundGravity="center"
+            android:hint="전화번호"></EditText>
 
         <Button
             android:id="@+id/get"
@@ -50,13 +50,13 @@
         android:layout_marginTop="4dp"
         >
 
-    <EditText
-        android:layout_width="match_parent"
-        android:layout_height="50dp"
-        android:hint="인증번호"
-        android:layout_weight="3"
-        >
-    </EditText>
+        <EditText
+            android:id="@+id/authNumber"
+            android:layout_width="match_parent"
+            android:layout_height="50dp"
+            android:layout_weight="3"
+            android:foregroundGravity="center"
+            android:hint="인증번호"></EditText>
 
         <Button
             android:id="@+id/check"

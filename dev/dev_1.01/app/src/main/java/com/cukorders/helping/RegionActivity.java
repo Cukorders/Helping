@@ -9,9 +9,7 @@ import android.content.pm.PackageManager;
 import android.location.Location;
 import android.os.Bundle;
 import android.view.View;
-import android.widget.Button;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
@@ -20,7 +18,6 @@ import androidx.core.content.ContextCompat;
 
 import com.google.android.gms.location.FusedLocationProviderClient;
 import com.google.android.gms.location.LocationServices;
-import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.tasks.OnSuccessListener;
 
 public class RegionActivity  extends AppCompatActivity {
@@ -39,9 +36,9 @@ public class RegionActivity  extends AppCompatActivity {
         result=(TextView) findViewById(R.id.search_result);
 
         // 버튼들이 클릭됐을 때=> OnClickListener 실행 : 확장성을 위해 OnClickListener 함수를 switch-case문으로 작성하였다.
-        findViewById(R.id.buttonGpsSearch).setOnClickListener(OnClickListener);
-        findViewById(R.id.SearchGpsButton).setOnClickListener(OnClickListener);
-        findViewById(R.id.GobackButton).setOnClickListener(OnClickListener);
+        findViewById(R.id.currentLocation).setOnClickListener(OnClickListener);
+        findViewById(R.id.SearchLocationButton).setOnClickListener(OnClickListener);
+        findViewById(R.id.bt_back).setOnClickListener(OnClickListener);
 
         // 위치 권한 요청을 하기 위한 FusedLocationClient 불러옴
         mFusedLocationClient= LocationServices.getFusedLocationProviderClient(this);
@@ -52,13 +49,13 @@ public class RegionActivity  extends AppCompatActivity {
         @Override
         public void onClick(View v) {
             switch(v.getId()){ // 후에 다른 버튼이 추가됐을 시 case만 추가하면 되므로 확장성 때문에 switch 구문을 사용하였다.
-                case R.id.buttonGpsSearch:
+                case R.id.currentLocation:
                     searchRegionalInfo(); // 현위치 주변 동들을 불러와 result(xml id: search_result)에 나타낸다.
                     break;
-                case R.id.SearchGpsButton:
+                case R.id.SearchLocationButton:
                     getRegionInfo(); // 현재 위치로 찾기 버튼이 클릭됐을 시 주변 지역 정보가 나오는 화면(regional_certification2)으로 이동한다.
                     break;
-                case R.id.GobackButton:
+                case R.id.bt_back:
                     goBack(); //이전 페이지로 가기(뒤로 가기 버튼이 눌렸을 때)
                     break;
 
@@ -109,7 +106,6 @@ public class RegionActivity  extends AppCompatActivity {
                         .create()
                         .show();
 
-
             } else {
                 // 위치 권한을 요청
                 ActivityCompat.requestPermissions((Activity)context,
@@ -126,7 +122,7 @@ public class RegionActivity  extends AppCompatActivity {
                             if (location != null) {
                                 latittude = location.getLatitude();
                                 longitude = location.getLongitude(); // 현재 사용자의 경도와 위도를 불러온다.
-
+                                result.setText(""); // 위치 정보를 불러올 수 없다는 텍스트가 남아있을 수 있으므로 지운다.
                             }
                         }
                     });

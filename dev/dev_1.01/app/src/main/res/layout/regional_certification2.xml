@@ -27,7 +27,7 @@
 
         //TODO 뒤  로   가  기   버  튼   기  능  넣  기
         <ImageButton
-            android:id="@+id/GobackButton"
+            android:id="@+id/bt_back"
             android:layout_width="30dp"
             android:layout_height="20dp"
             android:src="@drawable/back_icon24"
@@ -41,13 +41,12 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_weight="1"
-            android:textSize="16sp"
+            android:gravity="center"
             android:hint="동명(읍, 면)으로 검색 (ex. 서초동)"
-            >
-        </EditText>
+            android:textSize="16sp"></EditText>
 
         <ImageButton
-            android:id="@+id/SearchGpsButton"
+            android:id="@+id/SearchLocationButton"
             android:layout_width="30dp"
             android:layout_height="30dp"
             android:backgroundTint="@color/design_default_color_on_primary"
@@ -57,7 +56,7 @@
 
     </LinearLayout>
     <Button
-        android:id="@+id/buttonGpsSearch"
+        android:id="@+id/currentLocation"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:gravity="center"
