@@ -13,8 +13,8 @@ public class LogInActivity extends AppCompatActivity {
         setContentView(R.layout.number_authentication);
 
         // 버튼들이 클릭됐을 시
-        findViewById(R.id.bt_login).setOnClickListener(OnClickListener);
-        findViewById(R.id.get).setOnClickListener(OnClickListener);
+        findViewById(R.id.sendBtn).setOnClickListener(OnClickListener);
+        findViewById(R.id.LoginBtn).setOnClickListener(OnClickListener);
         findViewById(R.id.check).setOnClickListener(OnClickListener);
     }
 
@@ -24,14 +24,14 @@ public class LogInActivity extends AppCompatActivity {
         public void onClick(View v) {
 
             /* TODO
-            각 버튼 클릭 후 실행될 이벤트들 채워넣기
+            각 버튼 클릭 후 실행될 이벤트들 채워넣기.
             **/
             switch(v.getId()){
-                case R.id.bt_login:
+                case R.id.LoginBtn:
 
                     break;
 
-                case R.id.get:
+                case R.id.sendBtn:
 
                     break;
 

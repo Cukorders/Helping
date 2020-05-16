@@ -44,9 +44,9 @@ public class AuthActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.number_authentication);
 
-       findViewById(R.id.get).setOnClickListener(OnClickListener);
+       findViewById(R.id.sendBtn).setOnClickListener(OnClickListener);
        findViewById(R.id.check).setOnClickListener(OnClickListener);
-       findViewById(R.id.bt_login).setOnClickListener(OnClickListener);
+       findViewById(R.id.LoginBtn).setOnClickListener(OnClickListener);
 
        /* mMessageSendBtn.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -103,7 +103,7 @@ public class AuthActivity extends AppCompatActivity {
         @Override
         public void onClick(View v) {
             switch(v.getId()){
-                case R.id.get:
+                case R.id.sendBtn:
 
                     break;
 
@@ -111,7 +111,7 @@ public class AuthActivity extends AppCompatActivity {
 
                     break;
 
-                case R.id.bt_login:
+                case R.id.LoginBtn:
 
                     break;
             }
