@@ -3,45 +3,53 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
-    android:background="@android:color/transparent"
+    android:background="@color/colorWhite"
     android:paddingLeft="15dp"
     android:paddingRight="15dp"
     >
+
     <ImageView
-        android:layout_marginTop="50dp"
         android:layout_width="match_parent"
         android:layout_height="200dp"
-        android:src="@drawable/logo_charcter"/>
+        android:layout_marginTop="50dp"
+        android:paddingTop="10dp"
+        android:src="@drawable/logo_charcter" />
     <ImageView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:src="@drawable/people"
         android:layout_gravity="center" />
+
     <TextView
         android:id="@+id/version"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
         android:layout_marginTop="30dp"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
+        android:foregroundGravity="center"
         android:gravity="center_horizontal"
-        android:textColor="@color/colorBlack"
         android:text="우리 동네 심부름 매칭"
+        android:textColor="@color/colorBlack"
         android:textSize="24sp"
-        android:textStyle="bold"/>
+        android:textStyle="bold" />
+
     <TextView
-        android:layout_marginTop="10dp"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:layout_marginTop="10dp"
+        android:foregroundGravity="center"
         android:gravity="center_horizontal"
         android:text="너의 부름은 동네 심부름 매칭 서비스에요."
         android:textSize="18sp"
-        android:textStyle="bold"/>
+        android:textStyle="bold" />
+
     <TextView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:foregroundGravity="center"
         android:gravity="center_horizontal"
-        android:text= "내 동네를 설정하고 시작해보세요!"
+        android:text="내 동네를 설정하고 시작해보세요!"
         android:textSize="18sp"
-        android:textStyle="bold"/>
+        android:textStyle="bold" />
 
     <Button
         android:id="@+id/StartButton"
@@ -50,6 +58,7 @@
         android:layout_gravity="center"
         android:layout_marginTop="50dp"
         android:background="@drawable/gps_button_shape"
+        android:gravity="center"
         android:text="내 지역 설정하고 시작하기"
         android:textColor="@color/colorWhite"
         android:textSize="24sp" />

@@ -1,55 +1,83 @@
 package com.cukorders.helping;
 
-import androidx.appcompat.app.AppCompatActivity;
-
 import android.content.Intent;
+import android.net.Uri;
 import android.os.Bundle;
 import android.view.View;
+import android.view.animation.Animation;
+import android.view.animation.AnimationUtils;
 import android.widget.Button;
 
-import com.google.firebase.auth.FirebaseAuth;
-import com.google.firebase.auth.FirebaseUser;
+import androidx.appcompat.app.AppCompatActivity;
+
+import com.google.android.material.floatingactionbutton.FloatingActionButton;
 
 public class MainActivity extends AppCompatActivity {
-    //Todo Phone Auth
-    private FirebaseAuth mAuth;
-    private FirebaseUser mCurrentUser;
-    private Button mLogoutBtn;
+    FloatingActionButton fab_plus,fab_write,fab_info;
+    Animation FabOpen,FabClose,FabClockwise,FabAntiClockwise;
+    boolean isOpen=false;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-        mAuth = FirebaseAuth.getInstance();
-        mCurrentUser = mAuth.getCurrentUser();
 
-        mLogoutBtn = (Button) findViewById(R.id.LogoutBtn);
-        mLogoutBtn.setOnClickListener(new View.OnClickListener(){
+        fab_plus=(FloatingActionButton) findViewById(R.id.fab_plus);
+        fab_write=(FloatingActionButton) findViewById(R.id.fab_write);
+        fab_info=(FloatingActionButton) findViewById(R.id.fab_info);
+        FabOpen= AnimationUtils.loadAnimation(getApplicationContext(),R.anim.fab_open);
+        FabClose= AnimationUtils.loadAnimation(getApplicationContext(),R.anim.fab_close);
+        FabClockwise= AnimationUtils.loadAnimation(getApplicationContext(),R.anim.rotate_clockwise);
+        FabAntiClockwise= AnimationUtils.loadAnimation(getApplicationContext(),R.anim.rotate_anticlockwise);
+
+        fab_plus.setOnClickListener(new View.OnClickListener() {
             @Override
-            public void onClick(View view){
-                mAuth.signOut();
-                sendToAuth();
+            public void onClick(View view) {
+                if(!isOpen){
+                    open();
+                }else{
+                    close();
+                }
             }
         });
-    }
-    public void onStart() {
-        super.onStart();
-        // Check if user is signed in (non-null) and update UI accordingly.
-        FirebaseUser currentUser = mAuth.getCurrentUser();
-        // if not logged in we should go to login page
-        if(currentUser==null){
-            Intent authIntent = new Intent(MainActivity.this, AuthActivity.class);
-            authIntent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
-            authIntent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK);
-            startActivity(authIntent);
-            finish();
-        }
-    }
-    //when logout, go to AuthActivity page again
-    private void sendToAuth() {
-        Intent authIntent = new Intent (MainActivity.this, AuthActivity.class);
-        startActivity(authIntent);
-        finish();
+
+
+        findViewById(R.id.myMission).setOnClickListener(onClickListener);
+        findViewById(R.id.currentMission).setOnClickListener(onClickListener);
     }
 
+    View.OnClickListener onClickListener=new View.OnClickListener() {
+        @Override
+        public void onClick(View v) {
+            switch(v.getId()){
+                case R.id.myMission:
+
+                    break;
+
+                case R.id.currentMission:
+
+                    break;
+            }
+        }
+    };
+
+    private void open(){
+        fab_write.startAnimation(FabOpen);
+        fab_info.startAnimation(FabOpen);
+        fab_plus.startAnimation(FabClockwise);
+        fab_info.setClickable(true);
+        fab_write.setClickable(true);
+        isOpen=true;
+        // Log.d("open","open");
+    }
+    private void close(){
+        fab_write.startAnimation(FabClose);
+        fab_info.startAnimation(FabClose);
+        fab_plus.startAnimation(FabAntiClockwise);
+        fab_info.setClickable(false);
+        fab_write.setClickable(false);
+        isOpen=false;
+        //  Log.d("close","close");
+    }
 
 }
