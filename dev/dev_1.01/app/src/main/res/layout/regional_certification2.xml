@@ -2,20 +2,8 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:orientation="vertical" >
-
-
-    <TextView
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:text="지역 인증하기"
-        android:gravity="center"
-        android:textColor="@color/colorGrayButtonPush"
-        android:textSize="20sp"
-        android:layout_marginBottom="5dp" />
-
-    
-
+    android:orientation="vertical"
+    android:layout_marginTop="10dp">
 
     <LinearLayout
         android:layout_width="match_parent"
@@ -31,28 +19,13 @@
             android:layout_width="30dp"
             android:layout_height="20dp"
             android:src="@drawable/back_icon24"
-
+            android:
             android:paddingRight="5dp"
             >
         </ImageButton>
 
-        <EditText
-            android:id="@+id/editTextQuery"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:gravity="center"
-            android:hint="동명(읍, 면)으로 검색 (ex. 서초동)"
-            android:textSize="16sp"></EditText>
 
-        <ImageButton
-            android:id="@+id/SearchLocationButton"
-            android:layout_width="30dp"
-            android:layout_height="30dp"
-            android:backgroundTint="@color/design_default_color_on_primary"
 
-            android:paddingRight="5dp"
-            android:src="@drawable/search_icon16"></ImageButton>
 
     </LinearLayout>
     <Button
