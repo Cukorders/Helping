@@ -1,52 +1,71 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
     android:paddingLeft="15dp"
     android:paddingRight="15dp"
+    android:paddingTop="30dp"
     >
-    <ImageView
+
+    <RelativeLayout
         android:layout_width="match_parent"
-        android:layout_height="200dp"
-        android:src="@drawable/logo_charcter"
-        android:layout_marginBottom="15dp"
-        />
+        android:layout_height="130dp"
+        >
+        <ImageButton
+            android:id="@+id/profilebutton"
+            android:layout_height="wrap_content"
+            android:layout_width="match_parent"
+            android:src="@drawable/profile128"
+            android:gravity="center"
+            android:background="@android:color/transparent"
+            >
+        </ImageButton>
+
+        <ImageButton
+            android:id="@+id/camerabutton"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentRight="true"
+            android:layout_alignParentBottom="true"
+            android:layout_marginRight="110dp"
+            android:layout_marginBottom="0dp"
+            android:background="@android:color/transparent"
+            app:srcCompat="@drawable/camera"
+            >
+        </ImageButton>
+    </RelativeLayout>
+
 
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="horizontal"
+        android:layout_marginTop="50dp"
         android:weightSum="10"
         >
-        //TODO 중복확인할 수 있는 기능
 
+
+        //TODO 중복확인할 수 있는 기능
         <EditText
-            android:id="@+id/nickname"
             android:layout_width="match_parent"
+            android:hint="닉네임"
             android:layout_height="50dp"
             android:layout_weight="2"
-            android:gravity="center"
-            android:hint="닉네임"></EditText>
-
+            >
+        </EditText>
         <Button
-            android:id="@+id/check"
             android:layout_width="match_parent"
             android:layout_height="44dp"
             android:layout_weight="8"
             android:background="@drawable/select_button"
+            android:textColor="@color/colorBlack"
             android:text="중복확인"
-            android:textColor="@color/colorBlack"></Button>
+            >
+        </Button>
 
     </LinearLayout>
-
-    <EditText
-        android:id="@+id/name"
-        android:layout_width="match_parent"
-        android:layout_height="50dp"
-        android:gravity="center"
-        android:hint="이름"></EditText>>
-
 
     <LinearLayout
         android:layout_width="match_parent"
@@ -56,15 +75,14 @@
         >
         //TODO 성별 중에 남자 여자 선택할 수 있는 버튼
         // 선택하고 나서 버튼색 바뀌고 고정될 수 있게
-
         <EditText
-            android:id="@+id/gender"
             android:layout_width="match_parent"
+            android:hint="성별"
             android:layout_height="50dp"
-            android:layout_weight="2"
             android:enabled="false"
-            android:gravity="center"
-            android:hint="성별"></EditText>
+            android:layout_weight="2"
+            >
+        </EditText>
 
         <Button
             android:id="@+id/male"
@@ -96,16 +114,6 @@
         android:layout_marginBottom="10dp"
         android:background="@drawable/gps_button_shape"
         android:text="회원가입 완료"
-        android:textColor="@color/colorWhite"></Button>
-
-    <Button
-        android:id="@+id/logoutBtn"
-        android:layout_width="match_parent"
-        android:layout_height="50dp"
-        android:layout_marginTop="20dp"
-        android:layout_marginBottom="10dp"
-        android:background="@drawable/gps_button_shape"
-        android:text="로그아웃"
         android:textColor="@color/colorWhite"></Button>
 
 </LinearLayout>
