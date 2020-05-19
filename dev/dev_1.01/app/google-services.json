@@ -15,6 +15,14 @@
       },
       "oauth_client": [
         {
+          "client_id": "750767526775-g44h6m26hlf0h7lough944ofmaiv1mf1.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.cukorders.helping",
+            "certificate_hash": "d5416269b3e727582fa470a38e8acfd5c43fc8d6"
+          }
+        },
+        {
           "client_id": "750767526775-3kq2ig6dqf7udiop247bopl53ej5u2b4.apps.googleusercontent.com",
           "client_type": 1,
           "android_info": {
