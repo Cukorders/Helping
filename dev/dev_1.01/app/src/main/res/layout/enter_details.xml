@@ -1,24 +1,52 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
     android:paddingLeft="15dp"
     android:paddingRight="15dp"
+    android:paddingTop="30dp"
     >
-    <ImageView
+
+    <RelativeLayout
         android:layout_width="match_parent"
-        android:layout_height="200dp"
-        android:src="@drawable/logo_charcter"
-        android:layout_marginBottom="15dp"
-        />
+        android:layout_height="130dp"
+        >
+        <ImageButton
+            android:id="@+id/profilebutton"
+            android:layout_height="wrap_content"
+            android:layout_width="match_parent"
+            android:src="@drawable/profile128"
+            android:gravity="center"
+            android:background="@android:color/transparent"
+            >
+        </ImageButton>
+
+        <ImageButton
+            android:id="@+id/camerabutton"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentRight="true"
+            android:layout_alignParentBottom="true"
+            android:layout_marginRight="110dp"
+            android:layout_marginBottom="0dp"
+            android:background="@android:color/transparent"
+            app:srcCompat="@drawable/camera"
+            >
+        </ImageButton>
+    </RelativeLayout>
+
 
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="horizontal"
+        android:layout_marginTop="50dp"
         android:weightSum="10"
         >
+
+
         //TODO 중복확인할 수 있는 기능
 
         <EditText
@@ -38,13 +66,6 @@
             android:textColor="@color/colorBlack"></Button>
 
     </LinearLayout>
-
-    <EditText
-        android:id="@+id/name"
-        android:layout_width="match_parent"
-        android:layout_height="50dp"
-        android:hint="이름"></EditText>>
-
 
     <LinearLayout
         android:layout_width="match_parent"
