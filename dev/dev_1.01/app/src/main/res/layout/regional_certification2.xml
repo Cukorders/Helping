@@ -1,11 +1,12 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
     android:layout_marginTop="10dp">
 
-    <LinearLayout
+    <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="50dp"
         android:orientation="horizontal"
@@ -18,32 +19,77 @@
             android:id="@+id/bt_back"
             android:layout_width="30dp"
             android:layout_height="20dp"
+            android:layout_marginLeft="5dp"
             android:src="@drawable/back_icon24"
-            android:
+            android:background="@android:color/transparent"
             android:paddingRight="5dp"
             >
         </ImageButton>
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="지역 인증 하기"
+            android:gravity="center"
+            android:textSize="20sp"
+            android:textColor="@color/colorBlack">
+        </TextView>
 
 
 
-
-    </LinearLayout>
-    <Button
-        android:id="@+id/currentLocation"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:gravity="center"
-        android:background="@drawable/gps_button_shape"
-        android:text="현재위치로 찾기"
-        android:textColor="@color/colorWhite"
-        android:textSize="20sp">
-    </Button>
-
-    <RelativeLayout
-        android:layout_width="match_parent"
-        android:layout_height="match_parent">
 
     </RelativeLayout>
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+        <Button
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:onClick="onLastLocationButtonClicked" />
 
-    //TODO GPS Listview add
+        <fragment
+            android:id="@+id/googlemapview"
+            android:layout_width="match_parent"
+            android:layout_height="300dp"
+            android:name="com.google.android.gms.maps.SupportMapFragment"
+            tools:context="com.example.mapwithmarker.MapsMarkerActivity" >
+        </fragment>
+        <TextView
+            android:id="@+id/result_gps"
+            android:layout_below="@id/googlemapview"
+            android:paddingLeft="10dp"
+            android:paddingTop="20dp"
+            android:paddingBottom="20dp"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="현재 위치가 내 지역으로 설정한 ''에 있습니다."
+            android:textSize="16sp"
+            android:textColor="@color/colorBlack">
+        </TextView>
+        <Button
+            android:id="@+id/whygps"
+            android:layout_below="@id/result_gps"
+            android:paddingLeft="10dp"
+            android:paddingBottom="20dp"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="왜 지역인증을 해야하나요?"
+            android:background="@android:color/transparent"
+            android:textSize="16sp"
+            android:gravity="left">
+        </Button>
+        <Button
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_margin="20dp"
+            android:layout_below="@id/whygps"
+            android:text="동네 인증 완료하기"
+            android:textColor="@color/colorWhite"
+            android:textSize="20sp"
+            android:background="@drawable/gps_button_shape">
+        </Button>
+    </RelativeLayout>
+
+
+
+
 </LinearLayout>
