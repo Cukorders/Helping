@@ -11,7 +11,7 @@ public class ChooseTheRegionActivity  extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.regional_certification2);
+        setContentView(R.layout.regional_certification1);
 
         findViewById(R.id.bt_back).setOnClickListener(OnClickListener);
         findViewById(R.id.currentLocation).setOnClickListener(OnClickListener);

@@ -68,7 +68,7 @@ public class RegionActivity  extends FragmentActivity implements OnMapReadyCallb
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.regional_certification1);
+        setContentView(R.layout.regional_certification2);
 
         //위치 관리자 객체 참조
         locationManager=(LocationManager)getSystemService(Context.LOCATION_SERVICE);
