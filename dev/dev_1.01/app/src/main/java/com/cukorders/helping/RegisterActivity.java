@@ -59,7 +59,7 @@ public class RegisterActivity extends AppCompatActivity {
     };
 
     private void finish_register(){
-        Intent intent=new Intent(this,LogInActivity.class);
+        Intent intent=new Intent(this,AuthActivity.class);
         startActivity(intent);
     }
 }
