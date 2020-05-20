@@ -4,14 +4,18 @@ import android.Manifest;
 import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager;
+import android.graphics.Color;
+import android.graphics.Typeface;
 import android.location.Address;
 import android.location.Geocoder;
 import android.location.Location;
 import android.location.LocationManager;
 import android.os.Bundle;
+import android.text.Spannable;
+import android.text.style.ForegroundColorSpan;
+import android.text.style.StyleSpan;
 import android.view.View;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.core.app.ActivityCompat;
@@ -32,6 +36,8 @@ import com.google.android.gms.tasks.Task;
 import java.io.IOException;
 import java.util.List;
 
+import static android.text.Spanned.SPAN_INCLUSIVE_EXCLUSIVE;
+
 
 public class RegionActivity  extends FragmentActivity implements OnMapReadyCallback{
 
@@ -43,6 +49,8 @@ public class RegionActivity  extends FragmentActivity implements OnMapReadyCallb
     private static final int PERMISSIONS_REQUEST_ACCESS_FINE_LOCATION = 2002;
     private static final int UPDATE_INTERVAL_MS = 1000;  // 1초
     private static final int FASTEST_UPDATE_INTERVAL_MS = 500; // 0.5초
+    private static final String msg1="현재 위치가 내 지역으로 설정한 ";
+    private static final String msg2="에 있습니다.";
    Context context=this;
    //위치 정보 얻는 객체
    private FusedLocationProviderClient mFusedLocationClient;
@@ -56,8 +64,7 @@ public class RegionActivity  extends FragmentActivity implements OnMapReadyCallb
     Location currentLocation;
 
     public String dong="";
-    private TextView getDong;
-
+    private TextView result_gps;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -66,19 +73,20 @@ public class RegionActivity  extends FragmentActivity implements OnMapReadyCallb
         //위치 관리자 객체 참조
         locationManager=(LocationManager)getSystemService(Context.LOCATION_SERVICE);
 
-        SupportMapFragment supportMapFragment=(SupportMapFragment) getSupportFragmentManager().findFragmentById(R.id.map);
+        SupportMapFragment supportMapFragment=(SupportMapFragment) getSupportFragmentManager().findFragmentById(R.id.googlemapview);
         supportMapFragment.getMapAsync(this);
 
         // 버튼들이 클릭됐을 때=> OnClickListener 실행 : 확장성을 위해 OnClickListener 함수를 switch-case문으로 작성하였다.
         findViewById(R.id.currentLocation).setOnClickListener(OnClickListener);
-        findViewById(R.id.SearchLocationButton).setOnClickListener(OnClickListener);
+        findViewById(R.id.finish_location).setOnClickListener(OnClickListener);
         findViewById(R.id.bt_back).setOnClickListener(OnClickListener);
 
         // 위치 권한 요청을 하기 위한 FusedLocationClient 불러옴
         mFusedLocationClient= LocationServices.getFusedLocationProviderClient(this);
         geocoder=new Geocoder(this);
 
-        getDong=(TextView) findViewById(R.id.editTextQuery);
+        result_gps=(TextView) findViewById(R.id.result_gps);
+
     }
 
     View.OnClickListener OnClickListener=new View.OnClickListener() {
@@ -88,8 +96,8 @@ public class RegionActivity  extends FragmentActivity implements OnMapReadyCallb
                 case R.id.currentLocation:
                     fetchLocation(); // 현위치 주변 동들을 불러와 result(xml id: search_result)에 나타낸다.
                     break;
-                case R.id.SearchLocationButton:
-                    getRegionInfo(); // 현재 위치로 찾기 버튼이 클릭됐을 시 주변 지역 정보가 나오는 화면(regional_certification2)으로 이동한다.
+                case R.id.finish_location:
+                    goPhoneAuth();
                     break;
                 case R.id.bt_back:
                     goBack(); //이전 페이지로 가기(뒤로 가기 버튼이 눌렸을 때)
@@ -99,28 +107,10 @@ public class RegionActivity  extends FragmentActivity implements OnMapReadyCallb
         }
     };
 
-    private void getRegionInfo(){
-        List<Address> list=null;
-        String str=getDong.getText().toString();
-        Toast.makeText(this,str,Toast.LENGTH_LONG).show();
-        try{
-            list = geocoder.getFromLocationName
-                    (str, // 지역 이름
-                            10); // 읽을 개수
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-        if(list==null) Toast.makeText(this,"위치 정보를 불러올 수 없습니다.",Toast.LENGTH_LONG).show();
-        else{
-            if(list.size()>0){
-                Address address=list.get(0);
-               // Location location=new
-            }else{
-                Toast.makeText(this,"해당되는 주소 정보를 찾을 수 없습니다.",Toast.LENGTH_LONG);
-            }
-        }
+    private void goPhoneAuth(){
+        Intent intent=new Intent(this,AuthActivity.class);
+        startActivity(intent);
     }
-
 
     private void goBack(){
         Intent intent=new Intent(this,LoadingActivity.class); // 뒤로 가기 버튼 누름 => 첫 화면으로 다시 돌아감.
@@ -163,10 +153,17 @@ public class RegionActivity  extends FragmentActivity implements OnMapReadyCallb
                     }
                     Address cur=addr.get(0);
                     dong=cur.getThoroughfare();
+                    int start=msg1.length(),end=start+dong.length();
                     MarkerOptions markerOptions = new MarkerOptions().position(now).title(dong);
+                    result_gps.setText("현재 위치가 내 지역으로 설정한 "+dong+"에 있습니다.");
+                    Spannable span=(Spannable) result_gps.getText();
+                    span.setSpan(new StyleSpan(Typeface.BOLD),start,end, SPAN_INCLUSIVE_EXCLUSIVE);
+                    span.setSpan(new ForegroundColorSpan(Color.RED),start,end, SPAN_INCLUSIVE_EXCLUSIVE);
+                    result_gps.setText(span);
+
                     mMap.moveCamera(CameraUpdateFactory.newLatLng(now));
                     mMap.addMarker(markerOptions);
-                    SupportMapFragment supportMapFragment = (SupportMapFragment) getSupportFragmentManager().findFragmentById(R.id.map);
+                    SupportMapFragment supportMapFragment = (SupportMapFragment) getSupportFragmentManager().findFragmentById(R.id.googlemapview);
                     assert supportMapFragment != null;
                     supportMapFragment.getMapAsync((OnMapReadyCallback) context);
                 }
