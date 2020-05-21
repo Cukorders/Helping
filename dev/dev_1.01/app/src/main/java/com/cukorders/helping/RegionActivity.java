@@ -113,7 +113,7 @@ public class RegionActivity  extends FragmentActivity implements OnMapReadyCallb
     }
 
     private void goBack(){
-        Intent intent=new Intent(this,LoadingActivity.class); // 뒤로 가기 버튼 누름 => 첫 화면으로 다시 돌아감.
+        Intent intent=new Intent(this,ChooseTheRegionActivity.class); // 뒤로 가기 버튼 누름 => 첫 화면으로 다시 돌아감.
         startActivity(intent);
     }
 

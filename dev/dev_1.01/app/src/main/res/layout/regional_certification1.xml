@@ -66,11 +66,10 @@
         android:textSize="20sp">
     </Button>
 
-    <RelativeLayout
+    <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="match_parent">
-
-    </RelativeLayout>
+        android:layout_height="match_parent"
+        android:orientation="vertical"></LinearLayout>
 
     //TODO GPS Listview add
 </LinearLayout>

@@ -1,22 +1,19 @@
 package com.cukorders.helping;
 
-import android.content.Intent;
-import android.net.Uri;
 import android.os.Bundle;
 import android.view.View;
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
+import android.widget.Button;
 
 import androidx.appcompat.app.AppCompatActivity;
 
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
-import com.google.firebase.auth.FirebaseAuth;
-import com.google.firebase.auth.FirebaseUser;
-import com.google.firebase.auth.UserInfo;
 
 public class MainActivity extends AppCompatActivity {
     FloatingActionButton fab_plus,fab_write,fab_info;
     Animation FabOpen,FabClose,FabClockwise,FabAntiClockwise;
+    private Button myMission,currentMission;
     boolean isOpen=false;
    // private long backKeyPressedTime = 0;
     @Override
@@ -31,6 +28,11 @@ public class MainActivity extends AppCompatActivity {
         FabClose= AnimationUtils.loadAnimation(getApplicationContext(),R.anim.fab_close);
         FabClockwise= AnimationUtils.loadAnimation(getApplicationContext(),R.anim.rotate_clockwise);
         FabAntiClockwise= AnimationUtils.loadAnimation(getApplicationContext(),R.anim.rotate_anticlockwise);
+
+        myMission=(Button) findViewById(R.id.myMission);
+        currentMission=(Button) findViewById(R.id.currentMission);
+        findViewById(R.id.myMission).setOnClickListener(onClickListener);
+        findViewById(R.id.currentMission).setOnClickListener(onClickListener);
 
         fab_plus.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -49,8 +51,6 @@ public class MainActivity extends AppCompatActivity {
             }
         });
 */
-        findViewById(R.id.myMission).setOnClickListener(onClickListener);
-        findViewById(R.id.currentMission).setOnClickListener(onClickListener);
     }
 
     View.OnClickListener onClickListener=new View.OnClickListener() {
@@ -64,6 +64,7 @@ public class MainActivity extends AppCompatActivity {
                 case R.id.currentMission:
 
                     break;
+
             }
         }
     };

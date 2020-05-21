@@ -14,7 +14,7 @@ public class LogInActivity extends AppCompatActivity {
         // 버튼들이 클릭됐을 시
         findViewById(R.id.sendBtn).setOnClickListener(OnClickListener);
         findViewById(R.id.LoginBtn).setOnClickListener(OnClickListener);
-        findViewById(R.id.check).setOnClickListener(OnClickListener);
+       // findViewById(R.id.check).setOnClickListener(OnClickListener);
     }
 
 
@@ -34,9 +34,9 @@ public class LogInActivity extends AppCompatActivity {
 
                     break;
 
-                case R.id.check:
+             //   case R.id.check:
 
-                    break;
+                   // break;
             }
         }
     };

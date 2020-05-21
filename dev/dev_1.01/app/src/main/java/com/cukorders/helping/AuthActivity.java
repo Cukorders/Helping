@@ -1,31 +1,22 @@
 package com.cukorders.helping;
 
-import android.app.MediaRouteButton;
 import android.content.Intent;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.View;
-import android.view.WindowManager;
 import android.widget.Button;
-import android.widget.EditText;
-import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.appcompat.widget.ButtonBarLayout;
 
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
-import com.google.firebase.FirebaseException;
 import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseAuthInvalidCredentialsException;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.auth.PhoneAuthCredential;
 import com.google.firebase.auth.PhoneAuthProvider;
-
-import java.util.concurrent.TimeUnit;
 
 public class AuthActivity extends AppCompatActivity {
 
@@ -45,7 +36,7 @@ public class AuthActivity extends AppCompatActivity {
         setContentView(R.layout.number_authentication);
 
        findViewById(R.id.sendBtn).setOnClickListener(OnClickListener);
-       findViewById(R.id.check).setOnClickListener(OnClickListener);
+//       findViewById(R.id.check).setOnClickListener(OnClickListener);
        findViewById(R.id.LoginBtn).setOnClickListener(OnClickListener);
 
        /* mMessageSendBtn.setOnClickListener(new View.OnClickListener() {
@@ -107,9 +98,9 @@ public class AuthActivity extends AppCompatActivity {
 
                     break;
 
-                case R.id.check:
+                //case R.id.check:
 
-                    break;
+                //    break;
 
                 case R.id.LoginBtn:
 
