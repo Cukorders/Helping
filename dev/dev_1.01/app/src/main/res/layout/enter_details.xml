@@ -25,11 +25,12 @@
             android:id="@+id/cameraBtn"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:background="@android:color/transparent"
-            android:layout_alignParentBottom="true"
             android:layout_alignEnd="@+id/userProfileImage"
-            app:srcCompat="@drawable/camera">
-        </ImageButton>/>
+            android:layout_alignParentBottom="true"
+            android:layout_marginEnd="-10dp"
+            android:layout_marginBottom="-0dp"
+            android:background="@android:color/transparent"
+            app:srcCompat="@drawable/camera_black_48"></ImageButton>/>
     </RelativeLayout>
 
 

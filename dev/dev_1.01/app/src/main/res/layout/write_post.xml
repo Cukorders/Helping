@@ -156,6 +156,7 @@
                 android:layout_height="wrap_content"
                 android:hint= "보증금 :"
                 android:textSize="18sp"/>
+            //물품가격 edittext => 카테고리에서 물품 관련된 경우 입력할 수 있고,물품 관련된 경우가 아닌 경우 입력할 수 없도록
             <EditText
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
@@ -190,9 +191,127 @@
                 android:textSize="18sp"/>
         </LinearLayout>
 
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:layout_marginBottom="10dp"
+            android:paddingTop="10dp"
+            android:paddingBottom="20dp"
+            android:layout_marginLeft="10dp"
+            android:layout_marginRight="10dp"
+            android:background="@drawable/stroke_below_bold">
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:text="성별"
+                android:textSize="18sp"
+                android:paddingLeft="5dp"/>
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_marginTop="3dp"
+                android:orientation="horizontal">
+                <Button
+                    android:layout_width="wrap_content"
+                    android:layout_height="match_parent"
+                    android:layout_marginRight="3dp"
+                    android:text= "동성"
+                    android:textSize="16sp"
+                    android:background="@drawable/primary_btn_bg"
+                    android:textColor="@color/colorBlack"/>
+                <Button
+                    android:layout_width="wrap_content"
+                    android:layout_height="match_parent"
+                    android:layout_marginLeft="3dp"
+                    android:text= "무관"
+                    android:textSize="16sp"
+                    android:background="@drawable/select_button"
+                    android:textColor="@color/colorBlack"/>
+            </LinearLayout>
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:layout_marginTop="3dp"
+                android:text= "희망 연령대"
+                android:textSize="18sp"
+                android:paddingLeft="5dp"/>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_marginTop="3dp"
+                android:orientation="horizontal">
+                <Button
+                    android:id="@+id/button10s"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginRight="2dp"
+                    android:text="10대"
+                    android:layout_weight="2"
+                    android:background="@drawable/primary_btn_bg"
+                    android:textColor="@color/colorBlack">
+                </Button>
+                <Button
+                    android:id="@+id/button20s"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="2dp"
+                    android:layout_marginRight="2dp"
+                    android:text="20대"
+                    android:layout_weight="2"
+                    android:background="@drawable/select_button"
+                    android:textColor="@color/colorBlack">
+                </Button>
+                <Button
+                    android:id="@+id/button30s"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="2dp"
+                    android:layout_marginRight="2dp"
+                    android:text="30대"
+                    android:layout_weight="2"
+                    android:background="@drawable/select_button"
+                    android:textColor="@color/colorBlack">
+                </Button>
+                <Button
+                    android:id="@+id/button40s"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="2dp"
+                    android:layout_marginRight="2dp"
+                    android:text="40대"
+                    android:layout_weight="2"
+                    android:background="@drawable/select_button"
+                    android:textColor="@color/colorBlack">
+                </Button>
+                <Button
+                    android:id="@+id/button50s"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="2dp"
+                    android:text="50대이상"
+                    android:layout_weight="2"
+                    android:background="@drawable/select_button"
+                    android:textColor="@color/colorBlack">
+                </Button>
+            </LinearLayout>
+
+        </LinearLayout>
+
+        <Button
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="10dp"
+            android:layout_marginBottom="20dp"
+            android:layout_marginLeft="10dp"
+            android:layout_marginRight="10dp"
+            android:background="@drawable/gps_button_shape"
+            android:text= "작성 완료"
+            android:textSize="20sp"
+            android:textColor="@color/colorWhite"/>
 
 
 
     </LinearLayout>
-
 </ScrollView>
