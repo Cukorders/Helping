@@ -1,52 +1,79 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
     android:paddingLeft="15dp"
     android:paddingRight="15dp"
+    android:paddingTop="30dp"
     >
-    <ImageView
+    <RelativeLayout
         android:layout_width="match_parent"
-        android:layout_height="200dp"
-        android:src="@drawable/logo_charcter"
-        android:layout_marginBottom="15dp"
-        />
+        android:layout_height="180dp"
+        android:gravity="center">
+
+        <de.hdodenhof.circleimageview.CircleImageView
+            android:id="@+id/userProfileImage"
+            android:layout_width="170dp"
+            android:layout_height="170dp"
+            android:background="@android:color/transparent"
+            android:src="@drawable/profile128">
+        </de.hdodenhof.circleimageview.CircleImageView>
+
+        <ImageButton
+            android:id="@+id/cameraBtn"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignEnd="@+id/userProfileImage"
+            android:layout_alignParentBottom="true"
+            android:layout_marginEnd="-10dp"
+            android:layout_marginBottom="-0dp"
+            android:background="@android:color/transparent"
+            app:srcCompat="@drawable/camera_black_48"></ImageButton>/>
+    </RelativeLayout>
+
 
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="horizontal"
+        android:layout_marginTop="10dp"
+        >
+        <TextView
+            android:id="@+id/profile_form_feedback"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="에러입니다"
+            android:textColor="@color/colorError"
+            android:textSize="18dp"
+            android:visibility="invisible">
+        </TextView>
+    </LinearLayout>
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:layout_marginTop="10dp"
+        android:layout_marginBottom="10dp"
         android:weightSum="10"
         >
-        //TODO 중복확인할 수 있는 기능
-
         <EditText
-            android:id="@+id/nickname"
+            android:id="@+id/userNickname"
             android:layout_width="match_parent"
             android:layout_height="50dp"
             android:layout_weight="2"
-            android:gravity="center"
             android:hint="닉네임"></EditText>
 
         <Button
-            android:id="@+id/check"
+            android:id="@+id/nicknameCheck"
             android:layout_width="match_parent"
             android:layout_height="44dp"
             android:layout_weight="8"
-            android:background="@drawable/select_button"
+            android:background="@drawable/primary_btn_bg"
             android:text="중복확인"
             android:textColor="@color/colorBlack"></Button>
-
     </LinearLayout>
-
-    <EditText
-        android:id="@+id/name"
-        android:layout_width="match_parent"
-        android:layout_height="50dp"
-        android:gravity="center"
-        android:hint="이름"></EditText>>
-
 
     <LinearLayout
         android:layout_width="match_parent"
@@ -54,48 +81,109 @@
         android:orientation="horizontal"
         android:weightSum="10"
         >
-        //TODO 성별 중에 남자 여자 선택할 수 있는 버튼
-        // 선택하고 나서 버튼색 바뀌고 고정될 수 있게
-
-        <EditText
-            android:id="@+id/gender"
-            android:layout_width="match_parent"
-            android:layout_height="50dp"
-            android:layout_weight="2"
-            android:enabled="false"
-            android:gravity="center"
-            android:hint="성별"></EditText>
-
         <Button
-            android:id="@+id/male"
+            android:id="@+id/maleBtn"
             android:layout_width="match_parent"
             android:layout_height="44dp"
             android:layout_marginRight="3dp"
-            android:layout_weight="4"
-            android:background="@drawable/select_button"
+            android:layout_weight="5"
+            android:background="@drawable/primary_btn_bg"
             android:text="남자"
-            android:textColor="@color/colorBlack"></Button>
-
+            android:textColor="@color/colorBlack">
+        </Button>
         <Button
-            android:id="@+id/female"
+            android:id="@+id/femaleBtn"
             android:layout_width="match_parent"
             android:layout_height="44dp"
             android:layout_marginLeft="3dp"
-            android:layout_weight="4"
+            android:layout_weight="5"
             android:background="@drawable/select_button"
             android:text="여자"
-            android:textColor="@color/colorBlack"></Button>
+            android:textColor="@color/colorBlack">
+        </Button>
+    </LinearLayout>
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:weightSum="10"
+        android:layout_marginTop="10dp"
+        android:layout_marginBottom="10dp">
+
+        <Button
+            android:id="@+id/button10s"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginRight="2dp"
+            android:text="10대"
+            android:layout_weight="2"
+            android:background="@drawable/primary_btn_bg"
+            android:textColor="@color/colorBlack">
+        </Button>
+        <Button
+            android:id="@+id/button20s"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="2dp"
+            android:layout_marginRight="2dp"
+            android:text="20대"
+            android:layout_weight="2"
+            android:background="@drawable/select_button"
+            android:textColor="@color/colorBlack">
+        </Button>
+        <Button
+            android:id="@+id/button30s"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="2dp"
+            android:layout_marginRight="2dp"
+            android:text="30대"
+            android:layout_weight="2"
+            android:background="@drawable/select_button"
+            android:textColor="@color/colorBlack">
+        </Button>
+        <Button
+            android:id="@+id/button40s"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="2dp"
+            android:layout_marginRight="2dp"
+            android:text="40대"
+            android:layout_weight="2"
+            android:background="@drawable/select_button"
+            android:textColor="@color/colorBlack">
+        </Button>
+        <Button
+            android:id="@+id/button50s"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="2dp"
+            android:text="50대이상"
+            android:layout_weight="2"
+            android:background="@drawable/select_button"
+            android:textColor="@color/colorBlack">
+        </Button>
     </LinearLayout>
 
-
     <Button
-        android:id="@+id/bt_finish"
+        android:id="@+id/profileRegisterBt"
+        android:layout_width="match_parent"
+        android:layout_height="50dp"
+        android:layout_marginTop="10dp"
+        android:layout_marginBottom="10dp"
+        android:background="@drawable/gps_button_shape"
+        android:text="회원가입 완료"
+        android:textColor="@color/colorWhite">
+    </Button>
+    <Button
+        android:id="@+id/logoutBtn"
         android:layout_width="match_parent"
         android:layout_height="50dp"
         android:layout_marginTop="20dp"
         android:layout_marginBottom="10dp"
         android:background="@drawable/gps_button_shape"
-        android:text="회원가입 완료"
-        android:textColor="@color/colorWhite"></Button>
+        android:text="로그아웃"
+        android:textColor="@color/colorWhite">
+    </Button>
 
 </LinearLayout>

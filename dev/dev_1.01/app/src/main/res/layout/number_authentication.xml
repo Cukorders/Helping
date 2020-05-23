@@ -10,8 +10,8 @@
     <ImageView
         android:layout_width="match_parent"
         android:layout_height="200dp"
-        android:src="@drawable/logo"
-        android:layout_marginBottom="15dp"
+        android:src="@drawable/logo_charcter"
+        android:background="@drawable/stroke_below_bold"
         />
 
     <TextView

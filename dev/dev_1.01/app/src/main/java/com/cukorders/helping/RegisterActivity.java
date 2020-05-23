@@ -26,7 +26,7 @@ public class RegisterActivity extends AppCompatActivity {
 
         // 입력된 정보들을 불러 오는 칸
         nickname=(TextView) findViewById(R.id.nickname);
-        name=(TextView) findViewById(R.id.name);
+        //name=(TextView) findViewById(R.id.name);
         gender=(TextView) findViewById(R.id.gender);
     }
 
