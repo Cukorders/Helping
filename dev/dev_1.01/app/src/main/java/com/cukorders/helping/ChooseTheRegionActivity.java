@@ -137,6 +137,7 @@ public class ChooseTheRegionActivity  extends AppCompatActivity {
         }
         Task<Location> task = mFusedLocationClient.getLastLocation();
         task.addOnSuccessListener(new OnSuccessListener<Location>() {
+
             @SuppressLint("LongLogTag")
             @Override
             public void onSuccess(Location location) {
@@ -168,7 +169,26 @@ public class ChooseTheRegionActivity  extends AppCompatActivity {
                     }
                     Log.d("the size of dongs","the size of dongs is "+String.valueOf(size));
                     if(size>0){
-                        //TODO : 창 띄우기
+                        final String array[]=dongs.toArray(new String[0]);
+                        Log.d("size of the array","the size of the array is "+String.valueOf(array.length));
+                        AlertDialog.Builder builder=new AlertDialog.Builder(ChooseTheRegionActivity.this);
+                        builder.setTitle("주변 위치 검색 결과입니다.");
+                        builder.setSingleChoiceItems(array, select, new DialogInterface.OnClickListener() {
+                            @Override
+                            public void onClick(DialogInterface dialog, int which) {
+                                select=which;
+                            }
+                        }).setPositiveButton("선택", new DialogInterface.OnClickListener() {
+                            @Override
+                            public void onClick(DialogInterface dialog, int which) {
+                                userLocation=array[select];
+                                Log.e("userLocation_search","the value of a parameter called userLocation in ChooseTheRegionActivity is "+userLocation);
+                                startActivity(new Intent(context,RegionActivity.class));
+                            }
+                        }).setNegativeButton("취소",null);
+
+
+                        builder.show();
                     }else{
                         Toast.makeText(context,errorMsg,Toast.LENGTH_LONG).show();
                     }
