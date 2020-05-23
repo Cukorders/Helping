@@ -66,7 +66,7 @@ public class RegionActivity  extends FragmentActivity implements OnMapReadyCallb
     private boolean mLocationPermissionGranted=false;
     private Location currentLocation;
     private String compare;
-    private String dong="";
+    public String dong="";
     private TextView result_gps;
     private String errorMSG="인증을 하려면 위치 정보를 불러와야 합니다.";
 

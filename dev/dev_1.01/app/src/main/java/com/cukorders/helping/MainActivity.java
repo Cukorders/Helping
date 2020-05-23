@@ -19,13 +19,14 @@ public class MainActivity extends AppCompatActivity {
     private Button myMission,currentMission;
     boolean isOpen=false;
    // private long backKeyPressedTime = 0;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        fab_plus=(FloatingActionButton) findViewById(R.id.fab_plus);
-        fab_write=(FloatingActionButton) findViewById(R.id.fab_write);
+        fab_plus=(FloatingActionButton) findViewById(R.id.fab_chat);
+        fab_write=(FloatingActionButton) findViewById(R.id.fab_like);
         fab_info=(FloatingActionButton) findViewById(R.id.fab_info);
         FabOpen= AnimationUtils.loadAnimation(getApplicationContext(),R.anim.fab_open);
         FabClose= AnimationUtils.loadAnimation(getApplicationContext(),R.anim.fab_close);
