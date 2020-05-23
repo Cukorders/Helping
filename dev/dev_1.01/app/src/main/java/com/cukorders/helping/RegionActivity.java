@@ -108,7 +108,7 @@ public class RegionActivity  extends FragmentActivity implements OnMapReadyCallb
                     compare=((ChooseTheRegionActivity)ChooseTheRegionActivity.regional_certification1).userLocation;
                     Log.e("compare value","compare value is "+compare);
                     Log.e("the user's location is ","the user's location is "+dong);
-                    //Toast.makeText(context,"compare value is "+compare+" user's current location value is "+dong,Toast.LENGTH_LONG).show();
+
                     if(compare.equals(dong)){
                         //TODO : DB에서 위치 인증이 완료된 유저라고 체크되어야 함.
                     goPhoneAuth();

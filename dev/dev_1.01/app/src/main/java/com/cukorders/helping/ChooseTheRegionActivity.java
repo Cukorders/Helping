@@ -39,6 +39,7 @@ import java.io.IOException;
 import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
 import java.net.URL;
+import java.util.ArrayList;
 import java.util.List;
 
 public class ChooseTheRegionActivity  extends AppCompatActivity {
@@ -59,6 +60,9 @@ public class ChooseTheRegionActivity  extends AppCompatActivity {
     private int select=0;
     public Location userInputLocation;
     Handler handler=new Handler();
+
+    // 주변 행정동들 검색할 때 주변 2km 내 행정동들을 불러오기
+    private final Double lat_2km=1.0/109.958489129649955, lng_2km=1.0/88.74;
 
     @SuppressLint("WrongViewCast")
     @Override
@@ -133,14 +137,44 @@ public class ChooseTheRegionActivity  extends AppCompatActivity {
         }
         Task<Location> task = mFusedLocationClient.getLastLocation();
         task.addOnSuccessListener(new OnSuccessListener<Location>() {
+            @SuppressLint("LongLogTag")
             @Override
             public void onSuccess(Location location) {
                 if (location != null) {
+                    Log.d("getting the location","a location parameter returns non-null value.");
+
                     nowLocation = location;
                     LatLng now=new LatLng(nowLocation.getLatitude(),nowLocation.getLongitude());
-
-                    // TODO 주변 동들 불러오기 -> 공공 API 찾아볼것
-
+                    int size=0;
+                    Double la[]={nowLocation.getLatitude(),nowLocation.getLatitude()+lat_2km,nowLocation.getLatitude()+lat_2km,nowLocation.getLatitude()-lat_2km,nowLocation.getLatitude()-lat_2km};
+                    Double ln[]={nowLocation.getLongitude(),nowLocation.getLongitude()+lng_2km,nowLocation.getLongitude()-lng_2km,nowLocation.getLongitude()+lng_2km,nowLocation.getLongitude()-lng_2km};
+                    String datas[]=new String[5];
+                    final ArrayList<String> dongs=new ArrayList<>();
+                    for(int i=0;i<5;++i){
+                        List<Address> addr=null;
+                        try {
+                            addr=geocoder.getFromLocation(la[i],ln[i],5);
+                        } catch (IOException e) {
+                            e.printStackTrace();
+                        }
+                        datas[i]=addr.get(0).getThoroughfare();
+                    }
+                    for(String data:datas){
+                        if(!dongs.contains(data)){
+                            ++size;
+                            dongs.add(data);
+                            Log.d("a data is added",data);
+                        }
+                    }
+                    Log.d("the size of dongs","the size of dongs is "+String.valueOf(size));
+                    if(size>0){
+                        //TODO : 창 띄우기
+                    }else{
+                        Toast.makeText(context,errorMsg,Toast.LENGTH_LONG).show();
+                    }
+                } else{
+                    Log.e("error in getting the location","error in getting the location");
+                    Toast.makeText(context,errorMsg,Toast.LENGTH_LONG);
                 }
             }
         });
@@ -245,7 +279,7 @@ public class ChooseTheRegionActivity  extends AppCompatActivity {
                         lngs[i]=lng;
                 }
 
-                    // TODO 검색 결과를 ListView에 추가하기
+                    // ListView에 클릭 이벤트를 적용하는 것이 까다로워 검색 결과 창을 따로 띄운다.
                     AlertDialog.Builder builder=new AlertDialog.Builder(ChooseTheRegionActivity.this);
                     builder.setTitle(userLocation+"에 관한 검색 결과입니다.");
                     builder.setSingleChoiceItems(addresses, select, new DialogInterface.OnClickListener() {
@@ -272,9 +306,13 @@ public class ChooseTheRegionActivity  extends AppCompatActivity {
                 } else{
                     Toast.makeText(this,"검색 결과가 존재하지 않습니다.",Toast.LENGTH_LONG).show();
                 }
+            } else{
+                // 네트워크에 연결되지 않았거나 느릴 시 경고창
+                Toast.makeText(this,"네트워크가 원활하지 않아 데이터를 불러오지 못했습니다.",Toast.LENGTH_LONG).show();
             }
         } catch (JSONException e) {
             e.printStackTrace();
         }
     }
+
 }

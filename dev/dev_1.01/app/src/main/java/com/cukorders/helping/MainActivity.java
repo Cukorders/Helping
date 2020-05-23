@@ -1,6 +1,9 @@
 package com.cukorders.helping;
 
+import android.annotation.SuppressLint;
+import android.graphics.Color;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
@@ -54,15 +57,20 @@ public class MainActivity extends AppCompatActivity {
     }
 
     View.OnClickListener onClickListener=new View.OnClickListener() {
+        @SuppressLint("LongLogTag")
         @Override
         public void onClick(View v) {
             switch(v.getId()){
                 case R.id.myMission:
-
+                    Log.d("myMission is clicked","myMission button is clicked");
+                    myMission.setBackgroundColor(Color.parseColor("#70D398"));
+                    currentMission.setBackgroundColor(Color.parseColor("#e1e1e1"));
                     break;
 
                 case R.id.currentMission:
-
+                    Log.d("currentMission is clicked","currentMission is clicked");
+                    currentMission.setBackgroundColor(Color.parseColor("#70D398"));
+                    myMission.setBackgroundColor(Color.parseColor("#e1e1e1"));
                     break;
 
             }
