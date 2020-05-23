@@ -3,7 +3,8 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:orientation="vertical">
+    android:orientation="vertical"
+    android:layout_marginTop="10dp">
 
     <RelativeLayout
         android:layout_width="match_parent"
@@ -16,10 +17,10 @@
         //TODO 뒤  로   가  기   버  튼   기  능  넣  기
         <ImageButton
             android:id="@+id/bt_back"
-            android:layout_width="32dp"
-            android:layout_height="32dp"
+            android:layout_width="30dp"
+            android:layout_height="20dp"
             android:layout_marginLeft="5dp"
-            android:src="@drawable/back_icon"
+            android:src="@drawable/back_icon24"
             android:background="@android:color/transparent"
             android:paddingRight="5dp"
             >
@@ -29,22 +30,64 @@
             android:layout_height="wrap_content"
             android:text="지역 인증 하기"
             android:gravity="center"
-            android:textSize="24sp"
+            android:textSize="20sp"
             android:textColor="@color/colorBlack">
         </TextView>
 
-    </RelativeLayout>
 
+
+    </RelativeLayout>
     <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content">
-        <ImageButton
+        <Button
+            android:id="@+id/currentLocation"
             android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_alignParentRight="true"
-            android:src="@drawable/gps_button"
-            android:onClick="onLastLocationButtonClicked" />
+            android:layout_height="wrap_content" />
 
+        <fragment
+            android:id="@+id/googlemapview"
+            android:name="com.google.android.gms.maps.SupportMapFragment"
+            android:layout_width="match_parent"
+            android:layout_height="300dp"
+            tools:context="com.example.mapwithmarker.MapsMarkerActivity"></fragment>
+
+        <TextView
+            android:id="@+id/result_gps"
+            android:layout_below="@id/googlemapview"
+            android:paddingLeft="10dp"
+            android:paddingTop="20dp"
+            android:paddingBottom="20dp"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="현 위치를 불러와 지역 인증을 완료하세요"
+            android:bufferType="spannable"
+            android:textSize="16sp"
+            android:textColor="@color/colorBlack">
+        </TextView>
+        <Button
+            android:id="@+id/whygps"
+            android:layout_below="@id/result_gps"
+            android:paddingLeft="10dp"
+            android:paddingBottom="20dp"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="왜 지역인증을 해야하나요?"
+            android:background="@android:color/transparent"
+            android:textSize="16sp"
+            android:gravity="left">
+        </Button>
+        <Button
+            android:id="@+id/finish_location"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_margin="20dp"
+            android:layout_below="@id/whygps"
+            android:text="동네 인증 완료하기"
+            android:textColor="@color/colorWhite"
+            android:textSize="20sp"
+            android:background="@drawable/gps_button_shape">
+        </Button>
         <fragment
             android:id="@+id/googlemapview"
             android:layout_width="match_parent"
@@ -87,7 +130,16 @@
             android:background="@drawable/gps_button_shape">
         </Button>
     </RelativeLayout>
-
+    <Button
+        android:id="@+id/bt_skip"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="320dp"
+        android:layout_marginTop="100dp"
+        android:layout_marginRight="10dp"
+        android:backgroundTint="@color/colorLogo"
+        android:text="SKIP"
+        android:textColor="@color/design_default_color_on_primary" />
 
 
 
