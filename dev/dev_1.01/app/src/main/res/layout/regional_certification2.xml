@@ -36,7 +36,6 @@
 
 
 
-
     </RelativeLayout>
     <RelativeLayout
         android:layout_width="match_parent"
@@ -89,9 +88,48 @@
             android:textSize="20sp"
             android:background="@drawable/gps_button_shape">
         </Button>
-
+        <fragment
+            android:id="@+id/googlemapview"
+            android:layout_width="match_parent"
+            android:layout_height="300dp"
+            android:name="com.google.android.gms.maps.SupportMapFragment"
+            tools:context="com.example.mapwithmarker.MapsMarkerActivity" >
+        </fragment>
+        <TextView
+            android:id="@+id/result_gps"
+            android:layout_below="@id/googlemapview"
+            android:paddingLeft="10dp"
+            android:paddingTop="20dp"
+            android:paddingBottom="20dp"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="현재 위치가 내 지역으로 설정한 ''에 있습니다."
+            android:textSize="16sp"
+            android:textColor="@color/colorBlack">
+        </TextView>
+        <Button
+            android:id="@+id/whygps"
+            android:layout_below="@id/result_gps"
+            android:paddingLeft="10dp"
+            android:paddingBottom="20dp"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="왜 지역인증을 해야하나요?"
+            android:background="@android:color/transparent"
+            android:textSize="16sp"
+            android:gravity="left">
+        </Button>
+        <Button
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_margin="20dp"
+            android:layout_below="@id/whygps"
+            android:text="동네 인증 완료하기"
+            android:textColor="@color/colorWhite"
+            android:textSize="20sp"
+            android:background="@drawable/gps_button_shape">
+        </Button>
     </RelativeLayout>
-
     <Button
         android:id="@+id/bt_skip"
         android:layout_width="wrap_content"
@@ -102,6 +140,7 @@
         android:backgroundTint="@color/colorLogo"
         android:text="SKIP"
         android:textColor="@color/design_default_color_on_primary" />
+
 
 
 </LinearLayout>

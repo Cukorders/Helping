@@ -20,9 +20,10 @@ public class RegisterActivity extends AppCompatActivity {
         userNickname=(TextView) findViewById(R.id.userNickname);
 
 
+
         male=(Button) findViewById(R.id.maleBtn);
         female=(Button) findViewById(R.id.femaleBtn);
-    }
+
 
 
 }

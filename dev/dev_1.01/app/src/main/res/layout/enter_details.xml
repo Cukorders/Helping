@@ -25,26 +25,36 @@
             android:id="@+id/cameraBtn"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:background="@android:color/transparent"
-            android:layout_alignParentBottom="true"
             android:layout_alignEnd="@+id/userProfileImage"
-            app:srcCompat="@drawable/camera">
-        </ImageButton>/>
+            android:layout_alignParentBottom="true"
+            android:layout_marginEnd="-10dp"
+            android:layout_marginBottom="-0dp"
+            android:background="@android:color/transparent"
+            app:srcCompat="@drawable/camera_black_48"></ImageButton>/>
     </RelativeLayout>
 
 
-    android:layout_width="match_parent"
-    android:layout_height="wrap_content"
-    android:orientation="horizontal"
-    android:layout_marginTop="50dp"
-    android:weightSum="10"
-    >
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="horizontal"
         android:layout_marginTop="10dp"
         >
+        <TextView
+            android:id="@+id/profile_form_feedback"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="에러입니다"
+            android:textColor="@color/colorError"
+            android:textSize="18dp"
+            android:visibility="invisible">
+        </TextView>
+    </LinearLayout>
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:layout_marginTop="10dp">
         <TextView
             android:id="@+id/profile_form_feedback"
             android:layout_width="match_parent"
@@ -87,7 +97,6 @@
         android:weightSum="10"
         android:id="@+id/genderLayout"
         >
-
         <Button
             android:id="@+id/maleBtn"
             android:layout_width="match_parent"
@@ -97,6 +106,7 @@
             android:background="@color/colorGrayButton"
             android:text="남자"
             android:textColor="@color/colorBlack"></Button>
+
         <Button
             android:id="@+id/femaleBtn"
             android:layout_width="match_parent"
@@ -135,6 +145,7 @@
             android:text="20대"
             android:layout_weight="2"
             android:background="@color/colorGrayButton"
+
             android:textColor="@color/colorBlack">
         </Button>
         <Button
