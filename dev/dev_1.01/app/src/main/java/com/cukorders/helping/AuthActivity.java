@@ -6,12 +6,15 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
+import com.google.firebase.FirebaseApp;
 import com.google.firebase.FirebaseException;
 import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
@@ -19,7 +22,14 @@ import com.google.firebase.auth.FirebaseAuthInvalidCredentialsException;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.auth.PhoneAuthCredential;
 import com.google.firebase.auth.PhoneAuthProvider;
+import com.google.firebase.database.ChildEventListener;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
 
+import java.util.HashMap;
 import java.util.concurrent.TimeUnit;
 
 import static android.view.View.VISIBLE;
@@ -40,6 +50,11 @@ public class AuthActivity extends AppCompatActivity {
     private PhoneAuthProvider.OnVerificationStateChangedCallbacks mCallbacks;
     private String mVerificationId;
     private PhoneAuthProvider.ForceResendingToken mResendToken;
+
+    //Database
+    private FirebaseDatabase mDatabase;
+    private DatabaseReference mUserDatabase;
+
     @Override
     protected void onCreate(Bundle savedInstanceState){
         super.onCreate(savedInstanceState);
@@ -47,7 +62,28 @@ public class AuthActivity extends AppCompatActivity {
 
         mAuth = FirebaseAuth.getInstance();
         mCurrentUser = mAuth.getCurrentUser();
+        /*
+        String current_uid = mCurrentUser.getUid();
+        mUserDatabase = FirebaseDatabase.getInstance().getReference();
+        //retrieve data
+        mUserDatabase.addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                String name = dataSnapshot.child("name").getValue().toString();
+                String age = dataSnapshot.child("age").getValue().toString();
+                String gender = dataSnapshot.child("gender").getValue().toString();
+                String image = dataSnapshot.child("image").getValue().toString();
+                String imageThumbnails = dataSnapshot.child("Thumbnails").getValue().toString();
+                String region1 = dataSnapshot.child("region1").getValue().toString();
+                String region1State = dataSnapshot.child("region1State").getValue().toString();
+            }
 
+            @Override
+            public void onCancelled(@NonNull DatabaseError databaseError) {
+
+            }
+        });
+        */
         mPhoneText = findViewById(R.id.phoneEditText);
         mCodeText = findViewById(R.id.codeEditText);
         mMessageSentBtn = findViewById(R.id.sendBtn);
@@ -91,7 +127,6 @@ public class AuthActivity extends AppCompatActivity {
                     PhoneAuthCredential credential = PhoneAuthProvider.getCredential(mVerificationId,CodeNumber);
                     signInWithPhoneAuthCredential(credential);
                 }
-                mCodeBtn.setEnabled(true);
             }
         });
 
@@ -114,6 +149,14 @@ public class AuthActivity extends AppCompatActivity {
             @Override
             public void onCodeSent(String verificationId, PhoneAuthProvider.ForceResendingToken token) {
                 super.onCodeSent(verificationId, token);
+                //to make first try onVerificationCompleted
+                new android.os.Handler().postDelayed(
+                    new Runnable() {
+                        @Override
+                        public void run() {
+                        }
+                    },
+                100000);
                 // Save verification ID and resending token so we can use them later
                 mVerificationId = verificationId;
                 mResendToken = token;
@@ -129,12 +172,29 @@ public class AuthActivity extends AppCompatActivity {
                     @Override
                     public void onComplete(@NonNull Task<AuthResult> task) {
                         if (task.isSuccessful()) {
-                            // if logged in
-                            FirebaseUser user = task.getResult().getUser();
-                            Intent LoginIntent = new Intent(AuthActivity.this,LogInActivity.class);
-                            startActivity(LoginIntent);
-                            finish();
-                            // ...
+                            FirebaseUser current_user = FirebaseAuth.getInstance().getCurrentUser();
+                            String uid = current_user.getUid();
+                            mUserDatabase = FirebaseDatabase.getInstance().getReference().child("Users").child(uid);
+                            HashMap<String, String> userMap = new HashMap<>();
+                            userMap.put("Nickname","default");
+                            userMap.put("Image","default");
+                            userMap.put("Thumb_img","default");
+                            userMap.put("Gender","default");
+                            userMap.put("Age","default");
+                            userMap.put("Region1","default");
+                            userMap.put("Region1State","default");
+                            mUserDatabase.setValue(userMap).addOnCompleteListener(new OnCompleteListener<Void>() {
+                                @Override
+                                public void onComplete(@NonNull Task<Void> task) {
+                                    if(task.isSuccessful()){
+                                        Intent LoginIntent = new Intent(AuthActivity.this,LogInActivity.class);
+                                        LoginIntent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK |Intent.FLAG_ACTIVITY_CLEAR_TASK);
+                                        startActivity(LoginIntent);
+                                        finish();
+                                    }
+                                }
+                            });
+
                         } else {
                             if (task.getException() instanceof FirebaseAuthInvalidCredentialsException) {
                                 // The verification code entered was invalid
@@ -150,10 +210,12 @@ public class AuthActivity extends AppCompatActivity {
     protected void onStart(){
         super.onStart();
         if(mCurrentUser!=null){
-            Intent LoginIntent = new Intent(AuthActivity.this,MainActivity.class);
+            Intent LoginIntent = new Intent(AuthActivity.this,LogInActivity.class);
             LoginIntent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
             LoginIntent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK);
             startActivity(LoginIntent);
         }
+        //users 밑에 uid 검색을 통해서 만약에 기존에 있는 uid라면 flag 값을 1로 바꾸고 signinwithphoneauthcredential 안에서 intent를 mainintent로 가도록 하기
+        //새로운 database 만드는 것을 따로 함수로 빼자
     }
 }
