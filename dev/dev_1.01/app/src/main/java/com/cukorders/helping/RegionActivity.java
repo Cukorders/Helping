@@ -43,24 +43,24 @@ import static android.text.Spanned.SPAN_INCLUSIVE_EXCLUSIVE;
 
 public class RegionActivity  extends FragmentActivity implements OnMapReadyCallback{
 
-   private static final int PERMISSIONS_REQUEST_CODE=1000;
+    private static final int PERMISSIONS_REQUEST_CODE=1000;
     private static final int REQUEST_CODE = 101;
-   private static final int GPS_ENABLE_REQUEST_CODE=2001;
-   private static final LatLng DEFAULT_LOCATION=new LatLng(37.555744, 126.970431);
-   private static final Float DEFAULT_ZOOM=17.0f;
+    private static final int GPS_ENABLE_REQUEST_CODE=2001;
+    private static final LatLng DEFAULT_LOCATION=new LatLng(37.555744, 126.970431);
+    private static final Float DEFAULT_ZOOM=17.0f;
     private static final int PERMISSIONS_REQUEST_ACCESS_FINE_LOCATION = 2002;
     private static final int UPDATE_INTERVAL_MS = 1000;  // 1초
     private static final int FASTEST_UPDATE_INTERVAL_MS = 500; // 0.5초
     private static final String msg1="현재 위치가 내 지역으로 설정한 ";
     private static final String msg2="에 있습니다.";
     private static final String errorMsg="선택하신 위치와 현 위치가 달라 지역 인증에 실패하였습니다.";
-   Context context=this;
-   //위치 정보 얻는 객체
-   private FusedLocationProviderClient mFusedLocationClient;
+    Context context=this;
+    //위치 정보 얻는 객체
+    private FusedLocationProviderClient mFusedLocationClient;
 
-   private Double latittude,longitude; // 사용자의 현 위치(경도, 위도)
-   private GoogleMap mMap;
-   private Marker marker=null;
+    private Double latittude,longitude; // 사용자의 현 위치(경도, 위도)
+    private GoogleMap mMap;
+    private Marker marker=null;
     private Geocoder geocoder;
     private LocationManager locationManager;
     private boolean mLocationPermissionGranted=false;
@@ -85,7 +85,7 @@ public class RegionActivity  extends FragmentActivity implements OnMapReadyCallb
         findViewById(R.id.currentLocation).setOnClickListener(OnClickListener);
         findViewById(R.id.finish_location).setOnClickListener(OnClickListener);
         findViewById(R.id.bt_back).setOnClickListener(OnClickListener);
-        findViewById(R.id.bt_skip).setOnClickListener(OnClickListener);
+      //  findViewById(R.id.bt_skip).setOnClickListener(OnClickListener);
 
         // 위치 권한 요청을 하기 위한 FusedLocationClient 불러옴
         mFusedLocationClient= LocationServices.getFusedLocationProviderClient(this);
@@ -111,7 +111,7 @@ public class RegionActivity  extends FragmentActivity implements OnMapReadyCallb
 
                     if(compare.equals(dong)){
                         //TODO : DB에서 위치 인증이 완료된 유저라고 체크되어야 함.
-                    goPhoneAuth();
+                        goPhoneAuth();
                     } else{
                         // 인증 실패 에러 메시지 띄움
                         Toast.makeText(context,errorMsg,Toast.LENGTH_LONG).show();
@@ -121,10 +121,10 @@ public class RegionActivity  extends FragmentActivity implements OnMapReadyCallb
                     goBack(); //이전 페이지로 가기(뒤로 가기 버튼이 눌렸을 때)
                     break;
 
-                case R.id.bt_skip:
+               /* case R.id.bt_skip:
                     //TODO : DB에서 인증 안 된 유저라고 체크해야 함.
                     goPhoneAuth(); // 바로 전화 인증으로 건너 뜀.
-                    break;
+                    break;*/
             }
         }
     };
@@ -157,7 +157,7 @@ public class RegionActivity  extends FragmentActivity implements OnMapReadyCallb
                     Log.d("current Location is ",currentLocation.toString());
                     //Toast.makeText(getApplicationContext(), currentLocation.getLatitude() + " " + currentLocation.getLongitude(), Toast.LENGTH_SHORT).show();
                     LatLng now=new LatLng(currentLocation.getLatitude(),currentLocation.getLongitude());
-                   List<Address> addr = null;
+                    List<Address> addr = null;
                     String loc="";
                     try {
                         addr=geocoder.getFromLocation(currentLocation.getLatitude(),currentLocation.getLongitude(), 5);

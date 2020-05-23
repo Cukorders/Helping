@@ -23,7 +23,5 @@ public class RegisterActivity extends AppCompatActivity {
 
         male=(Button) findViewById(R.id.maleBtn);
         female=(Button) findViewById(R.id.femaleBtn);
-
-
-
+}
 }
