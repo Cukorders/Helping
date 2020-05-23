@@ -37,140 +37,115 @@
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:orientation="vertical"
-        android:layout_marginBottom="10dp"
+        android:orientation="horizontal"
         android:layout_marginLeft="10dp"
-        android:layout_marginRight="10dp">
-        <LinearLayout
+        android:layout_marginRight="10dp"
+        android:layout_marginBottom="20dp"
+        android:padding="15dp"
+        android:background="@drawable/logo_color_box"
+        android:weightSum="10">
+        <TextView
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:orientation="horizontal"
-            android:weightSum="10">
-            <TextView
-                android:layout_width="match_parent"
-                android:layout_height="50dp"
-                android:layout_marginTop="10dp"
-                android:layout_marginBottom="10dp"
-                android:layout_weight="8"
-                android:gravity="center_vertical"
-                android:paddingLeft="10dp"
-                android:background="@drawable/gps_button_shape"
-                android:text= "지역1"
-                android:textColor="@color/colorWhite"
-                android:textSize="20sp">
-            </TextView>
-            <Button
-                android:layout_width="wrap_content"
-                android:layout_height="50dp"
-                android:layout_marginLeft="5dp"
-                android:layout_marginRight="5dp"
-                android:background="@color/colorGrayButtonPush"
-                android:layout_gravity="center_vertical"
-                android:layout_weight="1"
-                android:text="변경" />
-            <Button
-                android:layout_width="wrap_content"
-                android:layout_height="50dp"
-                android:layout_gravity="center_vertical"
-                android:layout_weight="1"
-                android:background="@color/colorGrayButtonPush"
-                android:text="삭제"/>
-        </LinearLayout>
-
+            android:layout_height="wrap_content"
+            android:layout_weight="8"
+            android:layout_gravity="center_vertical"
+            android:background="@android:color/transparent"
+            android:text= "지역1"
+            android:textColor= "@color/colorBlack"
+            android:textSize="22sp">
+        </TextView>
+        <Button
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="5dp"
+            android:layout_marginRight="5dp"
+            android:background="@drawable/select_button"
+            android:layout_gravity="center_vertical"
+            android:layout_weight="1"
+            android:text="변경" />
+        <Button
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_vertical"
+            android:layout_weight="1"
+            android:background="@drawable/select_button"
+            android:text="삭제"/>
     </LinearLayout>
 
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:orientation="vertical"
-        android:layout_marginBottom="10dp"
+        android:orientation="horizontal"
         android:layout_marginLeft="10dp"
-        android:layout_marginRight="10dp">
-        <LinearLayout
+        android:layout_marginRight="10dp"
+        android:layout_marginBottom="20dp"
+        android:padding="15dp"
+        android:background="@drawable/logo_color_box"
+        android:weightSum="10">
+        <TextView
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:orientation="horizontal"
-            android:weightSum="10">
-            <TextView
-                android:layout_width="match_parent"
-                android:layout_height="50dp"
-                android:layout_marginTop="10dp"
-                android:layout_marginBottom="10dp"
-                android:layout_weight="8"
-                android:gravity="center_vertical"
-                android:paddingLeft="10dp"
-                android:background="@drawable/gps_button_shape"
-                android:text= "지역2"
-                android:textColor="@color/colorWhite"
-                android:textSize="20sp">
-            </TextView>
-            <Button
-                android:layout_width="wrap_content"
-                android:layout_height="50dp"
-                android:layout_marginLeft="5dp"
-                android:layout_marginRight="5dp"
-                android:background="@color/colorGrayButtonPush"
-                android:layout_gravity="center_vertical"
-                android:layout_weight="1"
-                android:text="변경" />
-            <Button
-                android:layout_width="wrap_content"
-                android:layout_height="50dp"
-                android:layout_gravity="center_vertical"
-                android:layout_weight="1"
-                android:background="@color/colorGrayButtonPush"
-                android:text="삭제"/>
-        </LinearLayout>
+            android:layout_height="wrap_content"
+            android:layout_weight="8"
+            android:layout_gravity="center_vertical"
+            android:background="@android:color/transparent"
+            android:text= "지역2"
+            android:textColor="@color/colorBlack"
+            android:textSize="22sp">
+        </TextView>
+        <Button
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="5dp"
+            android:layout_marginRight="5dp"
+            android:background="@drawable/select_button"
+            android:layout_gravity="center_vertical"
+            android:layout_weight="1"
+            android:text="변경" />
+        <Button
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_vertical"
+            android:layout_weight="1"
+            android:background="@drawable/select_button"
+            android:text="삭제"/>
     </LinearLayout>
 
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:orientation="vertical"
-        android:layout_marginBottom="10dp"
+        android:orientation="horizontal"
         android:layout_marginLeft="10dp"
-        android:layout_marginRight="10dp">
-        <LinearLayout
+        android:layout_marginRight="10dp"
+        android:padding="15dp"
+        android:background="@drawable/logo_color_box"
+        android:weightSum="10">
+        <TextView
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:orientation="horizontal"
-            android:weightSum="10">
-            <TextView
-                android:layout_width="match_parent"
-                android:layout_height="50dp"
-                android:layout_marginTop="10dp"
-                android:layout_marginBottom="10dp"
-                android:layout_weight="8"
-                android:gravity="center_vertical"
-                android:paddingLeft="10dp"
-                android:background="@drawable/gps_button_shape"
-                android:text= "지역3"
-                android:textColor="@color/colorWhite"
-                android:textSize="20sp">
-            </TextView>
-            <Button
-                android:layout_width="wrap_content"
-                android:layout_height="50dp"
-                android:layout_marginLeft="5dp"
-                android:layout_marginRight="5dp"
-                android:background="@color/colorGrayButtonPush"
-                android:layout_gravity="center_vertical"
-                android:layout_weight="1"
-                android:text="변경" />
-            <Button
-                android:layout_width="wrap_content"
-                android:layout_height="50dp"
-                android:layout_gravity="center_vertical"
-                android:layout_weight="1"
-                android:background="@color/colorGrayButtonPush"
-                android:text="삭제"/>
-        </LinearLayout>
+            android:layout_height="wrap_content"
+            android:layout_weight="8"
+            android:layout_gravity="center_vertical"
+            android:background="@android:color/transparent"
+            android:text= "지역3"
+            android:textColor="@color/colorBlack"
+            android:textSize="22sp">
+        </TextView>
+        <Button
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="5dp"
+            android:layout_marginRight="5dp"
+            android:background="@drawable/select_button"
+            android:layout_gravity="center_vertical"
+            android:layout_weight="1"
+            android:text="변경" />
+        <Button
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_vertical"
+            android:layout_weight="1"
+            android:background="@drawable/select_button"
+            android:text="삭제"/>
     </LinearLayout>
-
-
-
-
-
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"

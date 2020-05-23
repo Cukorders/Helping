@@ -74,7 +74,8 @@
                 android:layout_marginLeft="80dp"
                 android:text="프로필 보기"
                 android:textSize="20sp"
-                android:background="@drawable/gray_box_button"/>
+                android:textColor="@color/colorBlack"
+                android:background="@drawable/select_button"/>
         </LinearLayout>
     </LinearLayout>
     <LinearLayout
