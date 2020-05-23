@@ -106,7 +106,11 @@ public class RegionActivity  extends FragmentActivity implements OnMapReadyCallb
                 case R.id.finish_location:
                     // regional_certification1에서 입력한 위치 정보를 가져온다.
                     compare=((ChooseTheRegionActivity)ChooseTheRegionActivity.regional_certification1).userLocation;
-                    if(compare==dong){
+                    Log.e("compare value","compare value is "+compare);
+                    Log.e("the user's location is ","the user's location is "+dong);
+                    //Toast.makeText(context,"compare value is "+compare+" user's current location value is "+dong,Toast.LENGTH_LONG).show();
+                    if(compare.equals(dong)){
+                        //TODO : DB에서 위치 인증이 완료된 유저라고 체크되어야 함.
                     goPhoneAuth();
                     } else{
                         // 인증 실패 에러 메시지 띄움
@@ -134,14 +138,6 @@ public class RegionActivity  extends FragmentActivity implements OnMapReadyCallb
         Intent intent=new Intent(this,ChooseTheRegionActivity.class); // 뒤로 가기 버튼 누름 => 첫 화면으로 다시 돌아감.
         startActivity(intent);
     }
-
-   @Override
-    public void onMapReady(GoogleMap googleMap) {
-        mMap=googleMap;
-        mMap.moveCamera(CameraUpdateFactory.newLatLng(DEFAULT_LOCATION));
-        mMap.animateCamera(CameraUpdateFactory.zoomTo(10));
-    }
-
 
     private void fetchLocation() {
         if (ActivityCompat.checkSelfPermission(
@@ -185,6 +181,7 @@ public class RegionActivity  extends FragmentActivity implements OnMapReadyCallb
 
                     mMap.moveCamera(CameraUpdateFactory.newLatLng(now));
                     mMap.addMarker(markerOptions);
+                    mMap.animateCamera(CameraUpdateFactory.zoomTo(17.0f));
                     SupportMapFragment supportMapFragment = (SupportMapFragment) getSupportFragmentManager().findFragmentById(R.id.googlemapview);
                     assert supportMapFragment != null;
                     supportMapFragment.getMapAsync((OnMapReadyCallback) context);
@@ -197,6 +194,13 @@ public class RegionActivity  extends FragmentActivity implements OnMapReadyCallb
     }
 
     @Override
+    public void onMapReady(GoogleMap googleMap) {
+        mMap=googleMap;
+        mMap.moveCamera(CameraUpdateFactory.newLatLng(DEFAULT_LOCATION));
+        mMap.animateCamera(CameraUpdateFactory.zoomTo(10));
+    }
+
+    @Override
     public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
         switch (requestCode) {
             case REQUEST_CODE:
@@ -206,6 +210,7 @@ public class RegionActivity  extends FragmentActivity implements OnMapReadyCallb
                     Toast.makeText(this,errorMSG,Toast.LENGTH_LONG).show();
                 }
                 break;
+
             default:
                 Toast.makeText(this,errorMSG,Toast.LENGTH_LONG).show();
                 break;

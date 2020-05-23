@@ -262,7 +262,8 @@ public class ChooseTheRegionActivity  extends AppCompatActivity {
                             } catch (IOException e) {
                                 e.printStackTrace();
                             }
-                            userLocation=addr.get(0).getAddressLine(0)+addr.get(0).getLocality();
+                            userLocation=addr.get(0).getThoroughfare();
+                            Log.e("userLocation_search","the value of a parameter called userLocation in ChooseTheRegionActivity is "+userLocation);
                             startActivity(new Intent(context,RegionActivity.class));
                         }
                     }).setNegativeButton("취소",null);
