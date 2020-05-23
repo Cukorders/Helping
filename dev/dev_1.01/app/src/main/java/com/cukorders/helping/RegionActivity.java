@@ -14,8 +14,10 @@ import android.os.Bundle;
 import android.text.Spannable;
 import android.text.style.ForegroundColorSpan;
 import android.text.style.StyleSpan;
+import android.util.Log;
 import android.view.View;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.core.app.ActivityCompat;
@@ -51,6 +53,7 @@ public class RegionActivity  extends FragmentActivity implements OnMapReadyCallb
     private static final int FASTEST_UPDATE_INTERVAL_MS = 500; // 0.5초
     private static final String msg1="현재 위치가 내 지역으로 설정한 ";
     private static final String msg2="에 있습니다.";
+    private static final String errorMsg="선택하신 위치와 현 위치가 달라 지역 인증에 실패하였습니다.";
    Context context=this;
    //위치 정보 얻는 객체
    private FusedLocationProviderClient mFusedLocationClient;
@@ -61,10 +64,12 @@ public class RegionActivity  extends FragmentActivity implements OnMapReadyCallb
     private Geocoder geocoder;
     private LocationManager locationManager;
     private boolean mLocationPermissionGranted=false;
-    Location currentLocation;
-
-    public String dong="";
+    private Location currentLocation;
+    private String compare;
+    private String dong="";
     private TextView result_gps;
+    private String errorMSG="인증을 하려면 위치 정보를 불러와야 합니다.";
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -80,6 +85,7 @@ public class RegionActivity  extends FragmentActivity implements OnMapReadyCallb
         findViewById(R.id.currentLocation).setOnClickListener(OnClickListener);
         findViewById(R.id.finish_location).setOnClickListener(OnClickListener);
         findViewById(R.id.bt_back).setOnClickListener(OnClickListener);
+        findViewById(R.id.bt_skip).setOnClickListener(OnClickListener);
 
         // 위치 권한 요청을 하기 위한 FusedLocationClient 불러옴
         mFusedLocationClient= LocationServices.getFusedLocationProviderClient(this);
@@ -94,15 +100,27 @@ public class RegionActivity  extends FragmentActivity implements OnMapReadyCallb
         public void onClick(View v) {
             switch(v.getId()){ // 후에 다른 버튼이 추가됐을 시 case만 추가하면 되므로 확장성 때문에 switch 구문을 사용하였다.
                 case R.id.currentLocation:
+                    Log.d("button is clicked","button is clicked");
                     fetchLocation(); // 현위치 주변 동들을 불러와 result(xml id: search_result)에 나타낸다.
                     break;
                 case R.id.finish_location:
+                    // regional_certification1에서 입력한 위치 정보를 가져온다.
+                    compare=((ChooseTheRegionActivity)ChooseTheRegionActivity.regional_certification1).userLocation;
+                    if(compare==dong){
                     goPhoneAuth();
+                    } else{
+                        // 인증 실패 에러 메시지 띄움
+                        Toast.makeText(context,errorMsg,Toast.LENGTH_LONG).show();
+                    }
                     break;
                 case R.id.bt_back:
                     goBack(); //이전 페이지로 가기(뒤로 가기 버튼이 눌렸을 때)
                     break;
 
+                case R.id.bt_skip:
+                    //TODO : DB에서 인증 안 된 유저라고 체크해야 함.
+                    goPhoneAuth(); // 바로 전화 인증으로 건너 뜀.
+                    break;
             }
         }
     };
@@ -130,14 +148,17 @@ public class RegionActivity  extends FragmentActivity implements OnMapReadyCallb
                 this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(
                 this, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
             ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.ACCESS_FINE_LOCATION}, REQUEST_CODE);
+            Log.e("Permission is denied","Location permission is denied");
             return;
         }
         Task<Location> task = mFusedLocationClient.getLastLocation();
+        Log.e("get the location","get the location");
         task.addOnSuccessListener(new OnSuccessListener<Location>() {
             @Override
             public void onSuccess(Location location) {
                 if (location != null) {
                     currentLocation = location;
+                    Log.d("current Location is ",currentLocation.toString());
                     //Toast.makeText(getApplicationContext(), currentLocation.getLatitude() + " " + currentLocation.getLongitude(), Toast.LENGTH_SHORT).show();
                     LatLng now=new LatLng(currentLocation.getLatitude(),currentLocation.getLongitude());
                    List<Address> addr = null;
@@ -153,6 +174,7 @@ public class RegionActivity  extends FragmentActivity implements OnMapReadyCallb
                     }
                     Address cur=addr.get(0);
                     dong=cur.getThoroughfare();
+                    Log.d("current Location",dong);
                     int start=msg1.length(),end=start+dong.length();
                     MarkerOptions markerOptions = new MarkerOptions().position(now).title(dong);
                     result_gps.setText("현재 위치가 내 지역으로 설정한 "+dong+"에 있습니다.");
@@ -166,6 +188,9 @@ public class RegionActivity  extends FragmentActivity implements OnMapReadyCallb
                     SupportMapFragment supportMapFragment = (SupportMapFragment) getSupportFragmentManager().findFragmentById(R.id.googlemapview);
                     assert supportMapFragment != null;
                     supportMapFragment.getMapAsync((OnMapReadyCallback) context);
+                } else{
+                    //TODO make the location parameter return non-null value
+                    Log.e("location is empty","a location parameter returns null");
                 }
             }
         });
@@ -177,11 +202,13 @@ public class RegionActivity  extends FragmentActivity implements OnMapReadyCallb
             case REQUEST_CODE:
                 if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
                     fetchLocation();
+                } else{
+                    Toast.makeText(this,errorMSG,Toast.LENGTH_LONG).show();
                 }
+                break;
+            default:
+                Toast.makeText(this,errorMSG,Toast.LENGTH_LONG).show();
                 break;
         }
     }
-
-
-
 }
