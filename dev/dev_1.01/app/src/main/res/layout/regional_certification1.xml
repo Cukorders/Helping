@@ -28,7 +28,7 @@
             android:id="@+id/bt_back"
             android:layout_width="30dp"
             android:layout_height="20dp"
-            android:src="@drawable/back_icon24"
+            android:src="@drawable/back_icon"
 
             android:paddingRight="5dp"
             >
