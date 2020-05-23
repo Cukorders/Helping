@@ -1,36 +1,42 @@
 package com.cukorders.helping;
 
-import android.content.Intent;
-import android.net.Uri;
+import android.annotation.SuppressLint;
+import android.graphics.Color;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
+import android.widget.Button;
 
 import androidx.appcompat.app.AppCompatActivity;
 
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
-import com.google.firebase.auth.FirebaseAuth;
-import com.google.firebase.auth.FirebaseUser;
-import com.google.firebase.auth.UserInfo;
 
 public class MainActivity extends AppCompatActivity {
     FloatingActionButton fab_plus,fab_write,fab_info;
     Animation FabOpen,FabClose,FabClockwise,FabAntiClockwise;
+    private Button myMission,currentMission;
     boolean isOpen=false;
    // private long backKeyPressedTime = 0;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        fab_plus=(FloatingActionButton) findViewById(R.id.fab_plus);
-        fab_write=(FloatingActionButton) findViewById(R.id.fab_write);
+        fab_plus=(FloatingActionButton) findViewById(R.id.fab_chat);
+        fab_write=(FloatingActionButton) findViewById(R.id.fab_like);
         fab_info=(FloatingActionButton) findViewById(R.id.fab_info);
         FabOpen= AnimationUtils.loadAnimation(getApplicationContext(),R.anim.fab_open);
         FabClose= AnimationUtils.loadAnimation(getApplicationContext(),R.anim.fab_close);
         FabClockwise= AnimationUtils.loadAnimation(getApplicationContext(),R.anim.rotate_clockwise);
         FabAntiClockwise= AnimationUtils.loadAnimation(getApplicationContext(),R.anim.rotate_anticlockwise);
+
+        myMission=(Button) findViewById(R.id.myMission);
+        currentMission=(Button) findViewById(R.id.currentMission);
+        findViewById(R.id.myMission).setOnClickListener(onClickListener);
+        findViewById(R.id.currentMission).setOnClickListener(onClickListener);
 
         fab_plus.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -49,21 +55,25 @@ public class MainActivity extends AppCompatActivity {
             }
         });
 */
-        findViewById(R.id.myMission).setOnClickListener(onClickListener);
-        findViewById(R.id.currentMission).setOnClickListener(onClickListener);
     }
 
     View.OnClickListener onClickListener=new View.OnClickListener() {
+        @SuppressLint("LongLogTag")
         @Override
         public void onClick(View v) {
             switch(v.getId()){
                 case R.id.myMission:
-
+                    Log.d("myMission is clicked","myMission button is clicked");
+                    myMission.setBackgroundColor(Color.parseColor("#70D398"));
+                    currentMission.setBackgroundColor(Color.parseColor("#e1e1e1"));
                     break;
 
                 case R.id.currentMission:
-
+                    Log.d("currentMission is clicked","currentMission is clicked");
+                    currentMission.setBackgroundColor(Color.parseColor("#70D398"));
+                    myMission.setBackgroundColor(Color.parseColor("#e1e1e1"));
                     break;
+
             }
         }
     };
