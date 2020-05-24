@@ -7,4 +7,24 @@
 충전은 1,000원 단위로 가능합니다.\n\n
 미션 의뢰 시, 미션 수행 시, 헬퍼와 의뢰인이 수락한 경우, 포인트에서 해당 금액 자동 차감됩니다.\n\n
 미션 취소 시, 보증금은 포인트로 환급됩니다.</string>
+    <string-array name="notice">
+        <item>[공지]정부의 긴급 재난 지원금 거래 행위를 제한합니다.</item>
+        <item>[공지]더 좋은 서비스 제공을 위해 너의부름 개인정보 처리방침 및 이용약관이 변경될 예정이에요.</item>
+        <item>[공지]접속 장애로 인하여 서비스 이용에 불편을 드려 죄송합니다.</item>
+        <item>[알림]너의부름 서비스가 6월 17일부로 시작됩니다.</item>
+        <item>[알림]너의부름 서비스 1.0.1 베타버전 업데이트 내용</item>
+        <item>[알림]당신 근처의 모든 것, 너의부름의 시작</item>
+    </string-array>
+
+    <string-array name="notice_date">
+        <item>2020.05.24</item>
+        <item>2020.05.24</item>
+        <item>2020.05.24</item>
+        <item>2020.05.24</item>
+        <item>2020.05.24</item>
+        <item>2020.05.24</item>
+    </string-array>
+
+    <string name="faq_content">베타버전 진행중입니다\n\n서비스 오픈 시 개설하겠습니다.\n빠른 시일내에 뵙겠습니다.</string>
+
 </resources>

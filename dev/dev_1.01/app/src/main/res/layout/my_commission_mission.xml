@@ -10,12 +10,12 @@
         android:orientation="horizontal"
         android:gravity="center"
         android:background="@color/colorLogo"
-        android:paddingTop="9dp"
         android:weightSum="1">
         <ImageButton
             android:id="@+id/bt_back"
-            android:layout_width="32dp"
-            android:layout_height="32dp"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerVertical="true"
             android:layout_marginLeft="5dp"
             android:src="@drawable/back_icon_white"
             android:background="@android:color/transparent"
@@ -25,7 +25,7 @@
         <TextView
             android:id="@+id/recent_mission"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
+            android:layout_height="match_parent"
             android:text= "의뢰중인 미션"
             android:gravity="center"
             android:textSize="24sp"
@@ -33,7 +33,7 @@
         </TextView>
         <Button
             android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
+            android:layout_height="match_parent"
             android:layout_alignRight="@+id/recent_mission"
             android:gravity="center"
             android:text="신고하기"

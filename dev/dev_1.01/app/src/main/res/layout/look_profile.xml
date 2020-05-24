@@ -11,12 +11,12 @@
         android:layout_marginBottom="20dp"
         android:gravity="center"
         android:background="@color/colorLogo"
-        android:paddingTop="9dp"
         android:weightSum="1">
         <ImageButton
             android:id="@+id/bt_back"
-            android:layout_width="32dp"
-            android:layout_height="32dp"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerVertical="true"
             android:layout_marginLeft="5dp"
             android:src="@drawable/back_icon_white"
             android:background="@android:color/transparent"
@@ -26,7 +26,7 @@
         <TextView
             android:id="@+id/recent_mission"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
+            android:layout_height="match_parent"
             android:text= "프로필 설정"
             android:gravity="center"
             android:textSize="24sp"
@@ -90,8 +90,6 @@
             android:textColor="@color/colorBlack"
             android:textSize="18sp"
             android:textStyle="bold"/>
-
-
     </LinearLayout>
 
     <LinearLayout
@@ -114,18 +112,20 @@
         <EditText
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:hint= "성별"
+            android:hint="성별"
+            android:enabled="false"
             android:textSize="18sp"/>
         <EditText
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:hint= "연령"
+            android:enabled="false"
             android:textSize="18sp"/>
-        //물품가격 edittext => 카테고리에서 물품 관련된 경우 입력할 수 있고,물품 관련된 경우가 아닌 경우 입력할 수 없도록
         <EditText
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:hint= "전화번호"
+            android:enabled="false"
             android:textSize="18sp"/>
     </LinearLayout>
 

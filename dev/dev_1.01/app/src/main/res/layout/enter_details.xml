@@ -38,22 +38,6 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="horizontal"
-        android:layout_marginTop="10dp"
-        >
-        <TextView
-            android:id="@+id/profile_form_feedback"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:text="에러입니다"
-            android:textColor="@color/colorError"
-            android:textSize="18dp"
-            android:visibility="invisible">
-        </TextView>
-    </LinearLayout>
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:orientation="horizontal"
         android:layout_marginTop="10dp">
         <TextView
             android:id="@+id/profile_form_feedback"
@@ -103,7 +87,7 @@
             android:layout_height="44dp"
             android:layout_marginRight="3dp"
             android:layout_weight="5"
-            android:background="@color/colorGrayButton"
+            android:background="@drawable/select_button2"
             android:text="남자"
             android:textColor="@color/colorBlack"></Button>
 
@@ -133,7 +117,7 @@
             android:layout_marginRight="2dp"
             android:text="10대"
             android:layout_weight="2"
-            android:background="@color/colorGrayButton"
+            android:background="@drawable/select_button2"
             android:textColor="@color/colorBlack">
         </Button>
         <Button
@@ -144,7 +128,7 @@
             android:layout_marginRight="2dp"
             android:text="20대"
             android:layout_weight="2"
-            android:background="@color/colorGrayButton"
+            android:background="@drawable/select_button2"
 
             android:textColor="@color/colorBlack">
         </Button>
@@ -156,7 +140,7 @@
             android:layout_marginRight="2dp"
             android:text="30대"
             android:layout_weight="2"
-            android:background="@color/colorGrayButton"
+            android:background="@drawable/select_button2"
             android:textColor="@color/colorBlack">
         </Button>
         <Button
@@ -167,7 +151,7 @@
             android:layout_marginRight="2dp"
             android:text="40대"
             android:layout_weight="2"
-            android:background="@color/colorGrayButton"
+            android:background="@drawable/select_button2"
             android:textColor="@color/colorBlack">
         </Button>
         <Button
@@ -177,7 +161,7 @@
             android:layout_marginLeft="2dp"
             android:text="50대이상"
             android:layout_weight="2"
-            android:background="@color/colorGrayButton"
+            android:background="@drawable/select_button2"
             android:textColor="@color/colorBlack">
         </Button>
     </LinearLayout>
