@@ -8,14 +8,12 @@
     <TextView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="지역 검색하기"
+        android:text="지역 인증하기"
         android:gravity="center"
         android:textColor="@color/colorGrayButtonPush"
         android:textSize="20sp"
         android:layout_marginBottom="5dp" />
-
-
-
+  
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="50dp"
@@ -24,11 +22,12 @@
         android:layout_marginBottom="10dp"
         android:weightSum="1">
 
+        //TODO 뒤  로   가  기   버  튼   기  능  넣  기
         <ImageButton
             android:id="@+id/bt_back"
             android:layout_width="30dp"
             android:layout_height="20dp"
-            android:src="@drawable/back_icon24"
+            android:src="@drawable/back_icon"
 
             android:paddingRight="5dp"
             >
@@ -47,7 +46,7 @@
             android:id="@+id/SearchLocationButton"
             android:layout_width="30dp"
             android:layout_height="30dp"
-            android:backgroundTint="@color/design_default_color_surface"
+            android:backgroundTint="@color/design_default_color_on_primary"
 
             android:paddingRight="5dp"
             android:src="@drawable/search_icon16"></ImageButton>
@@ -64,15 +63,16 @@
         android:textSize="20sp">
     </Button>
 
-    <RelativeLayout
+    <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="match_parent">
+        android:layout_height="match_parent"
+        android:orientation="vertical">
 
-        <TextView
+        <ListView
             android:id="@+id/search_result"
             android:layout_width="match_parent"
             android:layout_height="match_parent" />
-    </RelativeLayout>
+    </LinearLayout>
 
     //TODO GPS Listview add
 </LinearLayout>

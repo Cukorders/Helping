@@ -9,28 +9,30 @@
     >
 
     <ImageView
+        android:layout_marginTop="50dp"
         android:layout_width="match_parent"
         android:layout_height="200dp"
-        android:layout_marginTop="50dp"
         android:paddingTop="10dp"
         android:src="@drawable/logo_charcter" />
+
     <ImageView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:src="@drawable/people"
         android:layout_gravity="center" />
 
+
+
     <TextView
         android:id="@+id/version"
+        android:layout_marginTop="30dp"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginTop="30dp"
-        android:foregroundGravity="center"
         android:gravity="center_horizontal"
-        android:text="우리 동네 심부름 매칭"
         android:textColor="@color/colorBlack"
+        android:text="우리 동네 심부름 매칭"
         android:textSize="24sp"
-        android:textStyle="bold" />
+        android:textStyle="bold"/>
 
     <TextView
         android:layout_width="match_parent"

@@ -2,38 +2,30 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="com.cukorders.helping">
 
-    <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
-    <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />
+    <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION"/>
+    <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION"/>
+    <uses-permission android:name="android.permission.INTERNET"/>
+    <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE"/>
+    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE"/>
+
 
     <application
+        android:usesCleartextTraffic="true"
         android:allowBackup="true"
         android:icon="@drawable/logo_charcter"
         android:label="너의 부름"
         android:roundIcon="@drawable/logo_charcter"
         android:supportsRtl="true"
-        android:theme="@style/AppTheme"
-        android:usesCleartextTraffic="true">
-        <activity
-            android:name=".StartActivity">
-            <intent-filter>
-                <action android:name="android.intent.action.MAIN" />
-
-                <category android:name="android.intent.category.LAUNCHER" />
-            </intent-filter>
-        </activity>
-        <activity
-            android:name=".ChatActivity">
-            <intent-filter>
-                <action android:name="android.intent.action.MAIN" />
-
-                <category android:name="android.intent.category.LAUNCHER" />
-            </intent-filter>
-        </activity>
+        android:theme="@style/AppTheme">
 
         <meta-data
             android:name="com.google.android.geo.API_KEY"
-            android:resource="@drawable/primary_btn_bg"
             android:value="AIzaSyA9CPuZCP0dwE7PvX9R3IECiL3AzEYW7D8" />
+
+        <meta-data
+            android:name="com.google.android.gms.version"
+            android:value="@integer/google_play_services_version" />
+
 
         <activity
             android:name=".LoadingActivity"
@@ -41,17 +33,19 @@
             android:theme="@style/SplashTheme">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
-
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity android:name=".RegionActivity" />
-        <activity android:name=".ChooseTheRegionActivity" />
-        <activity android:name=".RegisterActivity" />
-        <activity android:name=".RegisterFinishActivity" />
-        <activity android:name=".LogInActivity" />
-        <activity android:name=".AuthActivity" />
-        <activity android:name=".MainActivity" />
+        <activity android:name=".RegionActivity"></activity>
+        <activity android:name=".ChooseTheRegionActivity"></activity>
+        <activity android:name=".RegisterActivity"></activity>
+        <activity android:name=".RegisterFinishActivity"></activity>
+        <activity android:name=".AuthActivity"></activity>
+        <activity android:name=".MainActivity"></activity>
+        <activity android:name=".LogInActivity"/>
+        <activity android:name="com.theartofdev.edmodo.cropper.CropImageActivity"
+            android:theme="@style/Base.Theme.AppCompat"/>
+
     </application>
 
 </manifest>

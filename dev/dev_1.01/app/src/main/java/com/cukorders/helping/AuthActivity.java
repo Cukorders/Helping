@@ -1,19 +1,13 @@
 package com.cukorders.helping;
-
-import android.app.MediaRouteButton;
 import android.content.Intent;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.View;
-import android.view.WindowManager;
 import android.widget.Button;
 import android.widget.EditText;
-import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.appcompat.widget.ButtonBarLayout;
 
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
@@ -24,133 +18,196 @@ import com.google.firebase.auth.FirebaseAuthInvalidCredentialsException;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.auth.PhoneAuthCredential;
 import com.google.firebase.auth.PhoneAuthProvider;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
 
+import java.util.HashMap;
 import java.util.concurrent.TimeUnit;
 
+import static android.view.View.VISIBLE;
+
 public class AuthActivity extends AppCompatActivity {
+    private EditText mPhoneText;
+    private EditText mCodeText;
+
+    private Button mMessageSentBtn;
+    private Button mCodeBtn;
 
     private Button mLoginBtn;
-    //에러 메세지 내보내는 것
-    private TextView mLoginFeedbackText;
 
-    //callbacks
+    private FirebaseAuth mAuth;
+    private FirebaseUser mCurrentUser;
+    private TextView mErrorText;
+
     private PhoneAuthProvider.OnVerificationStateChangedCallbacks mCallbacks;
     private String mVerificationId;
     private PhoneAuthProvider.ForceResendingToken mResendToken;
 
-    private FirebaseAuth mAuth;
+    //Database
+    private FirebaseDatabase mDatabase;
+    private DatabaseReference mUserDatabase;
 
-    protected void onCrete(Bundle savedInstanceState){
+    @Override
+    protected void onCreate(Bundle savedInstanceState){
         super.onCreate(savedInstanceState);
         setContentView(R.layout.number_authentication);
 
-       findViewById(R.id.sendBtn).setOnClickListener(OnClickListener);
-       findViewById(R.id.check).setOnClickListener(OnClickListener);
-       findViewById(R.id.LoginBtn).setOnClickListener(OnClickListener);
-
-       /* mMessageSendBtn.setOnClickListener(new View.OnClickListener() {
+        mAuth = FirebaseAuth.getInstance();
+        mCurrentUser = mAuth.getCurrentUser();
+        /*
+        String current_uid = mCurrentUser.getUid();
+        mUserDatabase = FirebaseDatabase.getInstance().getReference();
+        //retrieve data
+        mUserDatabase.addValueEventListener(new ValueEventListener() {
             @Override
-            public void onClick(View view) {
-                String phone_number = mPhoneText.getText().toString();
-                    //check error
-                    if(phone_number.isEmpty()){
-                        mLoginFeedbackText.setText("전화번호를 입력해주세요");
-                        mLoginFeedbackText.setVisibility(View.VISIBLE);
-                    } else {
-                        mMessageSendBtn.setEnabled(false);
-                        String phoneNumber = mPhoneText.getText().toString();
-                        //  TODO 어떻게 DATABASE 로 연결하는가
-                        PhoneAuthProvider.getInstance().verifyPhoneNumber(
-                                phoneNumber,
-                                60,
-                                TimeUnit.SECONDS,
-                                AuthActivity.this,
-                                mCallbacks
-                        );
-                    }
+            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                String name = dataSnapshot.child("name").getValue().toString();
+                String age = dataSnapshot.child("age").getValue().toString();
+                String gender = dataSnapshot.child("gender").getValue().toString();
+                String image = dataSnapshot.child("image").getValue().toString();
+                String imageThumbnails = dataSnapshot.child("Thumbnails").getValue().toString();
+                String region1 = dataSnapshot.child("region1").getValue().toString();
+                String region1State = dataSnapshot.child("region1State").getValue().toString();
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError databaseError) {
+
+            }
+        });
+        */
+        mPhoneText = findViewById(R.id.phoneEditText);
+        mCodeText = findViewById(R.id.codeEditText);
+        mMessageSentBtn = findViewById(R.id.sendBtn);
+        mCodeBtn = findViewById(R.id.codeBtn);
+        mLoginBtn = findViewById(R.id.LoginBtn);
+        mErrorText = findViewById(R.id.login_form_feedback);
+
+        mAuth.setLanguageCode("kr");
+        mMessageSentBtn.setOnClickListener(new View.OnClickListener(){
+            @Override
+            public void onClick(View v){
+                String PhoneNumber = mPhoneText.getText().toString();
+                if(PhoneNumber.isEmpty()) {
+                    mErrorText.setText("전화번호를 입력해주세요");
+                    mErrorText.setVisibility(VISIBLE);
+                }else {
+                    mMessageSentBtn.setEnabled(false);
+                    mCodeText.setVisibility(VISIBLE);
+                    mCodeBtn.setVisibility(VISIBLE);
+                    mLoginBtn.setVisibility(VISIBLE);
+                    PhoneAuthProvider.getInstance().verifyPhoneNumber(
+                            PhoneNumber,       //User Phone Number
+                            60,                 // Timeout duration
+                            TimeUnit.SECONDS,   // Unit of timeout
+                            AuthActivity.this,
+                            mCallbacks);        // OnVerificationStateChangedCallbacks
+                }
+            }
+        });
+
+        mCodeBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                String CodeNumber = mCodeText.getText().toString();
+                if(CodeNumber.isEmpty()){
+                    mErrorText.setText("인증번호를 입력해주세요");
+                    mErrorText.setVisibility(VISIBLE);
+                }else {
+                    mCodeBtn.setEnabled(false);
+                    mLoginBtn.setEnabled(false);
+                    PhoneAuthCredential credential = PhoneAuthProvider.getCredential(mVerificationId,CodeNumber);
+                    signInWithPhoneAuthCredential(credential);
+                }
             }
         });
 
         mCallbacks = new PhoneAuthProvider.OnVerificationStateChangedCallbacks() {
             @Override
-            //automatically phoneNumber is verified
             public void onVerificationCompleted(PhoneAuthCredential phoneAuthCredential) {
+                //automatically verified
+                //instantly verified
+                mCodeBtn.setEnabled(false);
+                mLoginBtn.setEnabled(false);
                 signInWithPhoneAuthCredential(phoneAuthCredential);
-                mCodeLayout.setVisibility(View.VISIBLE);
-                mCodeLayout.setEnabled(false);
-                mLoginBtn.setVisibility(View.VISIBLE);
+            }
+
+            @Override
+            public void onVerificationFailed(FirebaseException e) {
+                mErrorText.setText("인증번호가 틀립니다");
+                mErrorText.setVisibility(VISIBLE);
+                mMessageSentBtn.setEnabled(true);
             }
             @Override
-            //verification is failed
-            public void onVerificationFailed(FirebaseException e) {
-                mLoginFeedbackText.setText("인증번호가 틀립니다.");
-                mLoginFeedbackText.setVisibility(View.VISIBLE);
-            }
-
-            public void OnCodeSent(String verificationId,PhoneAuthProvider.ForceResendingToken token) {
-                //Save verification ID and resending token so we can use them later
+            public void onCodeSent(String verificationId, PhoneAuthProvider.ForceResendingToken token) {
+                super.onCodeSent(verificationId, token);
+                //to make first try onVerificationCompleted
+                new android.os.Handler().postDelayed(
+                        new Runnable() {
+                            @Override
+                            public void run() {
+                            }
+                        },
+                        100000);
+                // Save verification ID and resending token so we can use them later
                 mVerificationId = verificationId;
                 mResendToken = token;
-                mCodeLayout.setVisibility(View.VISIBLE);
-                mLoginBtn.setVisibility(View.VISIBLE);
-                //mMessageSendBtn.setEnabled(true);
             }
-    };
-*/
+        };
     }
 
-    View.OnClickListener OnClickListener=new View.OnClickListener() {
-        @Override
-        public void onClick(View v) {
-            switch(v.getId()){
-                case R.id.sendBtn:
 
-                    break;
-
-                case R.id.check:
-
-                    break;
-
-                case R.id.LoginBtn:
-
-                    break;
-            }
-        }
-    };
-
-    //check if user is already logged in
+    //check if user is signed in
     private void signInWithPhoneAuthCredential(PhoneAuthCredential credential) {
         mAuth.signInWithCredential(credential)
-                .addOnCompleteListener(this, new OnCompleteListener<AuthResult>() {
+                .addOnCompleteListener(AuthActivity.this, new OnCompleteListener<AuthResult>() {
                     @Override
                     public void onComplete(@NonNull Task<AuthResult> task) {
                         if (task.isSuccessful()) {
-                            //if logged in
-                            // Sign in success, update UI with the signed-in user's information
-                            FirebaseUser user = task.getResult().getUser();
-
-                            mLoginBtn.setOnClickListener(new View.OnClickListener() {
+                            FirebaseUser current_user = FirebaseAuth.getInstance().getCurrentUser();
+                            String uid = current_user.getUid();
+                            mUserDatabase = FirebaseDatabase.getInstance().getReference().child("Users").child(uid);
+                            HashMap<String, String> userMap = new HashMap<>();
+                            userMap.put("Nickname","default");
+                            userMap.put("Image","default");
+                            userMap.put("Thumb_img","default");
+                            userMap.put("Gender","default");
+                            userMap.put("Age","default");
+                            userMap.put("Region1","default");
+                            userMap.put("Region1State","default");
+                            mUserDatabase.setValue(userMap).addOnCompleteListener(new OnCompleteListener<Void>() {
                                 @Override
-                                public void onClick(View v) {
-                                    Intent mainIntent = new Intent(AuthActivity.this, AuthActivity.class);
-                                    startActivity(mainIntent);
-                                    finish();
+                                public void onComplete(@NonNull Task<Void> task) {
+                                    if(task.isSuccessful()){
+                                        Intent LoginIntent = new Intent(AuthActivity.this,LogInActivity.class);
+                                        LoginIntent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK |Intent.FLAG_ACTIVITY_CLEAR_TASK);
+                                        startActivity(LoginIntent);
+                                        finish();
+                                    }
                                 }
                             });
 
-
                         } else {
-                            // Sign in failed, display a message and update the UI
-                            // 에러가 나고 난 뒤에 다시 재전송 할수 잇도록 버튼이 업데이트 되는가?
-                            mLoginFeedbackText.setText("로그인에 실패하셨습니다.\n 다시 시도 해주세요");
-                            mLoginFeedbackText.setVisibility(View.VISIBLE);
-
                             if (task.getException() instanceof FirebaseAuthInvalidCredentialsException) {
                                 // The verification code entered was invalid
+                                mErrorText.setText("로그인에 오류가 있습니다. 재실행해주세요");
+                                mErrorText.setVisibility(VISIBLE);
                             }
                         }
+
                     }
                 });
     }
 
+    protected void onStart(){
+        super.onStart();
+        if(mCurrentUser!=null){
+            Intent LoginIntent = new Intent(AuthActivity.this,LogInActivity.class);
+            LoginIntent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+            LoginIntent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK);
+            startActivity(LoginIntent);
+        }
+        //users 밑에 uid 검색을 통해서 만약에 기존에 있는 uid라면 flag 값을 1로 바꾸고 signinwithphoneauthcredential 안에서 intent를 mainintent로 가도록 하기
+        //새로운 database 만드는 것을 따로 함수로 빼자
+    }
 }

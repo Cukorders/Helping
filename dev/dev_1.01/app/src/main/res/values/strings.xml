@@ -1,3 +1,10 @@
 <resources>
     <string name="app_name">Helping</string>
+
+    <!-- TODO: Remove or change this placeholder text -->
+    <string name="hello_blank_fragment">Hello blank fragment</string>
+    <string name="caution_for_charging_point">[ 유의할 점 ]\n\n
+충전은 1,000원 단위로 가능합니다.\n\n
+미션 의뢰 시, 미션 수행 시, 헬퍼와 의뢰인이 수락한 경우, 포인트에서 해당 금액 자동 차감됩니다.\n\n
+미션 취소 시, 보증금은 포인트로 환급됩니다.</string>
 </resources>
