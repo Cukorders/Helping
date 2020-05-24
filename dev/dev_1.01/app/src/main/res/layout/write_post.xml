@@ -18,9 +18,9 @@
             <Button
                 android:id="@+id/back_button_write_post"
                 android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
+                android:layout_height="match_parent"
                 android:layout_weight="2"
-                android:gravity="left"
+                android:gravity="left|center"
                 android:paddingLeft="10dp"
                 android:textSize="20sp"
                 android:text="닫기"
@@ -35,10 +35,10 @@
                 android:textSize="24sp"
                 android:textColor="@color/colorWhite"/>
             <Button
-
                 android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
+                android:layout_height="match_parent"
                 android:layout_weight="2"
+                android:gravity="right|center"
                 android:paddingRight="10dp"
                 android:textSize="20sp"
                 android:text="완료"

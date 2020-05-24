@@ -8,14 +8,13 @@
         android:layout_width="match_parent"
         android:layout_height="50dp"
         android:orientation="horizontal"
-        android:gravity="center"
         android:background="@color/colorLogo"
-        android:paddingTop="9dp"
         android:weightSum="1">
         <ImageButton
             android:id="@+id/bt_back"
-            android:layout_width="32dp"
-            android:layout_height="32dp"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerVertical="true"
             android:layout_marginLeft="5dp"
             android:src="@drawable/back_icon_white"
             android:background="@android:color/transparent"
@@ -25,7 +24,7 @@
         <TextView
             android:id="@+id/recent_mission"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
+            android:layout_height="match_parent"
             android:text= "수행중인 미션"
             android:gravity="center"
             android:textSize="24sp"
@@ -46,7 +45,7 @@
         android:layout_height="match_parent">
         <LinearLayout
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
+            android:layout_height="match_parent"
             android:orientation="vertical">
         <LinearLayout
             android:layout_width="match_parent"
@@ -58,6 +57,7 @@
             android:layout_marginLeft="10dp"
             android:layout_marginRight="10dp">
             <ImageView
+                android:id="@+id/user_content_image"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:src="@drawable/add_picture"/>
@@ -68,6 +68,7 @@
                 android:layout_marginLeft="10dp"
                 android:layout_marginRight="10dp">
                 <TextView
+                    android:id="@+id/user_content_title"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="다른 유저가 등록한 게시물 제목"
@@ -75,6 +76,7 @@
                     android:textSize="16sp"
                     android:textStyle="bold"/>
                 <TextView
+                    android:id="@+id/user_content_content"
                     android:layout_width="wrap_content"
                     android:layout_height="match_parent"
                     android:layout_marginTop="20dp"
@@ -186,7 +188,6 @@
         android:orientation="horizontal"
         android:layout_marginLeft="10dp"
         android:layout_marginRight="10dp"
-        android:layout_gravity=""
         android:weightSum="10"
         android:background="@drawable/stroke_up_and_down_bold">
         <ImageButton
