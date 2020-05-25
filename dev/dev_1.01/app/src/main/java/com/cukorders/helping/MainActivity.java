@@ -14,7 +14,7 @@ import androidx.appcompat.app.AppCompatActivity;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 
 public class MainActivity extends AppCompatActivity {
-    FloatingActionButton fab_plus,fab_write,fab_info;
+    FloatingActionButton fab_plus,fab_write,fab_info,fab_chat;
     Animation FabOpen,FabClose,FabClockwise,FabAntiClockwise;
     private Button myMission,currentMission;
     boolean isOpen=false;
@@ -25,9 +25,10 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        fab_plus=(FloatingActionButton) findViewById(R.id.fab_chat);
-        fab_write=(FloatingActionButton) findViewById(R.id.fab_like);
+        fab_plus=(FloatingActionButton) findViewById(R.id.fab_plus);
+        fab_write=(FloatingActionButton) findViewById(R.id.fab_post);
         fab_info=(FloatingActionButton) findViewById(R.id.fab_info);
+        fab_chat=(FloatingActionButton) findViewById(R.id.fab_chat);
         FabOpen= AnimationUtils.loadAnimation(getApplicationContext(),R.anim.fab_open);
         FabClose= AnimationUtils.loadAnimation(getApplicationContext(),R.anim.fab_close);
         FabClockwise= AnimationUtils.loadAnimation(getApplicationContext(),R.anim.rotate_clockwise);
@@ -48,13 +49,7 @@ public class MainActivity extends AppCompatActivity {
                 }
             }
         });
-        /*fab_info.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                startUserInfo();
-            }
-        });
-*/
+
     }
 
     View.OnClickListener onClickListener=new View.OnClickListener() {
@@ -81,9 +76,11 @@ public class MainActivity extends AppCompatActivity {
     private void open(){
         fab_write.startAnimation(FabOpen);
         fab_info.startAnimation(FabOpen);
+        fab_chat.startAnimation(FabOpen);
         fab_plus.startAnimation(FabClockwise);
         fab_info.setClickable(true);
         fab_write.setClickable(true);
+        fab_chat.setClickable(true);
         isOpen=true;
         // Log.d("open","open");
     }
@@ -91,6 +88,7 @@ public class MainActivity extends AppCompatActivity {
         fab_write.startAnimation(FabClose);
         fab_info.startAnimation(FabClose);
         fab_plus.startAnimation(FabAntiClockwise);
+        fab_chat.startAnimation(FabClose);
         fab_info.setClickable(false);
         fab_write.setClickable(false);
         isOpen=false;
