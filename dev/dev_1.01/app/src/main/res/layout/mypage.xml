@@ -52,7 +52,7 @@
                 android:src="@drawable/user_icon">
             </de.hdodenhof.circleimageview.CircleImageView>
             <LinearLayout
-                android:layout_width="wrap_content"
+                android:layout_width="200dp"
                 android:layout_height="match_parent"
                 android:orientation="vertical"
                 android:layout_marginLeft="10dp">
@@ -62,14 +62,39 @@
                     android:text="사용자 닉네임"
                     android:textSize="18sp"
                     android:textStyle="bold"
-                    android:textColor="@color/colorBlack"/>
+                    android:textColor="@color/colorBlack" />
+                <RelativeLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:layout_marginTop="5dp">
+                    <ProgressBar
+                        android:id="@+id/pb"
+                        android:layout_width="100dp"
+                        android:layout_height="24dp"
+                        style="@style/Widget.AppCompat.ProgressBar.Horizontal"
+                        android:progressDrawable="@drawable/custom_progress_bar" />
+                    <TextView
+                        android:id="@+id/score"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_toEndOf="@+id/face"
+                        android:text="100점"
+                        android:textColor="@color/colorBlack"
+                        android:textSize="18sp"/>
+                    <ImageView
+                        android:id="@+id/face"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginLeft="1dp"
+                        android:src="@drawable/face_manner_darkblue"
+                        android:layout_toEndOf="@+id/pb"/>
+                </RelativeLayout>
             </LinearLayout>
             <Button
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:padding="8dp"
-                android:layout_marginLeft="80dp"
-                android:text="프로필 보기"
+                android:text="프로필 \n보기"
                 android:textSize="20sp"
                 android:textColor="@color/colorBlack"
                 android:background="@drawable/select_button"/>
