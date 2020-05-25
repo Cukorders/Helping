@@ -5,22 +5,19 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
-    android:background="@color/colorWhite"
+    android:background="@android:color/transparent"
     tools:context=".MainActivity">
-
     <ImageView
         android:id="@+id/imageView2"
         android:layout_width="match_parent"
         android:layout_height="100dp"
-        android:background="@color/colorLogo"
-        android:backgroundTint="@color/colorLogo"
-        app:srcCompat="@drawable/logo" />
+        android:background="@android:color/transparent"
+        app:srcCompat="@drawable/logo_charcter"/>
 
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="horizontal">
-
         <Button
             android:id="@+id/currentMission"
             android:layout_width="wrap_content"
@@ -41,7 +38,7 @@
     <FrameLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:padding="16dp">
+        android:padding="15dp">
 
         <com.google.android.material.floatingactionbutton.FloatingActionButton
             android:id="@+id/fab_chat"
@@ -52,7 +49,7 @@
             android:layout_marginBottom="16dp"
             android:backgroundTint="@color/colorLogo"
             android:elevation="6dp"
-            android:src="@android:drawable/ic_menu_add"
+            android:src="@drawable/add_widget32"
             app:pressedTranslationZ="12dp" />
 
         <com.google.android.material.floatingactionbutton.FloatingActionButton
@@ -64,7 +61,7 @@
             android:layout_marginBottom="100dp"
             android:backgroundTint="@color/colorLogo"
             android:elevation="6dp"
-            android:src="@android:drawable/ic_menu_edit"
+            android:src="@drawable/heart_widget32"
             android:visibility="invisible"
             app:backgroundTint="@color/colorAccent"
             app:pressedTranslationZ="12dp" />
@@ -79,7 +76,7 @@
             android:layout_marginBottom="180dp"
             android:backgroundTint="@color/colorLogo"
             android:elevation="6dp"
-            android:src="@android:drawable/ic_menu_my_calendar"
+            android:src="@drawable/chat_widget32"
             android:visibility="invisible"
             app:backgroundTint="@color/colorAccent"
             app:pressedTranslationZ="12dp" />
