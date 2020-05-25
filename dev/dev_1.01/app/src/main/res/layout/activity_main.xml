@@ -64,7 +64,7 @@
             android:layout_marginBottom="100dp"
             android:backgroundTint="@color/colorLogo"
             android:elevation="6dp"
-            android:src="@android:drawable/ic_menu_edit"
+            android:src="@drawable/ic_addprofile"
             android:visibility="invisible"
             app:backgroundTint="@color/colorAccent"
             app:pressedTranslationZ="12dp" />
@@ -79,7 +79,7 @@
             android:layout_marginBottom="180dp"
             android:backgroundTint="@color/colorLogo"
             android:elevation="6dp"
-            android:src="@android:drawable/ic_menu_my_calendar"
+            android:src="@drawable/linkprofile"
             android:visibility="invisible"
             app:backgroundTint="@color/colorAccent"
             app:pressedTranslationZ="12dp" />

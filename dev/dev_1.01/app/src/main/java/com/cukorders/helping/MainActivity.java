@@ -1,6 +1,8 @@
 package com.cukorders.helping;
 
 import android.annotation.SuppressLint;
+import android.content.Context;
+import android.content.Intent;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.util.Log;
@@ -18,6 +20,7 @@ public class MainActivity extends AppCompatActivity {
     Animation FabOpen,FabClose,FabClockwise,FabAntiClockwise;
     private Button myMission,currentMission;
     boolean isOpen=false;
+    private final Context context=this;
    // private long backKeyPressedTime = 0;
 
     @Override
@@ -38,6 +41,7 @@ public class MainActivity extends AppCompatActivity {
         currentMission=(Button) findViewById(R.id.currentMission);
         findViewById(R.id.myMission).setOnClickListener(onClickListener);
         findViewById(R.id.currentMission).setOnClickListener(onClickListener);
+        findViewById(R.id.fab_post).setOnClickListener(onClickListener);
 
         fab_plus.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -67,6 +71,11 @@ public class MainActivity extends AppCompatActivity {
                     Log.d("currentMission is clicked","currentMission is clicked");
                     currentMission.setBackgroundColor(Color.parseColor("#70D398"));
                     myMission.setBackgroundColor(Color.parseColor("#e1e1e1"));
+                    break;
+
+                case R.id.fab_post:
+                    Intent intent =new Intent(context,PostActivity.class);
+                    startActivity(intent);
                     break;
 
             }
