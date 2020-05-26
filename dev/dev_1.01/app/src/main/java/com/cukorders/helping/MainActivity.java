@@ -10,6 +10,8 @@ import android.view.animation.AnimationUtils;
 import android.widget.Button;
 
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 
@@ -18,12 +20,30 @@ public class MainActivity extends AppCompatActivity {
     Animation FabOpen,FabClose,FabClockwise,FabAntiClockwise;
     private Button myMission,currentMission;
     boolean isOpen=false;
-   // private long backKeyPressedTime = 0;
+    // private long backKeyPressedTime = 0;
+    // 리사이클러 뷰 관련
+    RecyclerView recyclerView;
+    String s1[], s2[];
+    //s1이 게시글 제목, s2가 게시물 작성시간,장소등 description, 게시글 역시 현재는 string에 배열로
+    //db 생성하고 게시글 작성가능할 때, 연동시킬것
+    int images[] = {};//이미지는 배열로 받았는데, 나중에 db 생성하면 db와 연동할 것
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+
+        recyclerView = findViewById(R.id.main_recyclerview);
+
+        s1 = getResources().getStringArray(R.array.main_title);
+        s2 = getResources().getStringArray(R.array.main_description);
+
+        MainAdapter mainAdapter = new MainAdapter(this, s1, s2, images);
+        recyclerView.setAdapter(mainAdapter);
+        recyclerView.setLayoutManager(new LinearLayoutManager(this));
+
+
+        //위가 recyclerview 아래가 widget
 
         fab_plus=(FloatingActionButton) findViewById(R.id.fab_chat);
         fab_write=(FloatingActionButton) findViewById(R.id.fab_like);
