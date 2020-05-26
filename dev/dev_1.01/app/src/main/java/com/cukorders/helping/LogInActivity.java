@@ -9,6 +9,7 @@ import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
 import android.provider.MediaStore;
+import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
@@ -37,6 +38,7 @@ import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.Query;
 import com.google.firebase.database.ValueEventListener;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
@@ -53,6 +55,7 @@ import de.hdodenhof.circleimageview.CircleImageView;
 import static android.view.View.VISIBLE;
 
 public class LogInActivity extends AppCompatActivity {
+    private static final String TAG = "LoginActivity" ;
     private FirebaseAuth mAuth;
     private FirebaseUser mCurrentUser;
 
@@ -63,7 +66,9 @@ public class LogInActivity extends AppCompatActivity {
     private String imagePath;
     private static final int GALLERY_CODE = 10;
 
+    private boolean chkNick=false;
     private TextView mErrorText;
+    private boolean chkPhoto=false;
     private CircleImageView profileImage;
     private ImageButton mEditImage;
     private String mNick;
@@ -100,8 +105,8 @@ public class LogInActivity extends AppCompatActivity {
                 String imageThumbnails = dataSnapshot.child("Thumb_img").getValue().toString();
                 String gender = dataSnapshot.child("Gender").getValue().toString();
                 String age = dataSnapshot.child("Age").getValue().toString();
-                String region1 = dataSnapshot.child("Region1").getValue().toString();
-                String region1State = dataSnapshot.child("Region1State").getValue().toString();
+                String score = dataSnapshot.child("Score").getValue().toString();
+                String money = dataSnapshot.child("Money").getValue().toString();
                 //변경사항 업데이트 하는 부분
                 Picasso.get().load(image).into(profileImage);
             }
@@ -135,6 +140,7 @@ public class LogInActivity extends AppCompatActivity {
         mImageStorage = FirebaseStorage.getInstance().getReference();
         profileImage= findViewById(R.id.userProfileImage);
 
+
         //logout
         mLogoutBtn = findViewById(R.id.logoutBtn);
         mLogoutBtn.setOnClickListener(new View.OnClickListener(){
@@ -156,9 +162,29 @@ public class LogInActivity extends AppCompatActivity {
                     mErrorText.setText("닉네임을 입력해주세요");
                     mErrorText.setVisibility(VISIBLE);
                 }else {
-                    //중복성체크
-                    //DB 연결후 진행
-                    mNickBtn.setEnabled(false);
+                    Log.d(TAG, "checkIfUserNicknameExists : checking if " + mNick + "already exists");
+                    DatabaseReference chkReference = FirebaseDatabase.getInstance().getReference();
+                    Query query = chkReference
+                            .child("Users")
+                            .orderByChild("Nickname")
+                            .equalTo(mNick);
+                    query.addListenerForSingleValueEvent(new ValueEventListener() {
+                        @Override
+                        public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                            if(dataSnapshot.getChildrenCount()>0) {
+                                mErrorText.setText("기존에 존재하는 닉네임입니다.\n 다른 닉네임을 입력해주세요");
+                                mErrorText.setVisibility(VISIBLE);
+                            }else{
+                                mErrorText.setText("사용 가능한 닉네임입니다!");
+                                chkNick = true;
+                                mErrorText.setTextColor(getResources().getColor(R.color.colorAccent));
+                                mNickBtn.setEnabled(false);
+                            }
+                        }
+                        @Override
+                        public void onCancelled(@NonNull DatabaseError databaseError) {
+                        }
+                    });
                 }
             }
         });
@@ -182,28 +208,33 @@ public class LogInActivity extends AppCompatActivity {
         Age5.setOnClickListener(setAge);
         //registerBtn
         mRegisterBtn = findViewById(R.id.profileRegisterBt);
-        mRegisterBtn.setOnClickListener(new View.OnClickListener(){
+        mRegisterBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if(mAge==""){
-                    mErrorText.setText("연령대를 선택해주세요");
-                    mErrorText.setVisibility(VISIBLE);
-                }
-                if(mGender==""){
-                    mErrorText.setText("성별을 선택해주세요");
-                    mErrorText.setVisibility(VISIBLE);
-                }
-                if(mNick=="") {
-                    mErrorText.setText("닉네임 중복확인을 해주세요");
-                    mErrorText.setVisibility(VISIBLE);
-                }
-                if(mAge!=""&&mGender!=""&&mNick!=""){
+                if ((mAge != "") && (mGender != "") && (chkNick != false)) {
+                    Log.d(TAG, "Register complete " + chkNick + "is true");
                     mUserDatabase.child("Nickname").setValue(mNick);
                     mUserDatabase.child("Gender").setValue(mGender);
                     mUserDatabase.child("Age").setValue(mAge);
                     mRegisterBtn.setEnabled(false);
                     sendUserToMain();
-                }
+                } else {
+                    if (mAge == "") {
+                        Log.d(TAG, "Register error mAge is not set");
+                        mErrorText.setText("연령대를 선택해주세요");
+                        mErrorText.setVisibility(VISIBLE);
+                    }
+                    if (mGender == "") {
+                        Log.d(TAG, "Register error mGender is not set");
+                        mErrorText.setText("성별을 선택해주세요");
+                        mErrorText.setVisibility(VISIBLE);
+                    }
+                    if (chkNick == false) {
+                        Log.d(TAG, "Register error chkNick is not set");
+                        mErrorText.setText("닉네임 중복확인을 해주세요");
+                        mErrorText.setVisibility(VISIBLE);
+                    }
+                };
             }
         });
     }
@@ -251,6 +282,7 @@ public class LogInActivity extends AppCompatActivity {
             }
         }
     }
+
 
     //사진 경로 가져오는 코드
     public String getPath(Uri uri){
