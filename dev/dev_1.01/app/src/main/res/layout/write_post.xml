@@ -154,11 +154,13 @@
             android:layout_marginLeft="10dp"
             android:layout_marginRight="10dp"
             android:background="@drawable/stroke_up_and_down_bold">
+
             <EditText
+                android:id="@+id/pay"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:hint= "보상금 :"
-                android:textSize="18sp"/>
+                android:hint="보상금 :"
+                android:textSize="18sp" />
 
             <EditText
                 android:id="@+id/due"
@@ -167,11 +169,13 @@
                 android:hint="보증금 :"
                 android:textSize="18sp" />
             //물품가격 edittext => 카테고리에서 물품 관련된 경우 입력할 수 있고,물품 관련된 경우가 아닌 경우 입력할 수 없도록
+
             <EditText
+                android:id="@+id/price"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:hint= "물품 가격 :"
-                android:textSize="18sp"/>
+                android:hint="물품 가격 :"
+                android:textSize="18sp" />
         </LinearLayout>
 
         <LinearLayout
@@ -184,21 +188,27 @@
             android:layout_marginLeft="10dp"
             android:layout_marginRight="10dp"
             android:background="@drawable/stroke_below_bold">
+
             <EditText
+                android:id="@+id/endTime"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:hint= "미션 완료 시간 :"
-                android:textSize="18sp"/>
+                android:hint="미션 완료 시간 :"
+                android:textSize="18sp" />
+
             <EditText
+                android:id="@+id/cancelTime"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:hint= "미션 취소 가능 시간 :"
-                android:textSize="18sp"/>
+                android:hint="미션 취소 가능 시간 :"
+                android:textSize="18sp" />
+
             <EditText
+                android:id="@+id/place"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:hint= "만날 장소(선택) :"
-                android:textSize="18sp"/>
+                android:hint="만날 장소(선택) :"
+                android:textSize="18sp" />
         </LinearLayout>
 
         <LinearLayout
