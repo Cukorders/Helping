@@ -146,7 +146,7 @@ public class LogInActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 mNick = mNickname.getText().toString();
-                if(mNick==""){
+                if(mNick.equals("")){
                     mErrorText.setText("닉네임을 입력해주세요");
                     mErrorText.setVisibility(VISIBLE);
                 }else {
@@ -199,7 +199,7 @@ public class LogInActivity extends AppCompatActivity {
         mRegisterBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if ((mAge != "") && (mGender != "") && (chkNick != false)) {
+                if (!(mAge.equals("")) && !(mGender.equals("")) && (chkNick != false)) {
                     Log.d(TAG, "Register complete " + chkNick + "is true");
                     mUserDatabase.child("Nickname").setValue(mNick);
                     mUserDatabase.child("Gender").setValue(mGender);
@@ -207,18 +207,21 @@ public class LogInActivity extends AppCompatActivity {
                     mRegisterBtn.setEnabled(false);
                     sendUserToMain();
                 } else {
-                    if (mAge == "") {
+                    if (mAge.equals("")) {
                         Log.d(TAG, "Register error mAge is not set");
+                        mErrorText.setTextColor(getResources().getColor(R.color.colorError));
                         mErrorText.setText("연령대를 선택해주세요");
                         mErrorText.setVisibility(VISIBLE);
                     }
-                    if (mGender == "") {
+                    if (mGender.equals("")) {
                         Log.d(TAG, "Register error mGender is not set");
+                        mErrorText.setTextColor(getResources().getColor(R.color.colorError));
                         mErrorText.setText("성별을 선택해주세요");
                         mErrorText.setVisibility(VISIBLE);
                     }
                     if (chkNick == false) {
                         Log.d(TAG, "Register error chkNick is not set");
+                        mErrorText.setTextColor(getResources().getColor(R.color.colorError));
                         mErrorText.setText("닉네임 중복확인을 해주세요");
                         mErrorText.setVisibility(VISIBLE);
                     }

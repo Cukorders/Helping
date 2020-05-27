@@ -22,7 +22,6 @@ public class MainActivity extends AppCompatActivity {
     Animation FabOpen,FabClose,FabClockwise,FabAntiClockwise;
     private Button myMission,currentMission;
     boolean isOpen=false;
-
     private final Context context=this;
     // private long backKeyPressedTime = 0;
     // 리사이클러 뷰 관련
@@ -65,6 +64,7 @@ public class MainActivity extends AppCompatActivity {
         findViewById(R.id.fab_post).setOnClickListener(onClickListener);
         findViewById(R.id.fab_info).setOnClickListener(onClickListener);
         findViewById(R.id.fab_chat).setOnClickListener(onClickListener);
+        findViewById(R.id.go_to_mypage).setOnClickListener(onClickListener);
 
         fab_plus.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -110,7 +110,12 @@ public class MainActivity extends AppCompatActivity {
                     break;
 
                 case R.id.fab_chat:
+                    //TODO 채팅 연결하기
+                    break;
 
+                case R.id.go_to_mypage:
+                    Intent intent3=new Intent(context,MyPageActivity.class);
+                    startActivity(intent3);
                     break;
 
             }
