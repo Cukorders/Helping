@@ -1,6 +1,8 @@
 package com.cukorders.helping;
 
 import android.annotation.SuppressLint;
+import android.content.Context;
+import android.content.Intent;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.util.Log;
@@ -16,10 +18,12 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 
 public class MainActivity extends AppCompatActivity {
-    FloatingActionButton fab_plus,fab_write,fab_info;
+    FloatingActionButton fab_plus,fab_write,fab_info,fab_chat;
     Animation FabOpen,FabClose,FabClockwise,FabAntiClockwise;
     private Button myMission,currentMission;
     boolean isOpen=false;
+
+    private final Context context=this;
     // private long backKeyPressedTime = 0;
     // 리사이클러 뷰 관련
     RecyclerView recyclerView;
@@ -48,6 +52,7 @@ public class MainActivity extends AppCompatActivity {
         fab_plus=(FloatingActionButton) findViewById(R.id.fab_chat);
         fab_write=(FloatingActionButton) findViewById(R.id.fab_like);
         fab_info=(FloatingActionButton) findViewById(R.id.fab_info);
+        fab_chat=(FloatingActionButton) findViewById(R.id.fab_chat);
         FabOpen= AnimationUtils.loadAnimation(getApplicationContext(),R.anim.fab_open);
         FabClose= AnimationUtils.loadAnimation(getApplicationContext(),R.anim.fab_close);
         FabClockwise= AnimationUtils.loadAnimation(getApplicationContext(),R.anim.rotate_clockwise);
@@ -57,6 +62,9 @@ public class MainActivity extends AppCompatActivity {
         currentMission=(Button) findViewById(R.id.currentMission);
         findViewById(R.id.myMission).setOnClickListener(onClickListener);
         findViewById(R.id.currentMission).setOnClickListener(onClickListener);
+        findViewById(R.id.fab_post).setOnClickListener(onClickListener);
+        findViewById(R.id.fab_info).setOnClickListener(onClickListener);
+        findViewById(R.id.fab_chat).setOnClickListener(onClickListener);
 
         fab_plus.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -68,13 +76,9 @@ public class MainActivity extends AppCompatActivity {
                 }
             }
         });
-        /*fab_info.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                startUserInfo();
-            }
-        });
-*/
+
+
+
     }
 
     View.OnClickListener onClickListener=new View.OnClickListener() {
@@ -94,6 +98,21 @@ public class MainActivity extends AppCompatActivity {
                     myMission.setBackgroundColor(Color.parseColor("#e1e1e1"));
                     break;
 
+                case R.id.fab_post:
+                    Intent intent1 =new Intent(context,PostActivity.class);
+                    Log.e("go to post","go to a posting page");
+                    startActivity(intent1);
+                    break;
+
+                case R.id.fab_info:
+                    Intent intent2=new Intent(context,MyPageActivity.class);
+                    startActivity(intent2);
+                    break;
+
+                case R.id.fab_chat:
+
+                    break;
+
             }
         }
     };
@@ -101,9 +120,11 @@ public class MainActivity extends AppCompatActivity {
     private void open(){
         fab_write.startAnimation(FabOpen);
         fab_info.startAnimation(FabOpen);
+        fab_chat.startAnimation(FabOpen);
         fab_plus.startAnimation(FabClockwise);
         fab_info.setClickable(true);
         fab_write.setClickable(true);
+        fab_chat.setClickable(true);
         isOpen=true;
         // Log.d("open","open");
     }
@@ -111,6 +132,7 @@ public class MainActivity extends AppCompatActivity {
         fab_write.startAnimation(FabClose);
         fab_info.startAnimation(FabClose);
         fab_plus.startAnimation(FabAntiClockwise);
+        fab_chat.startAnimation(FabClose);
         fab_info.setClickable(false);
         fab_write.setClickable(false);
         isOpen=false;

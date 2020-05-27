@@ -90,14 +90,16 @@
                         android:layout_toEndOf="@+id/pb"/>
                 </RelativeLayout>
             </LinearLayout>
+
             <Button
+                android:id="@+id/bt_profile"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:padding="8dp"
                 android:text="프로필 \n보기"
                 android:textSize="20sp"
                 android:textColor="@color/colorBlack"
-                android:background="@drawable/select_button"/>
+                android:textSize="20sp" />
         </LinearLayout>
     </LinearLayout>
     <LinearLayout

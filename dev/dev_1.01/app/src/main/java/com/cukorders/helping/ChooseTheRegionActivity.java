@@ -109,7 +109,8 @@ public class ChooseTheRegionActivity  extends AppCompatActivity {
                     performSearch();
                     break;
 
-                case R.id.currentLocation: //TODO : 역지오코딩하기 -> 주변 동들도 검색 결과에 띄운다.
+                case R.id.currentLocation:
+                    Log.e("current Location button","current location button is clicked");
                     fetchLocation();
                     break;
             }

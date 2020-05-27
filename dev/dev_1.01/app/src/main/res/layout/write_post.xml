@@ -34,16 +34,15 @@
                 android:text="미션 만들기"
                 android:textSize="24sp"
                 android:textColor="@color/colorWhite"/>
+
             <Button
                 android:layout_width="wrap_content"
                 android:layout_height="match_parent"
                 android:layout_weight="2"
-                android:gravity="right|center"
                 android:paddingRight="10dp"
-                android:textSize="20sp"
                 android:text="완료"
                 android:textColor="@color/colorWhite"
-                android:background="@android:color/transparent"/>
+                android:textSize="20sp" />
         </LinearLayout>
         <LinearLayout
             android:layout_width="match_parent"
@@ -58,19 +57,19 @@
                 android:background="@drawable/strokebox">
 
                 <ImageButton
-                    android:id="@+id/camera_album_add"
+                    android:id="@+id/camera_album_add1"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:background="@android:color/transparent"
                     android:src="@drawable/camera_button"
                     android:layout_centerInParent="true"/>
                 <TextView
-                    android:id="@+id/camera_picture_addnumber"
+                    android:id="@+id/camera_picture_addnumber1"
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
                     android:layout_marginBottom="5dp"
                     android:text="0/10"
-                    android:layout_below="@id/camera_album_add"
+                    android:layout_below="@id/camera_album_add1"
                     android:gravity="center"/>
             </RelativeLayout>
         </LinearLayout>
@@ -84,12 +83,14 @@
             android:layout_marginLeft="10dp"
             android:layout_marginRight="10dp"
             android:background="@drawable/stroke_below">
+
             <EditText
+                android:id="@+id/title"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:background="@android:color/transparent"
                 android:hint="글 제목"
-                android:textSize="18sp"/>
+                android:textSize="18sp" />
         </LinearLayout>
 
         <LinearLayout
@@ -102,14 +103,16 @@
             android:layout_marginLeft="10dp"
             android:layout_marginRight="10dp"
             android:background="@drawable/stroke_below">
+
             <TextView
+                android:id="@+id/category"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:layout_weight="7"
                 android:background="@android:color/transparent"
-                android:hint="카테고리 선택"
                 android:enabled="true"
-                android:textSize="18sp"/>
+                android:hint="카테고리 선택"
+                android:textSize="18sp" />
             <ImageButton
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
@@ -128,12 +131,14 @@
             android:layout_marginLeft="10dp"
             android:layout_marginRight="10dp"
             android:background="@drawable/stroke_below">
+
             <EditText
+                android:id="@+id/description"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:background="@android:color/transparent"
-                android:hint= "내용을 입력해주세요."
-                android:textSize="18sp"/>
+                android:hint="내용을 입력해주세요."
+                android:textSize="18sp" />
         </LinearLayout>
 
         <LinearLayout
@@ -146,22 +151,28 @@
             android:layout_marginLeft="10dp"
             android:layout_marginRight="10dp"
             android:background="@drawable/stroke_up_and_down_bold">
+
             <EditText
+                android:id="@+id/pay"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:hint= "보상금 :"
-                android:textSize="18sp"/>
+                android:hint="보상금 :"
+                android:textSize="18sp" />
+
             <EditText
+                android:id="@+id/due"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:hint= "보증금 :"
-                android:textSize="18sp"/>
+                android:hint="보증금 :"
+                android:textSize="18sp" />
             //물품가격 edittext => 카테고리에서 물품 관련된 경우 입력할 수 있고,물품 관련된 경우가 아닌 경우 입력할 수 없도록
+
             <EditText
+                android:id="@+id/price"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:hint= "물품 가격 :"
-                android:textSize="18sp"/>
+                android:hint="물품 가격 :"
+                android:textSize="18sp" />
         </LinearLayout>
 
         <LinearLayout
@@ -174,21 +185,27 @@
             android:layout_marginLeft="10dp"
             android:layout_marginRight="10dp"
             android:background="@drawable/stroke_below_bold">
+
             <EditText
+                android:id="@+id/endTime"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:hint= "미션 완료 시간 :"
-                android:textSize="18sp"/>
+                android:hint="미션 완료 시간 :"
+                android:textSize="18sp" />
+
             <EditText
+                android:id="@+id/cancelTime"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:hint= "미션 취소 가능 시간 :"
-                android:textSize="18sp"/>
+                android:hint="미션 취소 가능 시간 :"
+                android:textSize="18sp" />
+
             <EditText
+                android:id="@+id/place"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:hint= "만날 장소(선택) :"
-                android:textSize="18sp"/>
+                android:hint="만날 장소(선택) :"
+                android:textSize="18sp" />
         </LinearLayout>
 
         <LinearLayout
@@ -212,22 +229,26 @@
                 android:layout_height="match_parent"
                 android:layout_marginTop="3dp"
                 android:orientation="horizontal">
+
                 <Button
+                    android:id="@+id/bt_same"
                     android:layout_width="wrap_content"
                     android:layout_height="match_parent"
                     android:layout_marginRight="3dp"
-                    android:text= "동성"
-                    android:textSize="16sp"
                     android:background="@drawable/primary_btn_bg"
-                    android:textColor="@color/colorBlack"/>
+                    android:text="동성"
+                    android:textColor="@color/colorBlack"
+                    android:textSize="16sp" />
+
                 <Button
+                    android:id="@+id/bt_dontMind"
                     android:layout_width="wrap_content"
                     android:layout_height="match_parent"
                     android:layout_marginLeft="3dp"
-                    android:text= "무관"
-                    android:textSize="16sp"
                     android:background="@drawable/select_button"
-                    android:textColor="@color/colorBlack"/>
+                    android:text="무관"
+                    android:textColor="@color/colorBlack"
+                    android:textSize="16sp" />
             </LinearLayout>
             <TextView
                 android:layout_width="wrap_content"
@@ -300,16 +321,17 @@
         </LinearLayout>
 
         <Button
+            android:id="@+id/bt_post"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginTop="10dp"
-            android:layout_marginBottom="20dp"
             android:layout_marginLeft="10dp"
+            android:layout_marginTop="10dp"
             android:layout_marginRight="10dp"
+            android:layout_marginBottom="20dp"
             android:background="@drawable/gps_button_shape"
-            android:text= "작성 완료"
-            android:textSize="20sp"
-            android:textColor="@color/colorWhite"/>
+            android:text="작성 완료"
+            android:textColor="@color/colorWhite"
+            android:textSize="20sp" />
 
 
 
