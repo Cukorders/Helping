@@ -10,7 +10,6 @@
         android:orientation="horizontal"
         android:gravity="center"
         android:background="@color/colorLogo"
-        android:paddingTop="9dp"
         android:weightSum="1">
         <ImageButton
             android:id="@+id/bt_back"
@@ -19,7 +18,6 @@
             android:layout_marginLeft="5dp"
             android:src="@drawable/back_icon_white"
             android:background="@android:color/transparent"
-            android:paddingRight="5dp"
             >
         </ImageButton>
         <TextView
@@ -38,8 +36,8 @@
         android:orientation="vertical"
         android:paddingTop="20dp"
         android:paddingBottom="20dp"
-        android:layout_marginLeft="10dp"
-        android:layout_marginRight="10dp"
+        android:layout_marginLeft="5dp"
+        android:layout_marginRight="5dp"
         android:background="@drawable/stroke_below_bold">
 
         <LinearLayout
@@ -55,7 +53,7 @@
                 android:src="@drawable/user_icon">
             </de.hdodenhof.circleimageview.CircleImageView>
             <LinearLayout
-                android:layout_width="wrap_content"
+                android:layout_width="200dp"
                 android:layout_height="match_parent"
                 android:orientation="vertical"
                 android:layout_marginLeft="10dp">
@@ -66,16 +64,42 @@
                     android:textSize="18sp"
                     android:textStyle="bold"
                     android:textColor="@color/colorBlack"/>
+                <RelativeLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:layout_marginTop="15dp">
+                    <ProgressBar
+                        android:id="@+id/pb"
+                        android:layout_width="100dp"
+                        android:layout_height="24dp"
+                        style="@style/Widget.AppCompat.ProgressBar.Horizontal"
+                        android:progressDrawable="@drawable/custom_progress_bar" />
+                    <TextView
+                        android:id="@+id/score"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_toEndOf="@+id/face"
+                        android:text="100점"
+                        android:textColor="@color/colorBlack"
+                        android:textSize="18sp"/>
+                    <ImageView
+                        android:id="@+id/face"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginLeft="1dp"
+                        android:src="@drawable/face_manner_darkblue"
+                        android:layout_toEndOf="@+id/pb"/>
+                </RelativeLayout>
             </LinearLayout>
             <LinearLayout
                 android:layout_width="wrap_content"
                 android:layout_height="match_parent"
+                android:layout_gravity="center_vertical"
                 android:orientation="vertical">
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:padding="8dp"
-                    android:layout_marginLeft="80dp"
                     android:text= "내 포인트"
                     android:textSize="16sp"
                     android:textStyle="bold"
@@ -83,8 +107,7 @@
                 <LinearLayout
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:orientation="horizontal"
-                    android:layout_marginLeft="80dp">
+                    android:orientation="horizontal">
                     <ImageView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
@@ -160,7 +183,7 @@
                 android:text="충전하기"
                 android:textSize="14sp"
                 android:textColor="@color/colorBlack"
-                android:background="@drawable/select_button"/>
+                android:background="@drawable/select_button2"/>
         </LinearLayout>
         <TextView
             android:layout_width="match_parent"

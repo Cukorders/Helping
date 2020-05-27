@@ -17,9 +17,10 @@
         //TODO 뒤  로   가  기   버  튼   기  능  넣  기
         <ImageButton
             android:id="@+id/bt_back"
-            android:layout_width="30dp"
-            android:layout_height="20dp"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
             android:layout_marginLeft="5dp"
+            android:layout_centerVertical="true"
             android:src="@drawable/back_icon"
             android:background="@android:color/transparent"
             android:paddingRight="5dp"
@@ -27,7 +28,7 @@
         </ImageButton>
         <TextView
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
+            android:layout_height="match_parent"
             android:text="지역 인증 하기"
             android:gravity="center"
             android:textSize="20sp"
@@ -41,11 +42,13 @@
     <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content">
-        <Button
+        <ImageButton
             android:id="@+id/currentLocation"
             android:layout_width="wrap_content"
-            android:layout_height="wrap_content" />
-
+            android:layout_height="wrap_content"
+            android:layout_margin="3dp"
+            android:layout_alignParentRight="true"
+            android:src="@drawable/gps_button"/>
         <fragment
             android:id="@+id/googlemapview"
             android:layout_width="match_parent"

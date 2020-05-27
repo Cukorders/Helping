@@ -1,0 +1,156 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical">
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="50dp"
+        android:orientation="horizontal"
+        android:gravity="center"
+        android:background="@color/colorLogo"
+        android:weightSum="1">
+        <ImageButton
+            android:id="@+id/bt_back"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerVertical="true"
+            android:layout_marginLeft="5dp"
+            android:src="@drawable/back_icon_white"
+            android:background="@android:color/transparent"
+            android:paddingRight="5dp"
+            >
+        </ImageButton>
+        <TextView
+            android:id="@+id/recent_mission"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:text= "결제하기"
+            android:gravity="center"
+            android:textSize="24sp"
+            android:textColor="@color/colorWhite">
+        </TextView>
+    </RelativeLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical">
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:background="@drawable/stroke_below_bold"
+            android:paddingTop="20dp"
+            android:paddingBottom="20dp"
+            android:layout_marginLeft="10dp"
+            android:layout_marginRight="10dp">
+            <de.hdodenhof.circleimageview.CircleImageView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:src="@drawable/profile128"/>
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:orientation="vertical"
+                android:layout_marginLeft="10dp"
+                android:layout_marginTop="5dp">
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="사용자 닉네임"
+                    android:textSize="24sp"
+                    android:textColor="@color/colorBlack"/>
+                <RelativeLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:layout_marginTop="10dp"
+                    android:paddingBottom="10dp">
+                    <ProgressBar
+                        android:id="@+id/pb"
+                        android:layout_width="150dp"
+                        android:layout_height="24dp"
+                        android:layout_alignParentBottom="true"
+                        style="@style/Widget.AppCompat.ProgressBar.Horizontal"
+                        android:progressDrawable="@drawable/custom_progress_bar" />
+                    <TextView
+                        android:id="@+id/score"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_toEndOf="@+id/face"
+                        android:layout_alignParentBottom="true"
+                        android:text="100점"
+                        android:textColor="@color/colorBlack"
+                        android:textSize="18sp"/>
+                    <ImageView
+                        android:id="@+id/face"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_alignParentBottom="true"
+                        android:layout_marginLeft="1dp"
+                        android:src="@drawable/face_manner_darkblue"
+                        android:layout_toEndOf="@+id/pb"/>
+                </RelativeLayout>
+            </LinearLayout>
+        </LinearLayout>
+    </LinearLayout>
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:layout_marginBottom="10dp"
+            android:paddingTop="20dp"
+            android:paddingBottom="20dp"
+            android:layout_marginLeft="10dp"
+            android:layout_marginRight="10dp">
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:padding="20dp"
+                android:text= "의뢰자의 의뢰 내용"
+                android:gravity="center_horizontal"
+                android:textColor="@color/colorBlack"
+                android:background="@drawable/strokebox_bold"
+                android:textSize="18sp"/>
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:padding="20dp"
+                android:gravity="center_horizontal"
+                android:text= "협의 내용"
+                android:textColor="@color/colorBlack"
+                android:background="@drawable/strokebox_bold"
+                android:textSize="18sp"/>
+        </LinearLayout>
+    </ScrollView>
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="70dp"
+        android:orientation="horizontal">
+        <Button
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:layout_margin="0dp"
+            android:textSize="20sp"
+            android:text="결제 진행하기"
+            android:background="@drawable/recent_mission_button"/>
+        <Button
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:layout_margin="0dp"
+            android:text="취소하기"
+            android:textSize="20sp"
+            android:background="@drawable/recent_mission_button"/>
+    </LinearLayout>
+
+
+</LinearLayout>
+
+
+

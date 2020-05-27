@@ -5,22 +5,31 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
-    android:background="@color/colorWhite"
+    android:background="@android:color/transparent"
     tools:context=".MainActivity">
-
-    <ImageView
-        android:id="@+id/imageView2"
+    <RelativeLayout
         android:layout_width="match_parent"
-        android:layout_height="100dp"
-        android:background="@color/colorLogo"
-        android:backgroundTint="@color/colorLogo"
-        app:srcCompat="@drawable/logo" />
+        android:layout_height="wrap_content">
+        <ImageView
+            android:id="@+id/logo_image"
+            android:layout_width="match_parent"
+            android:layout_height="100dp"
+            android:background="@android:color/transparent"
+            android:src="@drawable/logo_charcter"/>
+        <ImageButton
+            android:id="@+id/go_to_mypage"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentRight="true"
+            android:padding="3dp"
+            android:background="@android:color/transparent"
+            android:src="@drawable/linkprofile"/>
+    </RelativeLayout>
 
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="horizontal">
-
         <Button
             android:id="@+id/currentMission"
             android:layout_width="wrap_content"
@@ -38,10 +47,41 @@
             android:text="나의 부름" />
     </LinearLayout>
 
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:paddingBottom="5dp"
+        android:paddingLeft="3dp"
+        android:paddingRight="3dp"
+        android:background="@drawable/stroke_below">
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentLeft="true"
+                android:text="지역명"
+                android:textColor="@color/colorBlack"
+                android:textSize="24sp"/>
+            <ImageButton
+                android:id="@+id/filter"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentRight="true"
+                android:background="@android:color/transparent"
+                android:src="@drawable/icon_filter" />
+        </RelativeLayout>
+    </LinearLayout>
+
     <FrameLayout
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:padding="16dp">
+        android:layout_height="match_parent">
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/main_recyclerview"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"/>
 
         <com.google.android.material.floatingactionbutton.FloatingActionButton
             android:id="@+id/fab_plus"
@@ -52,7 +92,7 @@
             android:layout_marginBottom="16dp"
             android:backgroundTint="@color/colorLogo"
             android:elevation="6dp"
-            android:src="@android:drawable/ic_menu_add"
+            android:src="@drawable/add_widget32"
             app:pressedTranslationZ="12dp" />
 
         <com.google.android.material.floatingactionbutton.FloatingActionButton
@@ -64,7 +104,7 @@
             android:layout_marginBottom="100dp"
             android:backgroundTint="@color/colorLogo"
             android:elevation="6dp"
-            android:src="@drawable/ic_addprofile"
+            android:src="@drawable/heart_widget32"
             android:visibility="invisible"
             app:backgroundTint="@color/colorAccent"
             app:pressedTranslationZ="12dp" />
@@ -94,6 +134,7 @@
             android:backgroundTint="@color/colorLogo"
             android:elevation="6dp"
             android:src="@drawable/chat_icon"
+            android:src="@drawable/chat_widget32"
             android:visibility="invisible"
             app:backgroundTint="@color/colorAccent"
             app:pressedTranslationZ="12dp" />
