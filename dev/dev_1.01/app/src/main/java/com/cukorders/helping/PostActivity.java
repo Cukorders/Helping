@@ -42,6 +42,14 @@ public class PostActivity extends AppCompatActivity {
         for(int i=0;i<5;++i)
             ageChecked[i]=false;
     }
+
+    private static void ageValue(boolean[] ageChecked){
+        boolean flag=false;
+        for(int i=0;i<5;++i){
+
+        }
+    }
+
     private static int checkedAge(boolean[] ageChecked){
         int ret=0;
         for(int i=0;i<5;++i)
@@ -110,32 +118,32 @@ public class PostActivity extends AppCompatActivity {
         postValue=new HashMap<>();
     }
 
-    View.OnClickListener onClickListener=new View.OnClickListener() {
+    final View.OnClickListener onClickListener = new View.OnClickListener() {
         @Override
         public void onClick(View v) {
-            switch(v.getId()){
+            switch (v.getId()) {
                 case R.id.back_button_write_post:
-                    startActivity(new Intent(context,MainActivity.class));
+                    startActivity(new Intent(context, MainActivity.class));
                     break;
 
                 default: //when a button bt_finish and a button bt_post are clicked
-                    Title=title.getText().toString();
-                    Description=description.getText().toString();
-                    Pay=Integer.parseInt(pay.getText().toString());
-                    Due=Integer.parseInt(due.getText().toString());
-                    Price=Integer.parseInt(price.getText().toString());
-                    Place=place.getText().toString();
-                    EndTime=endTime.getText().toString();
-                    CancelTime=cancelTime.getText().toString();
-                    Age=checkedAge(ageChecked);
-                    Log.d("title","title is "+Title);
-                    Log.d("Description","description of the post is "+Description);
+                    Title = title.getText().toString();
+                    Description = description.getText().toString();
+                    Pay = Integer.parseInt(pay.getText().toString());
+                    Due = Integer.parseInt(due.getText().toString());
+                    Price = Integer.parseInt(price.getText().toString());
+                    Place = place.getText().toString();
+                    EndTime = endTime.getText().toString();
+                    CancelTime = cancelTime.getText().toString();
+                    Age = checkedAge(ageChecked);
+                    Log.d("title", "title is " + Title);
+                    Log.d("Description", "description of the post is " + Description);
 
                     //TODO : 입력된 정보들을 db로 넘기기
-                   post= new Post(Title,Description,EndTime,CancelTime,Place,Pay,Due,Price,uid,sameGender,Age);
+                    post = new Post(Title, Description, EndTime, CancelTime, Place, Pay, Due, Price, uid, sameGender, Age);
                     databaseReference.child("Posting").push().setValue(post);
-                    Log.e("a post is uploaded","a post is successfully uploaded");
-                    startActivity(new Intent(context,MainActivity.class));
+                    Log.e("a post is uploaded", "a post is successfully uploaded");
+                    startActivity(new Intent(context, MainActivity.class));
                     break;
             }
         }
