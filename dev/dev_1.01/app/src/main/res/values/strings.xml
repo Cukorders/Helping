@@ -27,4 +27,21 @@
 
     <string name="faq_content">베타버전 진행중입니다\n\n서비스 오픈 시 개설하겠습니다.\n빠른 시일내에 뵙겠습니다.</string>
 
+    <string-array name="main_title">
+        <item>제목</item>
+        <item>제목</item>
+        <item>제목</item>
+        <item>제목</item>
+        <item>제목</item>
+    </string-array>
+
+    <string-array name="main_description">
+        <item>지역구 지역동 작성일자</item>
+        <item>지역구 지역동 작성일자</item>
+        <item>지역구 지역동 작성일자</item>
+        <item>지역구 지역동 작성일자</item>
+        <item>지역구 지역동 작성일자</item>
+    </string-array>
+
+
 </resources>

@@ -90,6 +90,33 @@
             android:textColor="@color/colorBlack"
             android:textSize="18sp"
             android:textStyle="bold"/>
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_marginTop="5dp">
+            <ProgressBar
+                android:id="@+id/pb"
+                android:layout_width="200dp"
+                android:layout_height="24dp"
+                style="@style/Widget.AppCompat.ProgressBar.Horizontal"
+                android:progressDrawable="@drawable/custom_progress_bar" />
+            <TextView
+                android:id="@+id/score"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_toEndOf="@+id/face"
+                android:layout_marginLeft="3dp"
+                android:text="100점"
+                android:textColor="@color/colorBlack"
+                android:textSize="18sp"/>
+            <ImageView
+                android:id="@+id/face"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="3dp"
+                android:src="@drawable/face_manner_darkblue"
+                android:layout_toEndOf="@+id/pb"/>
+        </RelativeLayout>
     </LinearLayout>
 
     <LinearLayout

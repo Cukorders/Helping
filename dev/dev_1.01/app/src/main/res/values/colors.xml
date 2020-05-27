@@ -15,4 +15,8 @@
     <color name="colorGrayButtonPush">#d5d5d5</color>
     <color name="disabledBtnBg">#999999</color>
     <color name="colorGray">#9B9B9B</color>
+    <color name="colorDarkBlue">#00008B</color>
+    <color name="colorGreen">#008000</color>
+    <color name="colorYellow">#FFFF00</color>
+    <color name="colorRed">#FF0000</color>
 </resources>
