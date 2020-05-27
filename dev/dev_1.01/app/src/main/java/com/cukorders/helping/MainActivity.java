@@ -105,7 +105,7 @@ public class MainActivity extends AppCompatActivity {
                     break;
 
                 case R.id.fab_info:
-                    Intent intent2=new Intent(context,MyPageActivity.class);
+                    Intent intent2=new Intent(context,MissionActivity.class);
                     startActivity(intent2);
                     break;
 
