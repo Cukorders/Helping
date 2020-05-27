@@ -60,19 +60,19 @@
                 android:background="@drawable/strokebox">
 
                 <ImageButton
-                    android:id="@+id/camera_album_add"
+                    android:id="@+id/camera_album_add1"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:background="@android:color/transparent"
                     android:src="@drawable/camera_button"
                     android:layout_centerInParent="true"/>
                 <TextView
-                    android:id="@+id/camera_picture_addnumber"
+                    android:id="@+id/camera_picture_addnumber1"
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
                     android:layout_marginBottom="5dp"
                     android:text="0/10"
-                    android:layout_below="@id/camera_album_add"
+                    android:layout_below="@id/camera_album_add1"
                     android:gravity="center"/>
             </RelativeLayout>
         </LinearLayout>

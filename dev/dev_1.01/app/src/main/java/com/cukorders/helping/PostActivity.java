@@ -64,6 +64,7 @@ public class PostActivity extends AppCompatActivity {
         }
     }
 
+    @SuppressLint("WrongViewCast")
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -78,6 +79,7 @@ public class PostActivity extends AppCompatActivity {
         description=(TextView) findViewById(R.id.description);
         place=(TextView) findViewById(R.id.place);
 
+
         findViewById(R.id.back_button_write_post).setOnClickListener(onClickListener);
         findViewById(R.id.bt_finish).setOnClickListener(onClickListener);
         findViewById(R.id.bt_post).setOnClickListener(onClickListener);
@@ -90,6 +92,7 @@ public class PostActivity extends AppCompatActivity {
         findViewById(R.id.button30s).setOnClickListener(checkAge);
         findViewById(R.id.button40s).setOnClickListener(checkAge);
         findViewById(R.id.button50s).setOnClickListener(checkAge);
+
 
         bt_same=(Button) findViewById(R.id.bt_same);
         bt_dontMind=(Button) findViewById(R.id.bt_dontMind);
@@ -134,6 +137,20 @@ public class PostActivity extends AppCompatActivity {
                     Log.e("a post is uploaded","a post is successfully uploaded");
                     startActivity(new Intent(context,MainActivity.class));
                     break;
+            }
+        }
+    };
+
+    View.OnClickListener addPhoto=new View.OnClickListener() {
+        @Override
+        public void onClick(View v) {
+            switch (v.getId()){
+                case R.id.camera_album_add1:
+
+
+                    break;
+
+
             }
         }
     };

@@ -42,6 +42,8 @@ public class MainActivity extends AppCompatActivity {
         findViewById(R.id.myMission).setOnClickListener(onClickListener);
         findViewById(R.id.currentMission).setOnClickListener(onClickListener);
         findViewById(R.id.fab_post).setOnClickListener(onClickListener);
+        findViewById(R.id.fab_info).setOnClickListener(onClickListener);
+        findViewById(R.id.fab_chat).setOnClickListener(onClickListener);
 
         fab_plus.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -53,6 +55,8 @@ public class MainActivity extends AppCompatActivity {
                 }
             }
         });
+
+
 
     }
 
@@ -74,8 +78,18 @@ public class MainActivity extends AppCompatActivity {
                     break;
 
                 case R.id.fab_post:
-                    Intent intent =new Intent(context,PostActivity.class);
-                    startActivity(intent);
+                    Intent intent1 =new Intent(context,PostActivity.class);
+                    Log.e("go to post","go to a posting page");
+                    startActivity(intent1);
+                    break;
+
+                case R.id.fab_info:
+                    Intent intent2=new Intent(context,MyPageActivity.class);
+                    startActivity(intent2);
+                    break;
+
+                case R.id.fab_chat:
+
                     break;
 
             }

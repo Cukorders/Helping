@@ -46,36 +46,16 @@ public class AuthActivity extends AppCompatActivity {
     //Database
     private FirebaseDatabase mDatabase;
     private DatabaseReference mUserDatabase;
+    private DatabaseReference mUserUids;
+
 
     @Override
-    protected void onCreate(Bundle savedInstanceState){
+    protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.number_authentication);
 
         mAuth = FirebaseAuth.getInstance();
         mCurrentUser = mAuth.getCurrentUser();
-        /*
-        String current_uid = mCurrentUser.getUid();
-        mUserDatabase = FirebaseDatabase.getInstance().getReference();
-        //retrieve data
-        mUserDatabase.addValueEventListener(new ValueEventListener() {
-            @Override
-            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                String name = dataSnapshot.child("name").getValue().toString();
-                String age = dataSnapshot.child("age").getValue().toString();
-                String gender = dataSnapshot.child("gender").getValue().toString();
-                String image = dataSnapshot.child("image").getValue().toString();
-                String imageThumbnails = dataSnapshot.child("Thumbnails").getValue().toString();
-                String region1 = dataSnapshot.child("region1").getValue().toString();
-                String region1State = dataSnapshot.child("region1State").getValue().toString();
-            }
-
-            @Override
-            public void onCancelled(@NonNull DatabaseError databaseError) {
-
-            }
-        });
-        */
         mPhoneText = findViewById(R.id.phoneEditText);
         mCodeText = findViewById(R.id.codeEditText);
         mMessageSentBtn = findViewById(R.id.sendBtn);
@@ -84,14 +64,14 @@ public class AuthActivity extends AppCompatActivity {
         mErrorText = findViewById(R.id.login_form_feedback);
 
         mAuth.setLanguageCode("kr");
-        mMessageSentBtn.setOnClickListener(new View.OnClickListener(){
+        mMessageSentBtn.setOnClickListener(new View.OnClickListener() {
             @Override
-            public void onClick(View v){
+            public void onClick(View v) {
                 String PhoneNumber = mPhoneText.getText().toString();
-                if(PhoneNumber.isEmpty()) {
+                if (PhoneNumber.isEmpty()) {
                     mErrorText.setText("전화번호를 입력해주세요");
                     mErrorText.setVisibility(VISIBLE);
-                }else {
+                } else {
                     mMessageSentBtn.setEnabled(false);
                     mCodeText.setVisibility(VISIBLE);
                     mCodeBtn.setVisibility(VISIBLE);
@@ -110,13 +90,13 @@ public class AuthActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 String CodeNumber = mCodeText.getText().toString();
-                if(CodeNumber.isEmpty()){
+                if (CodeNumber.isEmpty()) {
                     mErrorText.setText("인증번호를 입력해주세요");
                     mErrorText.setVisibility(VISIBLE);
-                }else {
+                } else {
                     mCodeBtn.setEnabled(false);
                     mLoginBtn.setEnabled(false);
-                    PhoneAuthCredential credential = PhoneAuthProvider.getCredential(mVerificationId,CodeNumber);
+                    PhoneAuthCredential credential = PhoneAuthProvider.getCredential(mVerificationId, CodeNumber);
                     signInWithPhoneAuthCredential(credential);
                 }
             }
@@ -138,6 +118,7 @@ public class AuthActivity extends AppCompatActivity {
                 mErrorText.setVisibility(VISIBLE);
                 mMessageSentBtn.setEnabled(true);
             }
+
             @Override
             public void onCodeSent(String verificationId, PhoneAuthProvider.ForceResendingToken token) {
                 super.onCodeSent(verificationId, token);
@@ -164,28 +145,36 @@ public class AuthActivity extends AppCompatActivity {
                     @Override
                     public void onComplete(@NonNull Task<AuthResult> task) {
                         if (task.isSuccessful()) {
-                            FirebaseUser current_user = FirebaseAuth.getInstance().getCurrentUser();
-                            String uid = current_user.getUid();
+                            String uid = mCurrentUser.getUid();
                             mUserDatabase = FirebaseDatabase.getInstance().getReference().child("Users").child(uid);
-                            HashMap<String, String> userMap = new HashMap<>();
-                            userMap.put("Nickname","default");
-                            userMap.put("Image","default");
-                            userMap.put("Thumb_img","default");
-                            userMap.put("Gender","default");
-                            userMap.put("Age","default");
-                            userMap.put("Region1","default");
-                            userMap.put("Region1State","default");
-                            mUserDatabase.setValue(userMap).addOnCompleteListener(new OnCompleteListener<Void>() {
-                                @Override
-                                public void onComplete(@NonNull Task<Void> task) {
-                                    if(task.isSuccessful()){
-                                        Intent LoginIntent = new Intent(AuthActivity.this,LogInActivity.class);
-                                        LoginIntent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK |Intent.FLAG_ACTIVITY_CLEAR_TASK);
-                                        startActivity(LoginIntent);
-                                        finish();
+                            boolean newuser = task.getResult().getAdditionalUserInfo().isNewUser();
+                            if (newuser) {
+                                //신규 사용자라면
+                                HashMap<String, String> userMap = new HashMap<>();
+                                userMap.put("Nickname", "default");
+                                userMap.put("Image", "default");
+                                userMap.put("Thumb_img", "default");
+                                userMap.put("Gender", "default");
+                                userMap.put("Age", "default");
+                                userMap.put("Score", "default");
+                                userMap.put("Money", "default");
+                                mUserDatabase.setValue(userMap).addOnCompleteListener(new OnCompleteListener<Void>() {
+                                    @Override
+                                    public void onComplete(@NonNull Task<Void> task) {
+                                        if (task.isSuccessful()) {
+                                            Intent LoginIntent = new Intent(AuthActivity.this, LogInActivity.class);
+                                            LoginIntent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+                                            startActivity(LoginIntent);
+                                            finish();
+                                        }
                                     }
-                                }
-                            });
+                                });
+                            } else {
+                                Intent MainIntent = new Intent(AuthActivity.this, MainActivity.class);
+                                MainIntent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+                                startActivity(MainIntent);
+                                finish();
+                            }
 
                         } else {
                             if (task.getException() instanceof FirebaseAuthInvalidCredentialsException) {
@@ -197,17 +186,5 @@ public class AuthActivity extends AppCompatActivity {
 
                     }
                 });
-    }
-
-    protected void onStart(){
-        super.onStart();
-        if(mCurrentUser!=null){
-            Intent LoginIntent = new Intent(AuthActivity.this,LogInActivity.class);
-            LoginIntent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
-            LoginIntent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK);
-            startActivity(LoginIntent);
-        }
-        //users 밑에 uid 검색을 통해서 만약에 기존에 있는 uid라면 flag 값을 1로 바꾸고 signinwithphoneauthcredential 안에서 intent를 mainintent로 가도록 하기
-        //새로운 database 만드는 것을 따로 함수로 빼자
     }
 }

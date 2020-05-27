@@ -1,6 +1,8 @@
 <resources>
     <string name="app_name">Helping</string>
-
+    <!-- Firebase database Fields -->
+    <string name="dbname_users">users</string>
+    <string name="field_username">username</string>
     <!-- TODO: Remove or change this placeholder text -->
     <string name="hello_blank_fragment">Hello blank fragment</string>
     <string name="caution_for_charging_point">[ 유의할 점 ]\n\n

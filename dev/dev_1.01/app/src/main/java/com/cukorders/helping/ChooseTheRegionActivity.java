@@ -110,6 +110,7 @@ public class ChooseTheRegionActivity  extends AppCompatActivity {
                     break;
 
                 case R.id.currentLocation:
+                    Log.e("current Location button","current location button is clicked");
                     fetchLocation();
                     break;
             }
