@@ -98,8 +98,7 @@
                 android:padding="8dp"
                 android:text="프로필 \n보기"
                 android:textSize="20sp"
-                android:textColor="@color/colorBlack"
-                android:textSize="20sp" />
+                android:textColor="@color/colorBlack" />
         </LinearLayout>
     </LinearLayout>
     <LinearLayout

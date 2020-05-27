@@ -49,8 +49,8 @@ public class MainActivity extends AppCompatActivity {
 
         //위가 recyclerview 아래가 widget
 
-        fab_plus=(FloatingActionButton) findViewById(R.id.fab_chat);
-        fab_write=(FloatingActionButton) findViewById(R.id.fab_like);
+        fab_plus=(FloatingActionButton) findViewById(R.id.fab_plus);
+        fab_write=(FloatingActionButton) findViewById(R.id.fab_post);
         fab_info=(FloatingActionButton) findViewById(R.id.fab_info);
         fab_chat=(FloatingActionButton) findViewById(R.id.fab_chat);
         FabOpen= AnimationUtils.loadAnimation(getApplicationContext(),R.anim.fab_open);

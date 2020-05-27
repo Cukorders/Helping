@@ -42,13 +42,7 @@
     <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content">
-        <ImageButton
-            android:id="@+id/currentLocation"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_margin="3dp"
-            android:layout_alignParentRight="true"
-            android:src="@drawable/gps_button"/>
+
         <fragment
             android:id="@+id/googlemapview"
             android:layout_width="match_parent"
@@ -56,6 +50,18 @@
             android:name="com.google.android.gms.maps.SupportMapFragment"
             tools:context="com.example.mapwithmarker.MapsMarkerActivity" >
         </fragment>
+
+        <ImageButton
+            android:id="@+id/currentLocation"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentRight="true"
+            android:layout_marginStart="3dp"
+            android:layout_marginTop="3dp"
+            android:layout_marginEnd="3dp"
+            android:layout_marginBottom="3dp"
+            android:src="@drawable/gps_button" />
+
         <TextView
             android:id="@+id/result_gps"
             android:layout_below="@id/googlemapview"

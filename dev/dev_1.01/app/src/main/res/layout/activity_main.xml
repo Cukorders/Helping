@@ -134,7 +134,6 @@
             android:backgroundTint="@color/colorLogo"
             android:elevation="6dp"
             android:src="@drawable/chat_icon"
-            android:src="@drawable/chat_widget32"
             android:visibility="invisible"
             app:backgroundTint="@color/colorAccent"
             app:pressedTranslationZ="12dp" />
