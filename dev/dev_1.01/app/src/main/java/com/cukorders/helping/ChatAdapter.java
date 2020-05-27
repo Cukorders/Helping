@@ -26,7 +26,7 @@ import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.core.Context;
 
 public class ChatAdapter extends RecyclerView.Adapter<ChatAdapter.MyViewHolder> {
-    private List<ChatData> mDataset;
+    private List<ChatDTO> mDataset;
     private String myNickName;
     // Provide a reference to the views for each data item
     // Complex data items may need more than one view per item, and
@@ -41,14 +41,11 @@ public class ChatAdapter extends RecyclerView.Adapter<ChatAdapter.MyViewHolder> 
             TextView_nickname = v.findViewById(R.id.TextView_nickname);
             TextView_msg = v.findViewById(R.id.TextView_msg);
             rootView = v;
-
         }
-
-
     }
 
     // Provide a suitable constructor (depends on the kind of dataset)
-    public ChatAdapter(List<ChatData> myDataset, ChatActivity2 context, String myNickName) {
+    public ChatAdapter(List<ChatDTO> myDataset, ChatActivity context, String myNickName) {
         //{"1","2"}
         mDataset = myDataset;
         this.myNickName = myNickName;
@@ -66,26 +63,24 @@ public class ChatAdapter extends RecyclerView.Adapter<ChatAdapter.MyViewHolder> 
         return vh;
     }
 
-
     // Replace the contents of a view (invoked by the layout manager)
     @Override
     public void onBindViewHolder(MyViewHolder holder, int position) {
         // - get element from your dataset at this position
         // - replace the contents of the view with that element
-        ChatData chat = mDataset.get(position);
+        ChatDTO chat = mDataset.get(position);
 
         holder.TextView_nickname.setText(chat.getNickname());
         holder.TextView_msg.setText(chat.getMsg());
 
         if(chat.getNickname().equals(this.myNickName)) {
-            holder.TextView_msg.setTextAlignment(View.TEXT_ALIGNMENT_TEXT_END);
+            holder.TextView_msg.setTextAlignment(View.TEXT_ALIGNMENT_TEXT_END); // 채팅 오른쪽에서 시작
             holder.TextView_nickname.setTextAlignment(View.TEXT_ALIGNMENT_TEXT_END);
         }
         else {
-            holder.TextView_msg.setTextAlignment(View.TEXT_ALIGNMENT_TEXT_START);
+            holder.TextView_msg.setTextAlignment(View.TEXT_ALIGNMENT_TEXT_START); // 채팅 왼쪽에서 시작
             holder.TextView_nickname.setTextAlignment(View.TEXT_ALIGNMENT_TEXT_START);
         }
-
     }
 
     // Return the size of your dataset (invoked by the layout manager)
@@ -96,11 +91,11 @@ public class ChatAdapter extends RecyclerView.Adapter<ChatAdapter.MyViewHolder> 
         return mDataset == null ? 0 :  mDataset.size();
     }
 
-    public ChatData getChat(int position) {
+    public ChatDTO getChat(int position) {
         return mDataset != null ? mDataset.get(position) : null;
     }
 
-    public void addChat(ChatData chat) {
+    public void addChat(ChatDTO chat) {
         mDataset.add(chat);
         notifyItemInserted(mDataset.size()-1); //갱신
     }

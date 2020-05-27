@@ -1,122 +1,92 @@
 package com.cukorders.helping;
 
-import android.content.Intent;
-import android.os.Bundle;
-import android.util.Log;
-import android.view.View;
-import android.widget.ArrayAdapter;
-import android.widget.Button;
-import android.widget.EditText;
-import android.widget.ListView;
+        import android.content.Intent;
+        import androidx.appcompat.app.AppCompatActivity;
+        import android.os.Bundle;
+        import android.util.Log;
+        import android.view.View;
+        import android.widget.ArrayAdapter;
+        import android.widget.Button;
+        import android.widget.EditText;
+        import android.widget.ListView;
 
-import androidx.annotation.NonNull;
-import androidx.appcompat.app.AppCompatActivity;
-import androidx.recyclerview.widget.LinearLayoutManager;
-import androidx.recyclerview.widget.RecyclerView;
+        import com.google.firebase.database.ChildEventListener;
+        import com.google.firebase.database.DataSnapshot;
+        import com.google.firebase.database.DatabaseError;
+        import com.google.firebase.database.DatabaseReference;
+        import com.google.firebase.database.FirebaseDatabase;
 
-import com.google.firebase.database.ChildEventListener;
-import com.google.firebase.database.DataSnapshot;
-import com.google.firebase.database.DatabaseError;
-import com.google.firebase.database.DatabaseReference;
-import com.google.firebase.database.FirebaseDatabase;
-import com.google.firebase.database.annotations.Nullable;
-
-import java.util.ArrayList;
-import java.util.List;
+        import java.util.ArrayList;
+        import java.util.List;
 
 public class ChatActivity2 extends AppCompatActivity {
 
-    private RecyclerView mRecyclerView;
-    public  RecyclerView.Adapter mAdapter;
-    private RecyclerView.LayoutManager mLayoutManager;
-    private List<ChatData> chatList;
-    private String nick = "nick2";
+    private String CHAT_NAME;
+    private String USER_NAME;
 
-    private EditText EditText_chat;
-    private Button Button_send;
-    private DatabaseReference myRef;
+    private ListView chat_view;
+    private EditText chat_edit;
+    private Button chat_send;
+
+    private FirebaseDatabase firebaseDatabase = FirebaseDatabase.getInstance();
+    private DatabaseReference databaseReference = firebaseDatabase.getReference();
+
+    public void onClick(View view) {
+    }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_chat);
 
+        // 위젯 ID 참조
+//        chat_view = (ListView) findViewById(R.id.chat_view);
+//        chat_edit = (EditText) findViewById(R.id.chat_edit);
+//        chat_send = (Button) findViewById(R.id.chat_sent);
 
-        Button_send = findViewById(R.id.Button_send);
-        EditText_chat = findViewById(R.id.EditText_chat);
+        // 로그인 화면에서 받아온 채팅방 이름, 유저 이름 저장
+        Intent intent = getIntent();
+        CHAT_NAME = intent.getStringExtra("chatName");
+        USER_NAME = intent.getStringExtra("userName");
 
-        Button_send.setOnClickListener(new View.OnClickListener() {
+        // 채팅 방 입장
+        openChat(CHAT_NAME);
+    }
+
+    private void openChat(String chatName) {
+        // 리스트 어댑터 생성 및 세팅
+        final ArrayAdapter<String> adapter
+
+                = new ArrayAdapter<String>(this, android.R.layout.simple_list_item_1, android.R.id.text1);
+        chat_view.setAdapter(adapter);
+
+        // 데이터 받아오기 및 어댑터 데이터 추가 및 삭제 등..리스너 관리
+        databaseReference.child("chat").child(chatName).addChildEventListener(new ChildEventListener() {
             @Override
-            public void onClick(View v) {
-                String msg = EditText_chat.getText().toString(); //msg
+            public void onChildAdded(DataSnapshot dataSnapshot, String s) {
+ //               addMessage(dataSnapshot, adapter);
+                Log.e("LOG", "s:"+s);
+            }
 
-                if(msg != null) {
-                    ChatData chat = new ChatData();
-                    chat.setNickname(nick);
-                    chat.setMsg(msg);
-                    myRef.push().setValue(chat);
-                }
+            @Override
+            public void onChildChanged(DataSnapshot dataSnapshot, String s) {
+
+            }
+
+            @Override
+            public void onChildRemoved(DataSnapshot dataSnapshot) {
+ //               removeMessage(dataSnapshot, adapter);
+            }
+
+            @Override
+            public void onChildMoved(DataSnapshot dataSnapshot, String s) {
+
+            }
+
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
 
             }
         });
-
-
-
-        mRecyclerView = findViewById(R.id.my_recycler_view);
-        mRecyclerView.setHasFixedSize(true);
-        mLayoutManager = new LinearLayoutManager(this);
-        mRecyclerView.setLayoutManager(mLayoutManager);
-
-        chatList = new ArrayList<>();
-        mAdapter = new ChatAdapter(chatList, ChatActivity2.this, nick);
-
-        mRecyclerView.setAdapter(mAdapter);
-
-        // Write a message to the database
-        FirebaseDatabase database = FirebaseDatabase.getInstance();
-        myRef = database.getReference();
-
-
-        //caution!!!
-
-        myRef.addChildEventListener(new ChildEventListener() {
-            @Override
-            public void onChildAdded(@NonNull DataSnapshot dataSnapshot, @Nullable String s) {
-                Log.d("CHATCHAT", dataSnapshot.getValue().toString());
-                ChatData chat = dataSnapshot.getValue(ChatData.class);
-                ((ChatAdapter) mAdapter).addChat(chat);
-            }
-
-            @Override
-            public void onChildChanged(@NonNull DataSnapshot dataSnapshot, @Nullable String s) {
-
-            }
-
-            @Override
-            public void onChildRemoved(@NonNull DataSnapshot dataSnapshot) {
-
-            }
-
-            @Override
-            public void onChildMoved(@NonNull DataSnapshot dataSnapshot, @org.jetbrains.annotations.Nullable String s) {
-
-            }
-
-            @Override
-            public void onCancelled(@NonNull DatabaseError databaseError) {
-
-            }
-        });
-
-        //1. recyclerView - 반복
-        //2. 디비 내용을 넣는다
-        //3. 상대방폰에 채팅 내용이 보임 - get
-
-        //1-1. recyclerview - chat data
-        //1. message, nickname - Data Transfer Object
-
-
-
-
     }
 }

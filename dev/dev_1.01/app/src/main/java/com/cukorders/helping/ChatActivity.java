@@ -1,7 +1,6 @@
 package com.cukorders.helping;
 
 import android.content.Intent;
-import androidx.appcompat.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
@@ -10,105 +9,105 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ListView;
 
+import androidx.annotation.NonNull;
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
+
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.ChildEventListener;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.annotations.Nullable;
 
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.List;
 
 public class ChatActivity extends AppCompatActivity {
 
-    private String CHAT_NAME;
-    private String USER_NAME;
+    private RecyclerView mRecyclerView;
+    public  RecyclerView.Adapter mAdapter;
+    private RecyclerView.LayoutManager mLayoutManager;
+    private List<ChatDTO> chatList;
+    private String nick = getIntent().getStringExtra("nickName");
+    private FirebaseAuth mAuth;
 
-    private ListView chat_view;
-    private EditText chat_edit;
-    private Button chat_send;
-
-    private FirebaseDatabase firebaseDatabase = FirebaseDatabase.getInstance();
-    private DatabaseReference databaseReference = firebaseDatabase.getReference();
-
-    public void onClick(View view) {
-    }
+    private EditText EditText_chat;
+    private Button Button_send;
+    private DatabaseReference myRef;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_chat);
 
-        // 위젯 ID 참조
-        chat_view = (ListView) findViewById(R.id.chat_view);
-        chat_edit = (EditText) findViewById(R.id.chat_edit);
-        chat_send = (Button) findViewById(R.id.chat_sent);
+        Button_send = findViewById(R.id.Button_send);
+        EditText_chat = findViewById(R.id.EditText_chat);
+        mAuth = FirebaseAuth.getInstance();
 
-        // 로그인 화면에서 받아온 채팅방 이름, 유저 이름 저장
-        Intent intent = getIntent();
-        CHAT_NAME = intent.getStringExtra("chatName");
-        USER_NAME = intent.getStringExtra("userName");
-
-        // 채팅 방 입장
-        openChat(CHAT_NAME);
-
-        // 메시지 전송 버튼에 대한 클릭 리스너 지정
-        chat_send.setOnClickListener(new View.OnClickListener() {
+        Button_send.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if (chat_edit.getText().toString().equals(""))
-                    return;
+                String msg = EditText_chat.getText().toString(); //msg
 
-                ChatDTO chat = new ChatDTO(USER_NAME, chat_edit.getText().toString()); //ChatDTO를 이용하여 데이터를 묶는다.
-                databaseReference.child("chat").child(CHAT_NAME).push().setValue(chat); // 데이터 푸쉬
-                chat_edit.setText(""); //입력창 초기화
+                Calendar c = Calendar.getInstance();
+                SimpleDateFormat dateformat = new SimpleDateFormat("yyyy-MM--dd hh:mm:ss");
+                String datetime = dateformat.format(c.getTime());
+                System.out.println(datetime);
 
+                if(msg != null) {
+                    ChatDTO chat = new ChatDTO();
+                    chat.setNickname(nick);
+                    chat.setMsg(msg);
+                    myRef.child(datetime).push().setValue(chat);
+                }
             }
         });
-    }
 
-    private void addMessage(DataSnapshot dataSnapshot, ArrayAdapter<String> adapter) {
-        ChatDTO chatDTO = dataSnapshot.getValue(ChatDTO.class);
-        adapter.add(chatDTO.getUserName() + " : " + chatDTO.getMessage());
-    }
+        mRecyclerView = findViewById(R.id.my_recycler_view);
+        mRecyclerView.setHasFixedSize(true);
+        mLayoutManager = new LinearLayoutManager(this);
+        mRecyclerView.setLayoutManager(mLayoutManager);
 
-    private void removeMessage(DataSnapshot dataSnapshot, ArrayAdapter<String> adapter) {
-        ChatDTO chatDTO = dataSnapshot.getValue(ChatDTO.class);
-        adapter.remove(chatDTO.getUserName() + " : " + chatDTO.getMessage());
-    }
+        chatList = new ArrayList<>();
+        mAdapter = new ChatAdapter(chatList, ChatActivity.this, nick);
 
-    private void openChat(String chatName) {
-        // 리스트 어댑터 생성 및 세팅
-        final ArrayAdapter<String> adapter
+        mRecyclerView.setAdapter(mAdapter);
 
-                = new ArrayAdapter<String>(this, android.R.layout.simple_list_item_1, android.R.id.text1);
-        chat_view.setAdapter(adapter);
+        // Write a message to the database
+        FirebaseDatabase database = FirebaseDatabase.getInstance();
+        myRef = database.getReference();
 
-        // 데이터 받아오기 및 어댑터 데이터 추가 및 삭제 등..리스너 관리
-        databaseReference.child("chat").child(chatName).addChildEventListener(new ChildEventListener() {
+        myRef.addChildEventListener(new ChildEventListener() {
             @Override
-            public void onChildAdded(DataSnapshot dataSnapshot, String s) {
-                addMessage(dataSnapshot, adapter);
-                Log.e("LOG", "s:"+s);
+            public void onChildAdded(@NonNull DataSnapshot dataSnapshot, @Nullable String s) {
+                Log.d("CHATCHAT", dataSnapshot.getValue().toString()); // 오류날 때 log로 확인하는 법 (logcat에서 검색 CHATCHAT)
+                ChatDTO chat = dataSnapshot.getValue(ChatDTO.class);
+                ((ChatAdapter) mAdapter).addChat(chat);
             }
 
             @Override
-            public void onChildChanged(DataSnapshot dataSnapshot, String s) {
+            public void onChildChanged(@NonNull DataSnapshot dataSnapshot, @Nullable String s) {
 
             }
 
             @Override
-            public void onChildRemoved(DataSnapshot dataSnapshot) {
-                removeMessage(dataSnapshot, adapter);
-            }
-
-            @Override
-            public void onChildMoved(DataSnapshot dataSnapshot, String s) {
+            public void onChildRemoved(@NonNull DataSnapshot dataSnapshot) {
 
             }
 
             @Override
-            public void onCancelled(DatabaseError databaseError) {
+            public void onChildMoved(@NonNull DataSnapshot dataSnapshot, @org.jetbrains.annotations.Nullable String s) {
+
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError databaseError) {
 
             }
         });

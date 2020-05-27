@@ -1,29 +1,24 @@
 package com.cukorders.helping;
 
+        import java.io.Serializable;
+
 public class ChatDTO {
-    private String userName;
-    private String message;
+    private String msg;
+    private String nickname;
 
-    public ChatDTO() {}
-    public ChatDTO(String userName, String message) {
-        this.userName = userName;
-        this.message = message;
+    public String getMsg() {
+        return msg;
     }
 
-    public void setUserName(String userName) {
-        this.userName = userName;
+    public void setMsg(String msg) {
+        this.msg = msg;
     }
 
-    public void setMessage(String message) {
-        this.message = message;
+    public String getNickname() {
+        return nickname;
     }
 
-    public String getUserName() {
-        return userName;
+    public void setNickname(String nickname) {
+        this.nickname = nickname;
     }
-
-    public String getMessage() {
-        return message;
-    }
-
 }
