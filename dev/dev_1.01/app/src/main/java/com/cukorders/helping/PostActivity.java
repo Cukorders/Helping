@@ -288,9 +288,11 @@ public class PostActivity extends AppCompatActivity {
             ret.put("due",due);
             ret.put("price",price);
             ret.put("uid",uid);
+            String res="";
             for(int i=0;i<5;++i)
                 if(ageChecked[i])
-                    ret.put("age",(i+1)*10); // 선택한 연령대를 모두 age column에 삽입한다.
+                    res+=Integer.toString((i+1)); // 선택한 연령대를 모두 age column에 삽입한다.
+            ret.put("age",res);
             ret.put("gender",sameGender?"동성":"무관");
             return ret;
         }
