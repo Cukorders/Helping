@@ -169,6 +169,8 @@ public class AuthActivity extends AppCompatActivity {
                                         }
                                     }
                                 });
+                                //todo 지역을 넣자
+
                             } else {
                                 Intent MainIntent = new Intent(AuthActivity.this, MainActivity.class);
                                 MainIntent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
@@ -186,5 +188,18 @@ public class AuthActivity extends AppCompatActivity {
 
                     }
                 });
+    }
+    protected void onStart(){
+        super.onStart();
+        if(mCurrentUser!=null){
+            sendUserToMain();
+        }
+    }
+    private void sendUserToMain(){
+        Intent profileIntent = new Intent(AuthActivity.this,MainActivity.class);
+        profileIntent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+        profileIntent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK);
+        startActivity(profileIntent);
+        finish();
     }
 }
