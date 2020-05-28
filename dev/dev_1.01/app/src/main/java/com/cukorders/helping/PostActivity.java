@@ -24,6 +24,8 @@ import com.google.firebase.database.FirebaseDatabase;
 import java.util.HashMap;
 import java.util.Map;
 
+import static com.cukorders.helping.MainActivity.mainActivity;
+
 public class PostActivity extends AppCompatActivity {
 
     public final Context regional_certification2=this;
@@ -121,7 +123,7 @@ public class PostActivity extends AppCompatActivity {
         age[3]=(Button) findViewById(R.id.button40s);
         age[4]=(Button) findViewById(R.id.button50s);
 
-        sameGender=false;
+        sameGender=true;
         init_ageChecked(ageChecked);
         ageChecked[0]=true; // age의 default값이 10대이므로
         childUpdate=new HashMap<>();
@@ -157,6 +159,7 @@ public class PostActivity extends AppCompatActivity {
                         @Override
                         public void onComplete(@NonNull Task<Void> task) {
                             if(task.isSuccessful()){
+                                Toast.makeText(mainActivity, "게시물 작성이 완료되었습니다.", Toast.LENGTH_LONG).show();
                                 Log.e("the post table is updated.","the post is successfully updated");
                             }
                         }
