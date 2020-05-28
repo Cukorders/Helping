@@ -9,9 +9,13 @@ import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.TextView;
+import android.widget.Toast;
 
+import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DatabaseReference;
@@ -29,15 +33,15 @@ public class PostActivity extends AppCompatActivity {
     private Button bt_same,bt_dontMind;
     private Button age[]=new Button[5]; // 연령 버튼
     private TextView title, description, pay,due,price,endTime,cancelTime,place;
-    private String Title,Description,EndTime,CancelTime,Place,uid; //TODO: uid를 불러오는 과정
+    private String Title,Description,EndTime,CancelTime,Place;
     private DatabaseReference databaseReference;
     private HashMap<String,Object> childUpdate=null;
     private HashMap<String,Object> postValue=null;
     private Map<String,Object> userValue=null;
     private int Pay,Due,Price,Age;
-    private final FirebaseUser user= FirebaseAuth.getInstance().getCurrentUser(); // 현재 위저를 불러온다. TODO: DB에서 이 유저의 UID를 불러온다.
+    private final FirebaseUser user= FirebaseAuth.getInstance().getCurrentUser(); // 현재 위저를 불러온다.
     private Post post;
-
+    private final String UID=FirebaseAuth.getInstance().getCurrentUser().getUid();
     @SuppressLint("LongLogTag")
     private static void init_ageChecked(boolean ageChecked[]){
         Log.d("init the array ageChecked","init the array ageChecked");
@@ -71,6 +75,11 @@ public class PostActivity extends AppCompatActivity {
             if (ageChecked[i]) {
                 flag = true;
             }
+        }
+        if(!flag){
+            Toast.makeText(context,"하나 이상의 연령층을 선택해야 합니다.",Toast.LENGTH_LONG).show();
+            ageChecked[0]=true;
+            age[0].setBackgroundColor(Color.parseColor("#70D398"));
         }
     }
 
@@ -115,7 +124,6 @@ public class PostActivity extends AppCompatActivity {
         sameGender=false;
         init_ageChecked(ageChecked);
         ageChecked[0]=true; // age의 default값이 10대이므로
-        databaseReference=FirebaseDatabase.getInstance().getReference();
         childUpdate=new HashMap<>();
         postValue=new HashMap<>();
     }
@@ -141,9 +149,18 @@ public class PostActivity extends AppCompatActivity {
                     Log.d("title", "title is " + Title);
                     Log.d("Description", "description of the post is " + Description);
 
-                    //TODO : 입력된 정보들을 db로 넘기기
-                    post = new Post(Title, Description, EndTime, CancelTime, Place, Pay, Due, Price, uid, sameGender, Age);
-                    databaseReference.child("Posting").push().setValue(post);
+                    databaseReference= FirebaseDatabase.getInstance().getReference().child("Posting").child(Title);
+                    post = new Post(Title, Description, EndTime, CancelTime, Place, Pay, Due, Price, UID, sameGender, Age);
+                    childUpdate= (HashMap<String, Object>) post.toMap();
+                    databaseReference.setValue(childUpdate).addOnCompleteListener(new OnCompleteListener<Void>() {
+                        @SuppressLint("LongLogTag")
+                        @Override
+                        public void onComplete(@NonNull Task<Void> task) {
+                            if(task.isSuccessful()){
+                                Log.e("the post table is updated.","the post is successfully updated");
+                            }
+                        }
+                    });
                     Log.e("a post is uploaded", "a post is successfully uploaded");
                     startActivity(new Intent(context, MainActivity.class));
                     break;
@@ -195,35 +212,34 @@ public class PostActivity extends AppCompatActivity {
             switch (v.getId()){
                 case R.id.button10s:
                     Log.d("a button 10s is clicked","a button 10s is clicked");
-                    init_ageChecked(ageChecked);
-                    ageChecked[0]=true;
+                    ageChecked[0]=!ageChecked[0];
                     checkAgeButton(age,ageChecked);
                     break;
 
                 case R.id.button20s:
                     Log.d("a button 20s is clicked","a button 20s is clicked");
-                    init_ageChecked(ageChecked);
-                    ageChecked[1]=true;
+                    //init_ageChecked(ageChecked);
+                    ageChecked[1]=!ageChecked[1];
                     checkAgeButton(age,ageChecked);
                     break;
 
                 case R.id.button30s:
-                    init_ageChecked(ageChecked);
-                    ageChecked[2]=true;
+                    //init_ageChecked(ageChecked);
+                    ageChecked[2]=!ageChecked[2];
                     Log.e("an age value","an age30s button is clicked. and its value is "+ageChecked[2]);
                     checkAgeButton(age,ageChecked);
                     break;
 
                 case R.id.button40s:
-                    init_ageChecked(ageChecked);
-                    ageChecked[3]=true;
+                    //init_ageChecked(ageChecked);
+                    ageChecked[3]=!ageChecked[3];
                     Log.e("an age value","an age40s button is clicked. and its value is "+ageChecked[3]);
                     checkAgeButton(age,ageChecked);
                     break;
 
                 default:
-                    init_ageChecked(ageChecked);
-                    ageChecked[4]=true;
+                   // init_ageChecked(ageChecked);
+                    ageChecked[4]=!ageChecked[4];
                     checkAgeButton(age,ageChecked);
                     break;
             }
