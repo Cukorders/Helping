@@ -73,6 +73,8 @@ public class LogInActivity extends AppCompatActivity {
     private Button Age5;
     private Button mRegisterBtn;
     private Button mLogoutBtn;
+    private String location;
+    private boolean locationCertification;
     //닉네임, 성별, 나이값도 업데이트 진행하기
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -80,6 +82,9 @@ public class LogInActivity extends AppCompatActivity {
         setContentView(R.layout.enter_details);
 
         profileImage = findViewById(R.id.userProfileImage);
+
+        locationCertification=((RegionActivity)RegionActivity.regional_certification2).isCertified; //지역 인증 여부
+        location=((ChooseTheRegionActivity)ChooseTheRegionActivity.regional_certification1).userLocation; // 사용자가 선택한 지역
 
         mAuth = FirebaseAuth.getInstance();
         mCurrentUser = mAuth.getCurrentUser();

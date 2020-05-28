@@ -43,6 +43,7 @@ import static android.text.Spanned.SPAN_INCLUSIVE_EXCLUSIVE;
 
 public class RegionActivity  extends FragmentActivity implements OnMapReadyCallback{
 
+    public static Context regional_certification2;
     private static final int PERMISSIONS_REQUEST_CODE=1000;
     private static final int REQUEST_CODE = 101;
     private static final int GPS_ENABLE_REQUEST_CODE=2001;
@@ -69,6 +70,7 @@ public class RegionActivity  extends FragmentActivity implements OnMapReadyCallb
     public String dong="";
     private TextView result_gps;
     private String errorMSG="인증을 하려면 위치 정보를 불러와야 합니다.";
+    public boolean isCertified=false; // 지역 인증 여부
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -85,14 +87,14 @@ public class RegionActivity  extends FragmentActivity implements OnMapReadyCallb
         findViewById(R.id.currentLocation).setOnClickListener(OnClickListener);
         findViewById(R.id.finish_location).setOnClickListener(OnClickListener);
         findViewById(R.id.bt_back).setOnClickListener(OnClickListener);
-      //  findViewById(R.id.bt_skip).setOnClickListener(OnClickListener);
+        findViewById(R.id.bt_skip).setOnClickListener(OnClickListener);
 
         // 위치 권한 요청을 하기 위한 FusedLocationClient 불러옴
         mFusedLocationClient= LocationServices.getFusedLocationProviderClient(this);
         geocoder=new Geocoder(this);
 
         result_gps=(TextView) findViewById(R.id.result_gps);
-
+        regional_certification2=this;
     }
 
     View.OnClickListener OnClickListener=new View.OnClickListener() {
@@ -110,7 +112,8 @@ public class RegionActivity  extends FragmentActivity implements OnMapReadyCallb
                     Log.e("the user's location is ","the user's location is "+dong);
 
                     if(compare.equals(dong)){
-                        //TODO : DB에서 위치 인증이 완료된 유저라고 체크되어야 함.
+                        isCertified=true;
+                        Log.e("인증 여부","인증 여부 : "+isCertified);
                         goPhoneAuth();
                     } else{
                         // 인증 실패 에러 메시지 띄움
@@ -121,10 +124,10 @@ public class RegionActivity  extends FragmentActivity implements OnMapReadyCallb
                     goBack(); //이전 페이지로 가기(뒤로 가기 버튼이 눌렸을 때)
                     break;
 
-               /* case R.id.bt_skip:
-                    //TODO : DB에서 인증 안 된 유저라고 체크해야 함.
+                case R.id.bt_skip:
+                    Log.e("인증 여부","인증 여부 : "+isCertified);
                     goPhoneAuth(); // 바로 전화 인증으로 건너 뜀.
-                    break;*/
+                    break;
             }
         }
     };
