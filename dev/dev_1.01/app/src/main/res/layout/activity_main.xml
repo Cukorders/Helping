@@ -37,6 +37,7 @@
             android:layout_weight="1"
             android:backgroundTint="@color/colorLogo"
             android:text="최근 미션" />
+            android:orientation="vertical">
 
         <Button
             android:id="@+id/myMission"
