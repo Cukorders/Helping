@@ -195,7 +195,7 @@ public class ChooseTheRegionActivity  extends AppCompatActivity {
                     }
                 } else{
                     Log.e("error in getting the location","error in getting the location");
-                    Toast.makeText(context,errorMsg,Toast.LENGTH_LONG);
+                    Toast.makeText(context,errorMsg,Toast.LENGTH_LONG).show();
                 }
             }
         });

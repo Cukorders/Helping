@@ -66,7 +66,7 @@ public class RegionActivity  extends FragmentActivity implements OnMapReadyCallb
     private LocationManager locationManager;
     private boolean mLocationPermissionGranted=false;
     private Location currentLocation;
-    private String compare;
+    private String compare="";
     public String dong="";
     private TextView result_gps;
     private String errorMSG="인증을 하려면 위치 정보를 불러와야 합니다.";
@@ -133,12 +133,12 @@ public class RegionActivity  extends FragmentActivity implements OnMapReadyCallb
     };
 
     private void goPhoneAuth(){
-        Intent intent=new Intent(this,AuthActivity.class);
+        Intent intent=new Intent(context,AuthActivity.class);
         startActivity(intent);
     }
 
     private void goBack(){
-        Intent intent=new Intent(this,ChooseTheRegionActivity.class); // 뒤로 가기 버튼 누름 => 첫 화면으로 다시 돌아감.
+        Intent intent=new Intent(context,ChooseTheRegionActivity.class); // 뒤로 가기 버튼 누름 => 첫 화면으로 다시 돌아감.
         startActivity(intent);
     }
 
@@ -190,6 +190,7 @@ public class RegionActivity  extends FragmentActivity implements OnMapReadyCallb
                     supportMapFragment.getMapAsync((OnMapReadyCallback) context);
                 } else{
                     //TODO make the location parameter return non-null value
+                    Toast.makeText(context,"위치 정보를 불러오는 데 실패하였습니다.",Toast.LENGTH_LONG).show();
                     Log.e("location is empty","a location parameter returns null");
                 }
             }

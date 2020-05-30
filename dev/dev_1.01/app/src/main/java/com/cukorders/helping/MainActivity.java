@@ -132,7 +132,7 @@ public class MainActivity extends AppCompatActivity {
         fab_write.setClickable(true);
         fab_chat.setClickable(true);
         isOpen=true;
-        // Log.d("open","open");
+         Log.d("open","open");
     }
     private void close(){
         fab_write.startAnimation(FabClose);
@@ -142,7 +142,7 @@ public class MainActivity extends AppCompatActivity {
         fab_info.setClickable(false);
         fab_write.setClickable(false);
         isOpen=false;
-        //  Log.d("close","close");
+          Log.d("close","close");
     }
 
     /*private void startStartActivity(){

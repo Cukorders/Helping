@@ -58,6 +58,7 @@ public class AuthActivity extends AppCompatActivity {
     private DatabaseReference locationDB;
 
 
+    @SuppressLint("LongLogTag")
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -74,6 +75,7 @@ public class AuthActivity extends AppCompatActivity {
 
         locationCertification=((RegionActivity)RegionActivity.regional_certification2).isCertified; //지역 인증 여부
         location=((ChooseTheRegionActivity)ChooseTheRegionActivity.regional_certification1).userLocation; // 사용자가 선택한 지역
+        Log.d("a value of the location parameter","a value of the parameter called location in AuthActivity is "+location);
 
         mAuth.setLanguageCode("kr");
         mMessageSentBtn.setOnClickListener(new View.OnClickListener() {
