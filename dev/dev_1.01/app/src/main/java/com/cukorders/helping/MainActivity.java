@@ -22,6 +22,7 @@ public class MainActivity extends AppCompatActivity {
     Animation FabOpen,FabClose,FabClockwise,FabAntiClockwise;
     private Button myMission,currentMission;
     boolean isOpen=false;
+    public static Context mainActivity;
     private final Context context=this;
     // private long backKeyPressedTime = 0;
     // 리사이클러 뷰 관련
@@ -77,7 +78,7 @@ public class MainActivity extends AppCompatActivity {
             }
         });
 
-
+        mainActivity=this;
 
     }
 
