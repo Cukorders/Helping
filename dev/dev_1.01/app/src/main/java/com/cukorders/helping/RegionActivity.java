@@ -69,7 +69,8 @@ public class RegionActivity  extends FragmentActivity implements OnMapReadyCallb
     public String dong="";
     private TextView result_gps;
     private String errorMSG="인증을 하려면 위치 정보를 불러와야 합니다.";
-
+    public static Context regional_certification2;
+    public static boolean isCertified=false;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -93,6 +94,7 @@ public class RegionActivity  extends FragmentActivity implements OnMapReadyCallb
 
         result_gps=(TextView) findViewById(R.id.result_gps);
 
+        regional_certification2=this;
     }
 
     View.OnClickListener OnClickListener=new View.OnClickListener() {
@@ -111,9 +113,12 @@ public class RegionActivity  extends FragmentActivity implements OnMapReadyCallb
 
                     if(compare.equals(dong)){
                         //TODO : DB에서 위치 인증이 완료된 유저라고 체크되어야 함.
+                        isCertified=true;
+                        Toast.makeText(context,"지역 인증에 성공하였습니다.",Toast.LENGTH_LONG).show();
                         goPhoneAuth();
                     } else{
                         // 인증 실패 에러 메시지 띄움
+                        isCertified=false;
                         Toast.makeText(context,errorMsg,Toast.LENGTH_LONG).show();
                     }
                     break;
@@ -123,6 +128,7 @@ public class RegionActivity  extends FragmentActivity implements OnMapReadyCallb
 
                /* case R.id.bt_skip:
                     //TODO : DB에서 인증 안 된 유저라고 체크해야 함.
+                    isCertified=false;
                     goPhoneAuth(); // 바로 전화 인증으로 건너 뜀.
                     break;*/
             }

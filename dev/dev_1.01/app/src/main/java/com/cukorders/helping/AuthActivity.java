@@ -1,6 +1,8 @@
 package com.cukorders.helping;
+
 import android.content.Intent;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
@@ -47,7 +49,7 @@ public class AuthActivity extends AppCompatActivity {
     private FirebaseDatabase mDatabase;
     private DatabaseReference mUserDatabase;
     private DatabaseReference mUserUids;
-
+    private DatabaseReference locationDB;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -147,6 +149,7 @@ public class AuthActivity extends AppCompatActivity {
                         if (task.isSuccessful()) {
                             String uid = mCurrentUser.getUid();
                             mUserDatabase = FirebaseDatabase.getInstance().getReference().child("Users").child(uid);
+                            locationDB=FirebaseDatabase.getInstance().getReference().child("userRegions").child(uid);
                             boolean newuser = task.getResult().getAdditionalUserInfo().isNewUser();
                             if (newuser) {
                                 //신규 사용자라면
@@ -158,6 +161,22 @@ public class AuthActivity extends AppCompatActivity {
                                 userMap.put("Age", "default");
                                 userMap.put("Score", "default");
                                 userMap.put("Money", "default");
+
+                                HashMap<String,String> locationTable=new HashMap<>();
+                                locationTable.put("Region1",((ChooseTheRegionActivity)ChooseTheRegionActivity.regional_certification1).userLocation);
+                                locationTable.put("Region1 state",Boolean.toString(((RegionActivity)RegionActivity.regional_certification2).isCertified));
+                                locationTable.put("Region2","default");
+                                locationTable.put("Region2 state","default");
+                                locationTable.put("Region3","default");
+                                locationTable.put("Region3 state","default");
+                                locationDB.setValue(locationTable).addOnCompleteListener(new OnCompleteListener<Void>() {
+                                    @Override
+                                    public void onComplete(@NonNull Task<Void> task) {
+                                        if (task.isSuccessful()) {
+                                            Log.d("location db","the location table is updated");
+                                        }
+                                    }
+                                });
                                 mUserDatabase.setValue(userMap).addOnCompleteListener(new OnCompleteListener<Void>() {
                                     @Override
                                     public void onComplete(@NonNull Task<Void> task) {
