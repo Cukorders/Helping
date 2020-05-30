@@ -86,7 +86,7 @@ public class RegionActivity  extends FragmentActivity implements OnMapReadyCallb
         findViewById(R.id.currentLocation).setOnClickListener(OnClickListener);
         findViewById(R.id.finish_location).setOnClickListener(OnClickListener);
         findViewById(R.id.bt_back).setOnClickListener(OnClickListener);
-      //  findViewById(R.id.bt_skip).setOnClickListener(OnClickListener);
+       // findViewById(R.id.bt_skip).setOnClickListener(OnClickListener);
 
         // 위치 권한 요청을 하기 위한 FusedLocationClient 불러옴
         mFusedLocationClient= LocationServices.getFusedLocationProviderClient(this);
@@ -126,9 +126,10 @@ public class RegionActivity  extends FragmentActivity implements OnMapReadyCallb
                     goBack(); //이전 페이지로 가기(뒤로 가기 버튼이 눌렸을 때)
                     break;
 
-               /* case R.id.bt_skip:
+              /* case R.id.bt_skip:
                     //TODO : DB에서 인증 안 된 유저라고 체크해야 함.
                     isCertified=false;
+                    Log.d("a skip button","a skip button is clicked");
                     goPhoneAuth(); // 바로 전화 인증으로 건너 뜀.
                     break;*/
             }
@@ -194,6 +195,7 @@ public class RegionActivity  extends FragmentActivity implements OnMapReadyCallb
                 } else{
                     //TODO make the location parameter return non-null value
                     Log.e("location is empty","a location parameter returns null");
+                    Toast.makeText(context,"위치 정보를 불러오는데 실패하였습니다.",Toast.LENGTH_LONG).show();
                 }
             }
         });

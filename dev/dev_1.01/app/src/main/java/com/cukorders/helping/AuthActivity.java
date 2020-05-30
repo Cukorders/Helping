@@ -162,7 +162,7 @@ public class AuthActivity extends AppCompatActivity {
                                 userMap.put("Score", "default");
                                 userMap.put("Money", "default");
 
-                                HashMap<String,String> locationTable=new HashMap<>();
+                                HashMap<String,String> locationTable=new HashMap<>(); //userRegion table
                                 locationTable.put("Region1",((ChooseTheRegionActivity)ChooseTheRegionActivity.regional_certification1).userLocation);
                                 locationTable.put("Region1 state",Boolean.toString(((RegionActivity)RegionActivity.regional_certification2).isCertified));
                                 locationTable.put("Region2","default");
@@ -175,22 +175,29 @@ public class AuthActivity extends AppCompatActivity {
                                         if (task.isSuccessful()) {
                                             Log.d("location db","the location table is updated");
                                         }
+                                        else{
+                                            Log.d("location db","db isn't updated");
+                                        }
                                     }
                                 });
                                 mUserDatabase.setValue(userMap).addOnCompleteListener(new OnCompleteListener<Void>() {
                                     @Override
                                     public void onComplete(@NonNull Task<Void> task) {
                                         if (task.isSuccessful()) {
+                                            Log.d("회원가입 완료","회원가입이 완료되었습니다.");
                                             Intent LoginIntent = new Intent(AuthActivity.this, LogInActivity.class);
                                             LoginIntent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
                                             startActivity(LoginIntent);
                                             finish();
+                                        } else{
+                                            Log.e("오류","회원가입 과정에서 오류가 발생하였습니다.");
                                         }
                                     }
                                 });
                             } else {
                                 Intent MainIntent = new Intent(AuthActivity.this, MainActivity.class);
                                 MainIntent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+                                Log.d("기존 회원","기존회원이므로 메인 화면으로 넘어갑니다.");
                                 startActivity(MainIntent);
                                 finish();
                             }

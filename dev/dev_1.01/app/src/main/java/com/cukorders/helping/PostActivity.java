@@ -9,9 +9,13 @@ import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.TextView;
+import android.widget.Toast;
 
+import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DatabaseReference;
@@ -27,7 +31,7 @@ public class PostActivity extends AppCompatActivity {
     private Button bt_same,bt_dontMind;
     private Button age[]=new Button[5]; // 연령 버튼
     private TextView title, description, pay,due,price,endTime,cancelTime,place;
-    private String Title,Description,EndTime,CancelTime,Place,uid; //TODO: uid를 불러오는 과정
+    private String Title,Description,EndTime,CancelTime,Place; //TODO: uid를 불러오는 과정
     private DatabaseReference databaseReference;
     private HashMap<String,Object> childUpdate=null;
     private HashMap<String,Object> postValue=null;
@@ -35,6 +39,7 @@ public class PostActivity extends AppCompatActivity {
     private int Pay,Due,Price,Age;
     private final FirebaseUser user= FirebaseAuth.getInstance().getCurrentUser(); // 현재 위저를 불러온다. TODO: DB에서 이 유저의 UID를 불러온다.
     private Post post;
+    private String uid=FirebaseAuth.getInstance().getCurrentUser().getUid();
 
     @SuppressLint("LongLogTag")
     private static void init_ageChecked(boolean ageChecked[]){
@@ -69,6 +74,11 @@ public class PostActivity extends AppCompatActivity {
             if (ageChecked[i]) {
                 flag = true;
             }
+        }
+        if(!flag){
+            ageChecked[0]=true;
+            age[0].setBackgroundColor(Color.parseColor("#70D398"));
+            Toast.makeText(context,"하나 이상의 연령층을 선택해야 합니다.",Toast.LENGTH_LONG).show();
         }
     }
 
@@ -110,10 +120,9 @@ public class PostActivity extends AppCompatActivity {
         age[3]=(Button) findViewById(R.id.button40s);
         age[4]=(Button) findViewById(R.id.button50s);
 
-        sameGender=false;
+        sameGender=true;
         init_ageChecked(ageChecked);
         ageChecked[0]=true; // age의 default값이 10대이므로
-        databaseReference=FirebaseDatabase.getInstance().getReference();
         childUpdate=new HashMap<>();
         postValue=new HashMap<>();
     }
@@ -141,8 +150,19 @@ public class PostActivity extends AppCompatActivity {
 
                     //TODO : 입력된 정보들을 db로 넘기기
                     post = new Post(Title, Description, EndTime, CancelTime, Place, Pay, Due, Price, uid, sameGender, Age);
-                    databaseReference.child("Posting").push().setValue(post);
-                    Log.e("a post is uploaded", "a post is successfully uploaded");
+                    databaseReference= FirebaseDatabase.getInstance().getReference().child("Posting").child(Title);
+                    childUpdate= (HashMap<String, Object>) post.toMap();
+                    databaseReference.setValue(childUpdate).addOnCompleteListener(new OnCompleteListener<Void>() {
+                        @Override
+                        public void onComplete(@NonNull Task<Void> task) {
+                            if (task.isSuccessful()) {
+                                Toast.makeText(context,"포스트가 성공적으로 업로드 되었습니다.",Toast.LENGTH_LONG).show();
+                                Log.e("a post is uploaded", "a post is successfully uploaded");
+                            } else{
+                                Toast.makeText(context,"오류가 발생하여 포스트 업로드에 실패하였습니다. 잠시 후에 다시 시도해주십시오.",Toast.LENGTH_LONG).show();
+                            }
+                        }
+                    });
                     startActivity(new Intent(context, MainActivity.class));
                     break;
             }
@@ -193,35 +213,30 @@ public class PostActivity extends AppCompatActivity {
             switch (v.getId()){
                 case R.id.button10s:
                     Log.d("a button 10s is clicked","a button 10s is clicked");
-                    init_ageChecked(ageChecked);
-                    ageChecked[0]=true;
+                    ageChecked[0]=!ageChecked[0];
                     checkAgeButton(age,ageChecked);
                     break;
 
                 case R.id.button20s:
                     Log.d("a button 20s is clicked","a button 20s is clicked");
-                    init_ageChecked(ageChecked);
-                    ageChecked[1]=true;
+                    ageChecked[1]=!ageChecked[1];
                     checkAgeButton(age,ageChecked);
                     break;
 
                 case R.id.button30s:
-                    init_ageChecked(ageChecked);
-                    ageChecked[2]=true;
+                    ageChecked[2]=!ageChecked[2];
                     Log.e("an age value","an age30s button is clicked. and its value is "+ageChecked[2]);
                     checkAgeButton(age,ageChecked);
                     break;
 
                 case R.id.button40s:
-                    init_ageChecked(ageChecked);
-                    ageChecked[3]=true;
+                    ageChecked[3]=!ageChecked[3];
                     Log.e("an age value","an age40s button is clicked. and its value is "+ageChecked[3]);
                     checkAgeButton(age,ageChecked);
                     break;
 
                 default:
-                    init_ageChecked(ageChecked);
-                    ageChecked[4]=true;
+                    ageChecked[4]=!ageChecked[4];
                     checkAgeButton(age,ageChecked);
                     break;
             }
@@ -270,9 +285,14 @@ public class PostActivity extends AppCompatActivity {
             ret.put("due",due);
             ret.put("price",price);
             ret.put("uid",uid);
+            ret.put("image1","default");
+            ret.put("image2","default");
+            ret.put("image3","default");
+            String tmp="";
             for(int i=0;i<5;++i)
                 if(ageChecked[i])
-                    ret.put("age",(i+1)*10); // 선택한 연령대를 모두 age column에 삽입한다.
+                   tmp+=Integer.toString(i+1); // 선택한 연령대를 모두 age column에 삽입한다.
+            ret.put("age",tmp);
             ret.put("gender",sameGender?"동성":"무관");
             return ret;
         }
