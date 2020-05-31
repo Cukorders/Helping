@@ -50,8 +50,7 @@
             android:id="@+id/SearchLocationButton"
             android:layout_width="30dp"
             android:layout_height="30dp"
-            android:backgroundTint="@color/design_default_color_on_primary"
-
+            android:background="@android:color/transparent"
             android:paddingRight="5dp"
             android:src="@drawable/search_icon16"></ImageButton>
 

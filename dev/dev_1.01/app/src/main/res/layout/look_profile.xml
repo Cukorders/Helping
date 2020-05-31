@@ -20,8 +20,7 @@
             android:layout_marginLeft="5dp"
             android:src="@drawable/back_icon_white"
             android:background="@android:color/transparent"
-            android:paddingRight="5dp"
-            >
+            android:paddingRight="5dp">
         </ImageButton>
         <TextView
             android:id="@+id/recent_mission"
@@ -57,32 +56,40 @@
             android:background="@android:color/transparent"
             app:srcCompat="@drawable/camera_black_48"/>
     </RelativeLayout>
-    <LinearLayout
+    <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="vertical"
         android:paddingTop="10dp"
         android:paddingBottom="10dp"
-        android:layout_marginLeft="10dp"
-        android:layout_marginRight="10dp">
-        <EditText
+        android:layout_margin="10dp"
+        android:background="@drawable/stroke_below_bold">
+        <TextView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:layout_centerInParent="true"
             android:gravity="center"
-            android:background="@drawable/gray_box_button"
-            android:hint="닉네임 설정"
-            android:textSize="18sp"/>
-    </LinearLayout>
+            android:background="@android:color/transparent"
+            android:text="닉네임"
+            android:textColor="@color/colorBlack"
+            android:textSize="20sp"/>
+        <ImageButton
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:src="@drawable/ic_addprofile"
+            android:layout_centerInParent="true"
+            android:layout_alignParentRight="true"
+            android:background="@android:color/transparent"/>
+    </RelativeLayout>
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="vertical"
-        android:layout_marginBottom="10dp"
         android:paddingTop="20dp"
         android:paddingBottom="20dp"
         android:layout_marginLeft="10dp"
         android:layout_marginRight="10dp"
-        android:background="@drawable/stroke_up_and_down_bold">
+        android:background="@drawable/stroke_below_bold">
         <TextView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -123,7 +130,6 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="vertical"
-        android:layout_marginBottom="10dp"
         android:paddingTop="20dp"
         android:paddingBottom="20dp"
         android:layout_marginLeft="10dp"
