@@ -1,7 +1,9 @@
 package com.cukorders.helping;
 
 import android.annotation.SuppressLint;
+import android.app.AlertDialog;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.Color;
 import android.os.Bundle;
@@ -10,6 +12,7 @@ import android.view.View;
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
 import android.widget.Button;
+import android.widget.TextView;
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.LinearLayoutManager;
@@ -34,6 +37,7 @@ public class MainActivity extends AppCompatActivity {
     int images[] = {};//이미지는 배열로 받았는데, 나중에 db 생성하면 db와 연동할 것
     FirebaseUser firebaseUser=FirebaseAuth.getInstance().getCurrentUser();
     private boolean locCertification;
+    private TextView nowLocation;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -50,13 +54,15 @@ public class MainActivity extends AppCompatActivity {
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
 
         locCertification=((RegionActivity)RegionActivity.regional_certification2).isCertified;
+        nowLocation=(TextView) findViewById(R.id.nowLocation);
+        nowLocation.setText(((ChooseTheRegionActivity)ChooseTheRegionActivity.regional_certification1).userLocation);
         if(firebaseUser==null){
             CustomDialog customDialog=new CustomDialog(context);
             customDialog.callFuction();
         }
-        /*else if(!locCertification){
+        else if(!locCertification){ // 로그인은 했지만 지역인증은 하지 않은 케이스
 
-        }*/
+        }
 
         //위가 recyclerview 아래가 widget
 
@@ -71,6 +77,7 @@ public class MainActivity extends AppCompatActivity {
 
         myMission=(Button) findViewById(R.id.myMission);
         currentMission=(Button) findViewById(R.id.currentMission);
+
         findViewById(R.id.myMission).setOnClickListener(onClickListener);
         findViewById(R.id.currentMission).setOnClickListener(onClickListener);
         findViewById(R.id.fab_post).setOnClickListener(onClickListener);
@@ -88,8 +95,6 @@ public class MainActivity extends AppCompatActivity {
                 }
             }
         });
-
-
 
     }
 
@@ -111,28 +116,58 @@ public class MainActivity extends AppCompatActivity {
                     break;
 
                 case R.id.fab_post:
+                    if(firebaseUser==null){
+                        caution();
+                    }else{
                     Intent intent1 =new Intent(context,PostActivity.class);
                     Log.e("go to post","go to a posting page");
                     startActivity(intent1);
+                    }
                     break;
 
                 case R.id.fab_info:
+                    if(firebaseUser==null){
+                        caution();
+                    }else{
                     Intent intent2=new Intent(context,MissionActivity.class);
                     startActivity(intent2);
+                    }
                     break;
 
                 case R.id.fab_chat:
-                    //TODO 채팅 연결하기
+                    if(firebaseUser==null){
+                        caution();
+                    }else {
+                        //TODO 채팅 연결하기
+                    }
                     break;
 
                 case R.id.go_to_mypage:
+                    if(firebaseUser==null){
+                        caution();
+                    }else{
                     Intent intent3=new Intent(context,MyPageActivity.class);
                     startActivity(intent3);
+                    }
                     break;
 
             }
         }
     };
+
+    private void caution(){
+        AlertDialog.Builder builder=new AlertDialog.Builder(context);
+        builder.setTitle("로그인이 필요한 작업입니다.");
+        builder.setMessage("이 작업을 수행하시려면 로그인이 필요합니다.");
+        builder.setPositiveButton("로그인/회원가입 하기",
+                new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        startActivity(new Intent(context,AuthActivity.class));
+                    }
+                }).setNegativeButton("취소",null);
+        builder.show();
+    }
 
     private void open(){
         fab_write.startAnimation(FabOpen);
@@ -143,7 +178,7 @@ public class MainActivity extends AppCompatActivity {
         fab_write.setClickable(true);
         fab_chat.setClickable(true);
         isOpen=true;
-        // Log.d("open","open");
+        Log.d("open","open");
     }
     private void close(){
         fab_write.startAnimation(FabClose);
@@ -153,7 +188,7 @@ public class MainActivity extends AppCompatActivity {
         fab_info.setClickable(false);
         fab_write.setClickable(false);
         isOpen=false;
-        //  Log.d("close","close");
+        Log.d("close","close");
     }
 
     /*private void startStartActivity(){

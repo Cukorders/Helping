@@ -2,7 +2,6 @@ package com.cukorders.helping;
 
 import android.annotation.SuppressLint;
 import android.content.Context;
-import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.Color;
 import android.os.Bundle;
@@ -13,7 +12,6 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
-import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 
 import com.google.android.gms.tasks.OnCompleteListener;
@@ -41,7 +39,7 @@ public class PostActivity extends AppCompatActivity {
     private int Pay,Due,Price,Age;
     private final FirebaseUser user= FirebaseAuth.getInstance().getCurrentUser(); // 현재 위저를 불러온다.
     private Post post;
-    private String uid;
+    private String uid=user.getUid();
 
     @SuppressLint("LongLogTag")
     private static void init_ageChecked(boolean ageChecked[]){
@@ -90,23 +88,7 @@ public class PostActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.write_post);
 
-        if(user==null){
-            Log.e("user Parameter","로그인하지 않은 유저입니다.");
-            AlertDialog.Builder builder=new AlertDialog.Builder(context);
-            builder.setTitle("로그인이 필요한 작업입니다.");
-            builder.setMessage("글 작성을 하려면 로그인을 해야합니다.");
-            builder.setPositiveButton("확인",
-                    new DialogInterface.OnClickListener() {
-                        @Override
-                        public void onClick(DialogInterface dialog, int which) {
-                            startActivity(new Intent(context,MainActivity.class));
-                        }
-                    });
-            builder.show();
-        }
-        else{
-            uid=user.getUid();
-        }
+        uid=user.getUid();
         title=(TextView) findViewById(R.id.title);
         due=(TextView) findViewById(R.id.due);
         pay=(TextView) findViewById(R.id.pay);
