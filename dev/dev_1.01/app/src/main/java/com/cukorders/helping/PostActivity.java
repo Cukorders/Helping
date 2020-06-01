@@ -2,6 +2,7 @@ package com.cukorders.helping;
 
 import android.annotation.SuppressLint;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.Color;
 import android.os.Bundle;
@@ -12,6 +13,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
+import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 
 import com.google.android.gms.tasks.OnCompleteListener;
@@ -31,15 +33,15 @@ public class PostActivity extends AppCompatActivity {
     private Button bt_same,bt_dontMind;
     private Button age[]=new Button[5]; // 연령 버튼
     private TextView title, description, pay,due,price,endTime,cancelTime,place;
-    private String Title,Description,EndTime,CancelTime,Place; //TODO: uid를 불러오는 과정
+    private String Title,Description,EndTime,CancelTime,Place;
     private DatabaseReference databaseReference;
     private HashMap<String,Object> childUpdate=null;
     private HashMap<String,Object> postValue=null;
     private Map<String,Object> userValue=null;
     private int Pay,Due,Price,Age;
-    private final FirebaseUser user= FirebaseAuth.getInstance().getCurrentUser(); // 현재 위저를 불러온다. TODO: DB에서 이 유저의 UID를 불러온다.
+    private final FirebaseUser user= FirebaseAuth.getInstance().getCurrentUser(); // 현재 위저를 불러온다.
     private Post post;
-    private String uid=FirebaseAuth.getInstance().getCurrentUser().getUid();
+    private String uid;
 
     @SuppressLint("LongLogTag")
     private static void init_ageChecked(boolean ageChecked[]){
@@ -88,6 +90,23 @@ public class PostActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.write_post);
 
+        if(user==null){
+            Log.e("user Parameter","로그인하지 않은 유저입니다.");
+            AlertDialog.Builder builder=new AlertDialog.Builder(context);
+            builder.setTitle("로그인이 필요한 작업입니다.");
+            builder.setMessage("글 작성을 하려면 로그인을 해야합니다.");
+            builder.setPositiveButton("확인",
+                    new DialogInterface.OnClickListener() {
+                        @Override
+                        public void onClick(DialogInterface dialog, int which) {
+                            startActivity(new Intent(context,MainActivity.class));
+                        }
+                    });
+            builder.show();
+        }
+        else{
+            uid=user.getUid();
+        }
         title=(TextView) findViewById(R.id.title);
         due=(TextView) findViewById(R.id.due);
         pay=(TextView) findViewById(R.id.pay);
@@ -148,7 +167,6 @@ public class PostActivity extends AppCompatActivity {
                     Log.d("title", "title is " + Title);
                     Log.d("Description", "description of the post is " + Description);
 
-                    //TODO : 입력된 정보들을 db로 넘기기
                     post = new Post(Title, Description, EndTime, CancelTime, Place, Pay, Due, Price, uid, sameGender, Age);
                     databaseReference= FirebaseDatabase.getInstance().getReference().child("Posting").child(Title);
                     childUpdate= (HashMap<String, Object>) post.toMap();
@@ -273,7 +291,6 @@ public class PostActivity extends AppCompatActivity {
         public int getPrice(){return price;}
         public boolean isSameGender(){return sameGender;}
 
-        // TODO HashMap을 DB에 insert할 수 있는지 알아보기(☆ => 연령 정보를 더 정확히 알 수 있다.)
         public Map<String,Object> toMap(){
             HashMap<String,Object> ret=new HashMap<>();
             ret.put("title",title);

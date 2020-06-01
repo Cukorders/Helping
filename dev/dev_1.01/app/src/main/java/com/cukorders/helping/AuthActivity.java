@@ -69,6 +69,7 @@ public class AuthActivity extends AppCompatActivity {
         mMessageSentBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                Log.e("message is sent","Message is sent");
                 String PhoneNumber = mPhoneText.getText().toString();
                 if (PhoneNumber.isEmpty()) {
                     mErrorText.setText("전화번호를 입력해주세요");
@@ -96,6 +97,7 @@ public class AuthActivity extends AppCompatActivity {
                     mErrorText.setText("인증번호를 입력해주세요");
                     mErrorText.setVisibility(VISIBLE);
                 } else {
+                    Log.e("code is sent","code is sent");
                     mCodeBtn.setEnabled(false);
                     mLoginBtn.setEnabled(false);
                     PhoneAuthCredential credential = PhoneAuthProvider.getCredential(mVerificationId, CodeNumber);
@@ -109,6 +111,7 @@ public class AuthActivity extends AppCompatActivity {
             public void onVerificationCompleted(PhoneAuthCredential phoneAuthCredential) {
                 //automatically verified
                 //instantly verified
+                Log.e("Credential is made","Credential is made");
                 mCodeBtn.setEnabled(false);
                 mLoginBtn.setEnabled(false);
                 signInWithPhoneAuthCredential(phoneAuthCredential);
@@ -116,6 +119,7 @@ public class AuthActivity extends AppCompatActivity {
 
             @Override
             public void onVerificationFailed(FirebaseException e) {
+                Log.e("Your initCode is wrong","Your initCode is wrong");
                 mErrorText.setText("인증번호가 틀립니다");
                 mErrorText.setVisibility(VISIBLE);
                 mMessageSentBtn.setEnabled(true);
@@ -150,6 +154,7 @@ public class AuthActivity extends AppCompatActivity {
                             String uid = mCurrentUser.getUid();
                             mUserDatabase = FirebaseDatabase.getInstance().getReference().child("Users").child(uid);
                             locationDB=FirebaseDatabase.getInstance().getReference().child("userRegions").child(uid);
+                            Log.d("인증완료","인증이 완료되었습니다");
                             boolean newuser = task.getResult().getAdditionalUserInfo().isNewUser();
                             if (newuser) {
                                 //신규 사용자라면
@@ -176,7 +181,7 @@ public class AuthActivity extends AppCompatActivity {
                                             Log.d("location db","the location table is updated");
                                         }
                                         else{
-                                            Log.d("location db","db isn't updated");
+                                            Log.e("location db","db isn't updated");
                                         }
                                     }
                                 });

@@ -58,7 +58,6 @@ public class ChooseTheRegionActivity  extends AppCompatActivity {
     private static String defaultURL="https://maps.googleapis.com/maps/api/geocode/json?address=";
     private String lats[],lngs[];
     private int select=0;
-    public Location userInputLocation;
     Handler handler=new Handler();
 
     // 주변 행정동들 검색할 때 주변 2km 내 행정동들을 불러오기

@@ -16,6 +16,8 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
 
 public class MainActivity extends AppCompatActivity {
     FloatingActionButton fab_plus,fab_write,fab_info,fab_chat;
@@ -30,6 +32,8 @@ public class MainActivity extends AppCompatActivity {
     //s1이 게시글 제목, s2가 게시물 작성시간,장소등 description, 게시글 역시 현재는 string에 배열로
     //db 생성하고 게시글 작성가능할 때, 연동시킬것
     int images[] = {};//이미지는 배열로 받았는데, 나중에 db 생성하면 db와 연동할 것
+    FirebaseUser firebaseUser=FirebaseAuth.getInstance().getCurrentUser();
+    private boolean locCertification;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -45,6 +49,14 @@ public class MainActivity extends AppCompatActivity {
         recyclerView.setAdapter(mainAdapter);
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
 
+        locCertification=((RegionActivity)RegionActivity.regional_certification2).isCertified;
+        if(firebaseUser==null){
+            CustomDialog customDialog=new CustomDialog(context);
+            customDialog.callFuction();
+        }
+        /*else if(!locCertification){
+
+        }*/
 
         //위가 recyclerview 아래가 widget
 
