@@ -21,6 +21,7 @@ import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.loader.content.CursorLoader;
 
+import com.cukorders.helping.chatting.UserModel;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
@@ -37,6 +38,8 @@ import com.google.firebase.storage.StorageReference;
 import com.google.firebase.storage.UploadTask;
 import com.squareup.picasso.Picasso;
 import com.theartofdev.edmodo.cropper.CropImage;
+
+import java.util.EventListener;
 
 import de.hdodenhof.circleimageview.CircleImageView;
 
@@ -83,7 +86,7 @@ public class LogInActivity extends AppCompatActivity {
 
         mAuth = FirebaseAuth.getInstance();
         mCurrentUser = mAuth.getCurrentUser();
-        String current_uid = mCurrentUser.getUid();
+        final String current_uid = mCurrentUser.getUid();
         mUserDatabase = FirebaseDatabase.getInstance().getReference().child("Users").child(current_uid);
         mUserDatabase.addValueEventListener(new ValueEventListener() {
             @Override
@@ -97,6 +100,13 @@ public class LogInActivity extends AppCompatActivity {
                 String money = dataSnapshot.child("Money").getValue().toString();
                 //변경사항 업데이트 하는 부분
                 Picasso.get().load(image).into(profileImage);
+
+                // 채팅방용 user database
+                UserModel userModel = new UserModel();
+                userModel.userName = name;
+                userModel.profileImageUrl = imageThumbnails;
+                userModel.uid = current_uid;
+
             }
 
             @Override
@@ -156,6 +166,7 @@ public class LogInActivity extends AppCompatActivity {
                             .child("Users")
                             .orderByChild("Nickname")
                             .equalTo(mNick);
+
                     query.addListenerForSingleValueEvent(new ValueEventListener() {
                         @Override
                         public void onDataChange(@NonNull DataSnapshot dataSnapshot) {

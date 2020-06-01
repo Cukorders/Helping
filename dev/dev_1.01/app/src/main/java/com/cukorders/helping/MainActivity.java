@@ -15,12 +15,17 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.cukorders.helping.chatting.ChatFragment;
+import com.cukorders.helping.chatting.PeopleFragment;
+import com.cukorders.helping.chatting.ChattingActivity;
+import com.cukorders.helping.chatting.ClientChatListActivity;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 
 public class MainActivity extends AppCompatActivity {
     FloatingActionButton fab_plus,fab_write,fab_info,fab_chat;
     Animation FabOpen,FabClose,FabClockwise,FabAntiClockwise;
     private Button myMission,currentMission;
+    private Button chat_list, client_chat_list, chatting; // 채팅방 확인용 (삭제예정)
     boolean isOpen=false;
     private final Context context=this;
     // private long backKeyPressedTime = 0;
@@ -45,7 +50,6 @@ public class MainActivity extends AppCompatActivity {
         recyclerView.setAdapter(mainAdapter);
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
 
-
         //위가 recyclerview 아래가 widget
 
         fab_plus=(FloatingActionButton) findViewById(R.id.fab_plus);
@@ -59,12 +63,21 @@ public class MainActivity extends AppCompatActivity {
 
         myMission=(Button) findViewById(R.id.myMission);
         currentMission=(Button) findViewById(R.id.currentMission);
+        // 채팅방 확인용 (삭제예정)
+        chat_list=(Button) findViewById(R.id.people_list);
+        client_chat_list=(Button) findViewById(R.id.client_chat_list);
+        chatting=(Button) findViewById(R.id.chatting);
+
         findViewById(R.id.myMission).setOnClickListener(onClickListener);
         findViewById(R.id.currentMission).setOnClickListener(onClickListener);
         findViewById(R.id.fab_post).setOnClickListener(onClickListener);
         findViewById(R.id.fab_info).setOnClickListener(onClickListener);
         findViewById(R.id.fab_chat).setOnClickListener(onClickListener);
         findViewById(R.id.go_to_mypage).setOnClickListener(onClickListener);
+        // 채팅방 확인용 (삭제예정)
+        findViewById(R.id.chatting).setOnClickListener(onClickListener);
+        findViewById(R.id.people_list).setOnClickListener(onClickListener);
+        findViewById(R.id.client_chat_list).setOnClickListener(onClickListener);
 
         fab_plus.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -96,6 +109,30 @@ public class MainActivity extends AppCompatActivity {
                     Log.d("currentMission is clicked","currentMission is clicked");
                     currentMission.setBackgroundColor(Color.parseColor("#70D398"));
                     myMission.setBackgroundColor(Color.parseColor("#e1e1e1"));
+                    break;
+                // 채팅방 확인용 (삭제예정)
+                case R.id.chatting:
+                    Intent intent4 =new Intent(context, ChattingActivity.class);
+                    Log.e("go to post","go to a posting page");
+                    startActivity(intent4);
+                    break;
+
+                case R.id.people_list:
+                    Intent intent5 =new Intent(context, PeopleFragment.class);
+                    Log.e("go to post","go to a posting page");
+                    startActivity(intent5);
+                    break;
+
+                case R.id.client_chat_list:
+                    Intent intent6 =new Intent(context, ClientChatListActivity.class);
+                    Log.e("go to post","go to a posting page");
+                    startActivity(intent6);
+                    break;
+
+                case R.id.chat_list:
+                    Intent intent7 =new Intent(context, ChatFragment.class);
+                    Log.e("go to post","go to a posting page");
+                    startActivity(intent7);
                     break;
 
                 case R.id.fab_post:
