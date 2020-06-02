@@ -71,6 +71,7 @@ public class RegionActivity  extends FragmentActivity implements OnMapReadyCallb
     private String errorMSG="인증을 하려면 위치 정보를 불러와야 합니다.";
     public static Context regional_certification2;
     public static boolean isCertified=false;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);

@@ -39,6 +39,7 @@ import com.theartofdev.edmodo.cropper.CropImage;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Random;
 
 public class PostActivity extends AppCompatActivity {
     private final Context context=this;
@@ -65,6 +66,8 @@ public class PostActivity extends AppCompatActivity {
     private static final int GALLERY_CODE = 10;
     private StorageReference storageReference;
     private String imagePath;
+    private String postKey;
+    private String nowLocation;
 
     @SuppressLint("LongLogTag")
     private static void init_ageChecked(boolean ageChecked[]){
@@ -196,6 +199,18 @@ public class PostActivity extends AppCompatActivity {
         postValue=new HashMap<>();
         initPhotoCheck(photoCheck);
         storageReference= FirebaseStorage.getInstance().getReference();
+        postKey=getRandomString(25);
+        nowLocation=((ChooseTheRegionActivity)ChooseTheRegionActivity.regional_certification1).userLocation;
+    }
+
+    private String getRandomString(int length) {
+        final String characters="abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ01234567890!@#$%";
+        StringBuilder stringBuilder=new StringBuilder();
+        while(length-- >0){
+            Random random=new Random();
+            stringBuilder.append(characters.charAt(random.nextInt(characters.length())));
+        }
+        return stringBuilder.toString();
     }
 
     final View.OnClickListener onClickListener = new View.OnClickListener() {
@@ -219,7 +234,7 @@ public class PostActivity extends AppCompatActivity {
                     Log.d("title", "title is " + Title);
                     Log.d("Description", "description of the post is " + Description);
 
-                    post = new Post(Title, Description, EndTime, CancelTime, Place, Pay, Due, Price, uid, sameGender, Age,Category);
+                    post = new Post(Title, Description, EndTime, CancelTime, Place, Pay, Due, Price, uid, sameGender, Age,Category,postKey,nowLocation);
                     databaseReference= FirebaseDatabase.getInstance().getReference().child("Posting").child(Title);
                     childUpdate= (HashMap<String, Object>) post.toMap();
                     databaseReference.setValue(childUpdate).addOnCompleteListener(new OnCompleteListener<Void>() {
@@ -256,7 +271,6 @@ public class PostActivity extends AppCompatActivity {
                     break;
 
                 case R.id.camera_album_add3:
-
 
                     break;
 
@@ -379,14 +393,15 @@ public class PostActivity extends AppCompatActivity {
     }
 
     class Post{
-        String title,description,endTime,cancelTime,place,uid,category;
+        String title,description,endTime,cancelTime,place,uid,category,postKey,location;
         int pay,due,price,age;
-        boolean sameGender;
-        public Post(String title,String description,String endTime,String cancelTime,String place,int pay,int due,int price,String uid,boolean sameGender,int age,String category){
+        boolean sameGender,isMatched,isFinished;
+        public Post(String title,String description,String endTime,String cancelTime,String place,int pay,int due,int price,String uid,boolean sameGender,int age,String category,String postKey,String location){
             this.title=title;
             this.description=description;
             this.endTime=endTime;
             this.cancelTime=cancelTime;
+            this.location=location;
             this.place=place;
             this.pay=pay;
             this.due=due;
@@ -395,6 +410,9 @@ public class PostActivity extends AppCompatActivity {
             this.category=category;
             this.sameGender=sameGender;
             this.age=age;
+            this.postKey=postKey;
+            this.isMatched=false;
+            this.isFinished=false;
         }
 
         public String getTitle(){return title;}
@@ -429,6 +447,10 @@ public class PostActivity extends AppCompatActivity {
             ret.put("age",tmp);
             ret.put("gender",sameGender?"동성":"무관");
             ret.put("category",category);
+            ret.put("post key",postKey);
+            ret.put("location",location);
+            ret.put("매칭 여부",isMatched);
+            ret.put("미션 완료 여부",isFinished);
             return ret;
         }
     }

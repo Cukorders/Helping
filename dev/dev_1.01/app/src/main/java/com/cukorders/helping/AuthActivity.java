@@ -1,5 +1,6 @@
 package com.cukorders.helping;
 
+import android.annotation.SuppressLint;
 import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
@@ -29,6 +30,9 @@ import java.util.concurrent.TimeUnit;
 import static android.view.View.VISIBLE;
 
 public class AuthActivity extends AppCompatActivity {
+
+    private String location;
+    private boolean locationCertification;
     private EditText mPhoneText;
     private EditText mCodeText;
 
@@ -45,11 +49,14 @@ public class AuthActivity extends AppCompatActivity {
     private String mVerificationId;
     private PhoneAuthProvider.ForceResendingToken mResendToken;
 
+    private final String DEFAULT="default";
+
     //Database
     private FirebaseDatabase mDatabase;
     private DatabaseReference mUserDatabase;
     private DatabaseReference mUserUids;
     private DatabaseReference locationDB;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -65,11 +72,13 @@ public class AuthActivity extends AppCompatActivity {
         mLoginBtn = findViewById(R.id.LoginBtn);
         mErrorText = findViewById(R.id.login_form_feedback);
 
+        locationCertification=((RegionActivity)RegionActivity.regional_certification2).isCertified; //지역 인증 여부
+        location=((ChooseTheRegionActivity)ChooseTheRegionActivity.regional_certification1).userLocation; // 사용자가 선택한 지역
+
         mAuth.setLanguageCode("kr");
         mMessageSentBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Log.e("message is sent","Message is sent");
                 String PhoneNumber = mPhoneText.getText().toString();
                 if (PhoneNumber.isEmpty()) {
                     mErrorText.setText("전화번호를 입력해주세요");
@@ -97,7 +106,6 @@ public class AuthActivity extends AppCompatActivity {
                     mErrorText.setText("인증번호를 입력해주세요");
                     mErrorText.setVisibility(VISIBLE);
                 } else {
-                    Log.e("code is sent","code is sent");
                     mCodeBtn.setEnabled(false);
                     mLoginBtn.setEnabled(false);
                     PhoneAuthCredential credential = PhoneAuthProvider.getCredential(mVerificationId, CodeNumber);
@@ -111,7 +119,6 @@ public class AuthActivity extends AppCompatActivity {
             public void onVerificationCompleted(PhoneAuthCredential phoneAuthCredential) {
                 //automatically verified
                 //instantly verified
-                Log.e("Credential is made","Credential is made");
                 mCodeBtn.setEnabled(false);
                 mLoginBtn.setEnabled(false);
                 signInWithPhoneAuthCredential(phoneAuthCredential);
@@ -119,7 +126,6 @@ public class AuthActivity extends AppCompatActivity {
 
             @Override
             public void onVerificationFailed(FirebaseException e) {
-                Log.e("Your initCode is wrong","Your initCode is wrong");
                 mErrorText.setText("인증번호가 틀립니다");
                 mErrorText.setVisibility(VISIBLE);
                 mMessageSentBtn.setEnabled(true);
@@ -151,37 +157,35 @@ public class AuthActivity extends AppCompatActivity {
                     @Override
                     public void onComplete(@NonNull Task<AuthResult> task) {
                         if (task.isSuccessful()) {
-                            String uid = mCurrentUser.getUid();
+                            String uid = FirebaseAuth.getInstance().getCurrentUser().getUid();
                             mUserDatabase = FirebaseDatabase.getInstance().getReference().child("Users").child(uid);
                             locationDB=FirebaseDatabase.getInstance().getReference().child("userRegions").child(uid);
-                            Log.d("인증완료","인증이 완료되었습니다");
+                            Log.e("Credential은 생성되었습니다.","Credential이 생성되었습니다");
                             boolean newuser = task.getResult().getAdditionalUserInfo().isNewUser();
                             if (newuser) {
                                 //신규 사용자라면
-                                HashMap<String, String> userMap = new HashMap<>();
+                                HashMap<String, String> userMap = new HashMap<>(); //User table
                                 userMap.put("Nickname", "default");
-                                userMap.put("Image", "default");
+                                userMap.put("Image", "gs://helping-2d860.appspot.com/profile_images/profile image.png");
                                 userMap.put("Thumb_img", "default");
                                 userMap.put("Gender", "default");
                                 userMap.put("Age", "default");
                                 userMap.put("Score", "default");
                                 userMap.put("Money", "default");
 
-                                HashMap<String,String> locationTable=new HashMap<>(); //userRegion table
-                                locationTable.put("Region1",((ChooseTheRegionActivity)ChooseTheRegionActivity.regional_certification1).userLocation);
-                                locationTable.put("Region1 state",Boolean.toString(((RegionActivity)RegionActivity.regional_certification2).isCertified));
-                                locationTable.put("Region2","default");
-                                locationTable.put("Region2 state","default");
-                                locationTable.put("Region3","default");
-                                locationTable.put("Region3 state","default");
+                                HashMap<String,String> locationTable=new HashMap<>(); //location table
+                                locationTable.put("Region1",location);
+                                locationTable.put("Region2",DEFAULT);
+                                locationTable.put("Region3",DEFAULT);
+                                locationTable.put("Region1 state",Boolean.toString(locationCertification));
+                                locationTable.put("Region2 state",DEFAULT);
+                                locationTable.put("Region3 state",DEFAULT);
                                 locationDB.setValue(locationTable).addOnCompleteListener(new OnCompleteListener<Void>() {
+                                    @SuppressLint("LongLogTag")
                                     @Override
                                     public void onComplete(@NonNull Task<Void> task) {
-                                        if (task.isSuccessful()) {
-                                            Log.d("location db","the location table is updated");
-                                        }
-                                        else{
-                                            Log.e("location db","db isn't updated");
+                                        if(task.isSuccessful()){
+                                            Log.e("the location table is updated.","the location table is successfully updated");
                                         }
                                     }
                                 });
@@ -189,20 +193,17 @@ public class AuthActivity extends AppCompatActivity {
                                     @Override
                                     public void onComplete(@NonNull Task<Void> task) {
                                         if (task.isSuccessful()) {
-                                            Log.d("회원가입 완료","회원가입이 완료되었습니다.");
                                             Intent LoginIntent = new Intent(AuthActivity.this, LogInActivity.class);
                                             LoginIntent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
                                             startActivity(LoginIntent);
                                             finish();
-                                        } else{
-                                            Log.e("오류","회원가입 과정에서 오류가 발생하였습니다.");
                                         }
                                     }
                                 });
+
                             } else {
                                 Intent MainIntent = new Intent(AuthActivity.this, MainActivity.class);
                                 MainIntent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
-                                Log.d("기존 회원","기존회원이므로 메인 화면으로 넘어갑니다.");
                                 startActivity(MainIntent);
                                 finish();
                             }
@@ -217,5 +218,21 @@ public class AuthActivity extends AppCompatActivity {
 
                     }
                 });
+
+    }
+
+    protected void onStart(){
+        super.onStart();
+        if(mCurrentUser!=null){
+            sendUserToMain();
+        }
+    }
+
+    private void sendUserToMain(){
+        Intent profileIntent = new Intent(AuthActivity.this,MainActivity.class);
+        profileIntent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+        profileIntent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK);
+        startActivity(profileIntent);
+        finish();
     }
 }
