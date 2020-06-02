@@ -8,10 +8,12 @@ import android.content.Intent;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.LayoutInflater;
 import android.view.View;
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
 import android.widget.Button;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import androidx.appcompat.app.AppCompatActivity;
@@ -38,6 +40,7 @@ public class MainActivity extends AppCompatActivity {
     FirebaseUser firebaseUser=FirebaseAuth.getInstance().getCurrentUser();
     private boolean locCertification;
     private TextView nowLocation;
+    private LinearLayout linearLayout;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -56,12 +59,14 @@ public class MainActivity extends AppCompatActivity {
         locCertification=((RegionActivity)RegionActivity.regional_certification2).isCertified;
         nowLocation=(TextView) findViewById(R.id.nowLocation);
         nowLocation.setText(((ChooseTheRegionActivity)ChooseTheRegionActivity.regional_certification1).userLocation);
+        linearLayout=(LinearLayout)findViewById(R.id.notCertified);
         if(firebaseUser==null){
             CustomDialog customDialog=new CustomDialog(context);
             customDialog.callFuction();
         }
-        else if(!locCertification){ // 로그인은 했지만 지역인증은 하지 않은 케이스
-
+        else if(!locCertification){ // 지역 인증을 안 했을 경우
+            LayoutInflater inflater=(LayoutInflater) getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+            inflater.inflate(R.layout.not_certified,linearLayout,true);
         }
 
         //위가 recyclerview 아래가 widget
@@ -74,6 +79,7 @@ public class MainActivity extends AppCompatActivity {
         FabClose= AnimationUtils.loadAnimation(getApplicationContext(),R.anim.fab_close);
         FabClockwise= AnimationUtils.loadAnimation(getApplicationContext(),R.anim.rotate_clockwise);
         FabAntiClockwise= AnimationUtils.loadAnimation(getApplicationContext(),R.anim.rotate_anticlockwise);
+        linearLayout=(LinearLayout) findViewById(R.id.notCertified);
 
         myMission=(Button) findViewById(R.id.myMission);
         currentMission=(Button) findViewById(R.id.currentMission);
@@ -84,6 +90,7 @@ public class MainActivity extends AppCompatActivity {
         findViewById(R.id.fab_info).setOnClickListener(onClickListener);
         findViewById(R.id.fab_chat).setOnClickListener(onClickListener);
         findViewById(R.id.go_to_mypage).setOnClickListener(onClickListener);
+        findViewById(R.id.filter).setOnClickListener(onClickListener);
 
         fab_plus.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -151,6 +158,11 @@ public class MainActivity extends AppCompatActivity {
                     }
                     break;
 
+                case R.id.filter:
+                    Intent intent3=new Intent(context,FilterActivity.class);
+                    Log.d("필터로 이동","필터로 이동");
+                    startActivity(intent3);
+                    break;
             }
         }
     };

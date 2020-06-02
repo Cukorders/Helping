@@ -56,13 +56,15 @@
                 android:layout_height="match_parent"
                 android:orientation="vertical"
                 android:layout_marginLeft="10dp">
+
                 <TextView
+                    android:id="@+id/user_name"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="사용자 닉네임"
+                    android:textColor="@color/colorBlack"
                     android:textSize="18sp"
-                    android:textStyle="bold"
-                    android:textColor="@color/colorBlack" />
+                    android:textStyle="bold" />
                 <RelativeLayout
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
@@ -123,12 +125,14 @@
                 android:padding="20dp"
                 android:layout_gravity="center"
                 android:background="@drawable/circle">
+
                 <ImageButton
+                    android:id="@+id/bt_chat"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:src="@drawable/chat_icon"
+                    android:layout_centerInParent="true"
                     android:background="@android:color/transparent"
-                    android:layout_centerInParent="true"/>
+                    android:src="@drawable/chat_icon" />
             </RelativeLayout>
         </LinearLayout>
 
@@ -143,12 +147,14 @@
                 android:padding="20dp"
                 android:layout_gravity="center"
                 android:background="@drawable/circle">
+
                 <ImageButton
+                    android:id="@+id/bt_fav"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:src="@drawable/heart_icon"
+                    android:layout_centerInParent="true"
                     android:background="@android:color/transparent"
-                    android:layout_centerInParent="true"/>
+                    android:src="@drawable/heart_icon" />
             </RelativeLayout>
         </LinearLayout>
 
@@ -163,12 +169,14 @@
                 android:padding="20dp"
                 android:layout_gravity="center"
                 android:background="@drawable/circle">
+
                 <ImageButton
+                    android:id="@+id/bt_history"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:src="@drawable/ic_history"
+                    android:layout_centerInParent="true"
                     android:background="@android:color/transparent"
-                    android:layout_centerInParent="true"/>
+                    android:src="@drawable/ic_history" />
             </RelativeLayout>
         </LinearLayout>
     </LinearLayout>
@@ -191,14 +199,16 @@
                 android:src="@drawable/ic_money"
                 android:layout_gravity="center_vertical"
                 android:background="@android:color/transparent"/>
+
             <Button
+                android:id="@+id/bt_point"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginLeft="5dp"
                 android:layout_gravity="center_vertical"
+                android:layout_marginLeft="5dp"
+                android:background="@android:color/transparent"
                 android:text="포인트 충전하기"
-                android:textSize="20sp"
-                android:background="@android:color/transparent"/>
+                android:textSize="20sp" />
         </LinearLayout>
     </LinearLayout>
     <LinearLayout
@@ -221,14 +231,16 @@
                 android:src="@drawable/place_icon"
                 android:layout_gravity="center_vertical"
                 android:background="@android:color/transparent"/>
+
             <Button
+                android:id="@+id/bt_choose_region"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginLeft="5dp"
                 android:layout_gravity="center_vertical"
-                android:text= "내동네 설정"
-                android:textSize="20sp"
-                android:background="@android:color/transparent"/>
+                android:layout_marginLeft="5dp"
+                android:background="@android:color/transparent"
+                android:text="내동네 설정"
+                android:textSize="20sp" />
         </LinearLayout>
         <LinearLayout
             android:layout_width="wrap_content"
@@ -241,14 +253,16 @@
                 android:src="@drawable/gps_icon_32black"
                 android:layout_gravity="center_vertical"
                 android:background="@android:color/transparent"/>
+
             <Button
+                android:id="@+id/bt_regional_certification"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginLeft="5dp"
                 android:layout_gravity="center_vertical"
-                android:text= "지역 인증하기"
-                android:textSize="20sp"
-                android:background="@android:color/transparent"/>
+                android:layout_marginLeft="5dp"
+                android:background="@android:color/transparent"
+                android:text="지역 인증하기"
+                android:textSize="20sp" />
         </LinearLayout>
     </LinearLayout>
     <LinearLayout
@@ -271,14 +285,16 @@
                 android:src="@drawable/notify32"
                 android:layout_gravity="center_vertical"
                 android:background="@android:color/transparent"/>
+
             <Button
+                android:id="@+id/bt_notice"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginLeft="5dp"
                 android:layout_gravity="center_vertical"
-                android:text= "공지사항"
-                android:textSize="20sp"
-                android:background="@android:color/transparent"/>
+                android:layout_marginLeft="5dp"
+                android:background="@android:color/transparent"
+                android:text="공지사항"
+                android:textSize="20sp" />
         </LinearLayout>
         <LinearLayout
             android:layout_width="wrap_content"
@@ -311,14 +327,16 @@
                 android:src="@drawable/setting_icon"
                 android:layout_gravity="center_vertical"
                 android:background="@android:color/transparent"/>
+
             <Button
+                android:id="@+id/bt_setting"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginLeft="5dp"
                 android:layout_gravity="center_vertical"
-                android:text= "앱 설정"
-                android:textSize="20sp"
-                android:background="@android:color/transparent"/>
+                android:layout_marginLeft="5dp"
+                android:background="@android:color/transparent"
+                android:text="앱 설정"
+                android:textSize="20sp" />
         </LinearLayout>
     </LinearLayout>
 
