@@ -1,4 +1,4 @@
-package com.cukorders.helping;
+/*package com.cukorders.helping;
 
 import android.content.Context;
 import android.view.LayoutInflater;
@@ -57,3 +57,4 @@ public class MainAdapter extends RecyclerView.Adapter<MainAdapter.MainViewHolder
         }
     }
 }
+*/
