@@ -7,39 +7,24 @@ import android.content.Intent;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.util.Log;
-import android.view.LayoutInflater;
 import android.view.View;
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
 import android.widget.Button;
-import android.widget.Toast;
-import android.widget.Toolbar;
-import androidx.annotation.NonNull;
+import android.widget.ImageButton;
 import android.widget.LinearLayout;
 import android.widget.TextView;
-import androidx.appcompat.app.AlertDialog;
 
+import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.recyclerview.widget.LinearLayoutManager;
-import androidx.recyclerview.widget.RecyclerView;
-import androidx.viewpager.widget.PagerAdapter;
 import androidx.viewpager.widget.ViewPager;
 
 import com.cukorders.Adapter.PageAdapter;
 import com.cukorders.Fragment.MyCallingFragment;
 import com.cukorders.Fragment.RecentMissionFragment;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
-
 import com.google.android.material.tabs.TabItem;
 import com.google.android.material.tabs.TabLayout;
-import com.google.firebase.database.DataSnapshot;
-import com.google.firebase.database.DatabaseError;
-import com.google.firebase.database.DatabaseReference;
-import com.google.firebase.database.FirebaseDatabase;
-import com.google.firebase.database.ValueEventListener;
-
-import java.util.ArrayList;
-
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 
@@ -50,16 +35,17 @@ public class MainActivity extends AppCompatActivity {
     private Button myMission,currentMission;
     boolean isOpen=false;
     private final Context context=this;
-
+    private ImageButton filter;
     private FirebaseUser firebaseUser=FirebaseAuth.getInstance().getCurrentUser();
 
     private TabLayout tabLayout;
     private ViewPager viewPager;
     private TabItem tab1,tab2;
 
+    private  LinearLayout linearLayout;
     private boolean locCertification;
     public static Context mainActivity;
-    public String mainLocation;
+    public String mainLocation="";
     private TextView nowLocation;
 
     @Override
@@ -74,18 +60,18 @@ public class MainActivity extends AppCompatActivity {
         FabClose= AnimationUtils.loadAnimation(getApplicationContext(),R.anim.fab_close);
         FabClockwise= AnimationUtils.loadAnimation(getApplicationContext(),R.anim.rotate_clockwise);
         FabAntiClockwise= AnimationUtils.loadAnimation(getApplicationContext(),R.anim.rotate_anticlockwise);
-        //linearLayout=(LinearLayout) findViewById(R.id.notCertified);
+        linearLayout=(LinearLayout) findViewById(R.id.notCertified);
 
+        nowLocation = (TextView) findViewById(R.id.nowLocation);
         myMission=(Button) findViewById(R.id.myMission);
         currentMission=(Button) findViewById(R.id.currentMission);
+        //filter=(ImageButton) findViewById(R.id.filter);
         //MainActivity=this;
-        findViewById(R.id.myMission).setOnClickListener(onClickListener);
-        findViewById(R.id.currentMission).setOnClickListener(onClickListener);
         findViewById(R.id.fab_post).setOnClickListener(onClickListener);
         findViewById(R.id.fab_info).setOnClickListener(onClickListener);
         findViewById(R.id.fab_chat).setOnClickListener(onClickListener);
         findViewById(R.id.go_to_mypage).setOnClickListener(onClickListener);
-        findViewById(R.id.filter).setOnClickListener(onClickListener);
+        //findViewById(R.id.filter).setOnClickListener(onClickListener);
 
         fab_plus.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -115,6 +101,7 @@ public class MainActivity extends AppCompatActivity {
         public void onClick(View v) {
             switch(v.getId()){
                 case R.id.fab_post:
+                    locCertification=((RegionActivity)RegionActivity.regional_certification2).isCertified;
                     if(firebaseUser==null){
                         caution();
                     }
@@ -126,7 +113,7 @@ public class MainActivity extends AppCompatActivity {
                             @Override
                             public void onClick(DialogInterface dialog, int which) {
                                 //TODO 지역인증 페이지로 넘기기
-                                mainLocation=nowLocation.getText().toString();
+                                mainLocation=((ChooseTheRegionActivity)ChooseTheRegionActivity.regional_certification1).userLocation;
                                 startActivity(new Intent(context,RegionActivity.class));
                             }
                         }).setNegativeButton("취소",null);
@@ -164,12 +151,14 @@ public class MainActivity extends AppCompatActivity {
                     startActivity(intent3);
                     }
                     break;
-
+/*
                 case R.id.filter:
                     Intent intent3=new Intent(context,FilterActivity.class);
                     Log.d("필터로 이동","필터로 이동");
                     startActivity(intent3);
                     break;
+
+ */
             }
         }
     };
