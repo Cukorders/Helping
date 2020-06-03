@@ -1,0 +1,135 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:background="@android:color/transparent"
+    tools:context=".MainActivity">
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+        <ImageView
+            android:id="@+id/logo_image"
+            android:layout_width="match_parent"
+            android:layout_height="100dp"
+            android:background="@android:color/transparent"
+            android:src="@drawable/logo_charcter"/>
+        <ImageButton
+            android:id="@+id/go_to_mypage"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentRight="true"
+            android:padding="3dp"
+            android:background="@android:color/transparent"
+            android:src="@drawable/linkprofile"/>
+    </RelativeLayout>
+    <androidx.coordinatorlayout.widget.CoordinatorLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:orientation="vertical">
+            <android.support.design.widget.TabLayout
+                android:id="@+id/outer_tab_layout"
+                android:layout_width="match_parent"
+                android:layout_height="100dp"
+                android:background="@color/colorLogo"
+                app:tabMode="fixed"
+                app:tabGravity="fill">
+                <com.google.android.material.tabs.TabItem
+                    android:layout_width="wrap_content"
+                    android:layout_height="match_parent"
+                    android:text="최근 미션"/>
+                <com.google.android.material.tabs.TabItem
+                    android:layout_width="wrap_content"
+                    android:layout_height="match_parent"
+                    android:text="나의 부름"/>
+            </android.support.design.widget.TabLayout>
+
+            <android.support.design.widget.TabLayout
+                android:id="@+id/inner_tab_layout"
+                android:layout_width="match_parent"
+                android:layout_height="100dp"
+                android:background="@color/colorGrayButton"
+                app:tabMode="scrollable"
+                app:tabGravity="fill">
+                <com.google.android.material.tabs.TabItem
+                    android:layout_width="wrap_content"
+                    android:layout_height="match_parent"
+                    android:text="수행중 미션"/>
+                <com.google.android.material.tabs.TabItem
+                    android:layout_width="wrap_content"
+                    android:layout_height="match_parent"
+                    android:text="의뢰중 미션"/>
+            </android.support.design.widget.TabLayout>
+
+            <android.support.v4.view.ViewPager
+                android:id="@+id/pager"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent" />
+        </LinearLayout>
+
+
+
+
+
+        <com.google.android.material.floatingactionbutton.FloatingActionButton
+            android:id="@+id/fab_plus"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="bottom|end"
+            android:layout_marginRight="16dp"
+            android:layout_marginBottom="16dp"
+            android:backgroundTint="@color/colorLogo"
+            android:elevation="6dp"
+            android:src="@drawable/add_widget32"
+            app:pressedTranslationZ="12dp" />
+
+        <com.google.android.material.floatingactionbutton.FloatingActionButton
+            android:id="@+id/fab_post"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="bottom|end"
+            android:layout_marginRight="16dp"
+            android:layout_marginBottom="100dp"
+            android:backgroundTint="@color/colorLogo"
+            android:elevation="6dp"
+            android:src="@drawable/ic_addprofile"
+            android:visibility="invisible"
+            app:backgroundTint="@color/colorAccent"
+            app:pressedTranslationZ="12dp" />
+
+
+        <com.google.android.material.floatingactionbutton.FloatingActionButton
+            android:id="@+id/fab_info"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="bottom|end"
+            android:layout_marginRight="16dp"
+            android:layout_marginBottom="180dp"
+            android:backgroundTint="@color/colorLogo"
+            android:elevation="6dp"
+            android:src="@drawable/heart_widget32"
+            android:visibility="invisible"
+            app:backgroundTint="@color/colorAccent"
+            app:pressedTranslationZ="12dp" />
+
+        <com.google.android.material.floatingactionbutton.FloatingActionButton
+            android:id="@+id/fab_chat"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="bottom|end"
+            android:layout_marginRight="16dp"
+            android:layout_marginBottom="260dp"
+            android:backgroundTint="@color/colorLogo"
+            android:elevation="6dp"
+            android:src="@drawable/chat_icon"
+            android:visibility="invisible"
+            app:backgroundTint="@color/colorAccent"
+            app:pressedTranslationZ="12dp" />
+
+    </androidx.coordinatorlayout.widget.CoordinatorLayout>
+</LinearLayout>
