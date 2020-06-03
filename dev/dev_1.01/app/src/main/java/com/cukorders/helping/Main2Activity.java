@@ -80,7 +80,7 @@ public class Main2Activity extends AppCompatActivity {
 
             }
         });
-
+/*
         //Todo 글쓰기 하고 닫기 하면 갑자기 종료됨
         //로그인 진행 또는 확인 시행
         locCertification=((RegionActivity)RegionActivity.regional_certification2).isCertified;
@@ -91,7 +91,7 @@ public class Main2Activity extends AppCompatActivity {
         else if(!locCertification){ // 로그인은 했지만 지역인증은 하지 않은 케이스
 
         }
-
+*/
         //widget
         fab_plus=(FloatingActionButton) findViewById(R.id.fab_plus);
         fab_write=(FloatingActionButton) findViewById(R.id.fab_post);

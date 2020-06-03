@@ -53,7 +53,6 @@ import static android.text.Spanned.SPAN_INCLUSIVE_EXCLUSIVE;
 
 public class RegionActivity  extends FragmentActivity implements OnMapReadyCallback{
 
-    public static Context regional_certification2;
     private static final int PERMISSIONS_REQUEST_CODE=1000;
     private static final int REQUEST_CODE = 101;
     private static final int GPS_ENABLE_REQUEST_CODE=2001;
@@ -135,7 +134,7 @@ public class RegionActivity  extends FragmentActivity implements OnMapReadyCallb
                     if(compare.equals(dong)){
                         isCertified=true;
                         Log.e("인증 여부","인증 여부 : "+isCertified);
-                        goPhoneAuth();
+                        goMain();
                     } else{
                         // 인증 실패 에러 메시지 띄움
                         isCertified=false;

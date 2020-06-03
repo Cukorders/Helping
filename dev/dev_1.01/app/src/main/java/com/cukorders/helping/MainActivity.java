@@ -25,8 +25,12 @@ import androidx.recyclerview.widget.RecyclerView;
 import androidx.viewpager.widget.PagerAdapter;
 import androidx.viewpager.widget.ViewPager;
 
+import com.cukorders.Adapter.PageAdapter;
+import com.cukorders.Fragment.MyCallingFragment;
+import com.cukorders.Fragment.RecentMissionFragment;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 
+import com.google.android.material.tabs.TabItem;
 import com.google.android.material.tabs.TabLayout;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
@@ -46,11 +50,22 @@ public class MainActivity extends AppCompatActivity {
     private Button myMission,currentMission;
     boolean isOpen=false;
     private final Context context=this;
-    private ViewPager mViewPager;
+
+    private FirebaseUser firebaseUser=FirebaseAuth.getInstance().getCurrentUser();
+
+    private TabLayout tabLayout;
+    private ViewPager viewPager;
+    private TabItem tab1,tab2;
+
+    private boolean locCertification;
+    public static Context mainActivity;
+    public String mainLocation;
+    private TextView nowLocation;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_main);
+        setContentView(R.layout.activity_main2);
         fab_plus=(FloatingActionButton) findViewById(R.id.fab_plus);
         fab_write=(FloatingActionButton) findViewById(R.id.fab_post);
         fab_info=(FloatingActionButton) findViewById(R.id.fab_info);
@@ -59,12 +74,11 @@ public class MainActivity extends AppCompatActivity {
         FabClose= AnimationUtils.loadAnimation(getApplicationContext(),R.anim.fab_close);
         FabClockwise= AnimationUtils.loadAnimation(getApplicationContext(),R.anim.rotate_clockwise);
         FabAntiClockwise= AnimationUtils.loadAnimation(getApplicationContext(),R.anim.rotate_anticlockwise);
-        linearLayout=(LinearLayout) findViewById(R.id.notCertified);
+        //linearLayout=(LinearLayout) findViewById(R.id.notCertified);
 
         myMission=(Button) findViewById(R.id.myMission);
         currentMission=(Button) findViewById(R.id.currentMission);
-        mainActivity=this;
-
+        //MainActivity=this;
         findViewById(R.id.myMission).setOnClickListener(onClickListener);
         findViewById(R.id.currentMission).setOnClickListener(onClickListener);
         findViewById(R.id.fab_post).setOnClickListener(onClickListener);
@@ -83,6 +97,15 @@ public class MainActivity extends AppCompatActivity {
                 }
             }
         });
+        //main
+        tabLayout = (TabLayout) findViewById(R.id.tab_Main);
+        tab1 = (TabItem) findViewById(R.id.tab_recent_mission);
+        tab2 = (TabItem) findViewById(R.id.tab_my_calling);
+        viewPager = findViewById(R.id.view_pager);
+
+        setUpViewPager(viewPager);
+        tabLayout.setTabTextColors(Color.parseColor("#e1e1e1"),Color.parseColor("#FFFFFF"));
+        tabLayout.setupWithViewPager(viewPager);
 
     }
 
@@ -91,18 +114,6 @@ public class MainActivity extends AppCompatActivity {
         @Override
         public void onClick(View v) {
             switch(v.getId()){
-                case R.id.myMission:
-                    Log.d("myMission is clicked","myMission button is clicked");
-                    myMission.setBackgroundColor(Color.parseColor("#70D398"));
-                    currentMission.setBackgroundColor(Color.parseColor("#e1e1e1"));
-                    break;
-
-                case R.id.currentMission:
-                    Log.d("currentMission is clicked","currentMission is clicked");
-                    currentMission.setBackgroundColor(Color.parseColor("#70D398"));
-                    myMission.setBackgroundColor(Color.parseColor("#e1e1e1"));
-                    break;
-
                 case R.id.fab_post:
                     if(firebaseUser==null){
                         caution();
@@ -176,7 +187,14 @@ public class MainActivity extends AppCompatActivity {
                 }).setNegativeButton("취소",null);
         builder.show();
     }
+    //tab 이동 설정하는 부분
+    private void setUpViewPager(ViewPager viewPager) {
+        PageAdapter adapter = new PageAdapter(getSupportFragmentManager());
+        adapter.addFragment(new RecentMissionFragment(),"최근 미션");
+        adapter.addFragment(new MyCallingFragment(),"나의 부름");
+        viewPager.setAdapter(adapter);
 
+    }
     private void open(){
         fab_write.startAnimation(FabOpen);
         fab_info.startAnimation(FabOpen);
