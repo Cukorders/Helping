@@ -1,6 +1,9 @@
 package com.cukorders.helping;
+
+import android.annotation.SuppressLint;
 import android.content.Intent;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
@@ -27,6 +30,9 @@ import java.util.concurrent.TimeUnit;
 import static android.view.View.VISIBLE;
 
 public class AuthActivity extends AppCompatActivity {
+
+    private String location;
+    private boolean locationCertification;
     private EditText mPhoneText;
     private EditText mCodeText;
 
@@ -43,10 +49,13 @@ public class AuthActivity extends AppCompatActivity {
     private String mVerificationId;
     private PhoneAuthProvider.ForceResendingToken mResendToken;
 
+    private final String DEFAULT="default";
+
     //Database
     private FirebaseDatabase mDatabase;
     private DatabaseReference mUserDatabase;
     private DatabaseReference mUserUids;
+    private DatabaseReference locationDB;
 
 
     @Override
@@ -62,6 +71,9 @@ public class AuthActivity extends AppCompatActivity {
         mCodeBtn = findViewById(R.id.codeBtn);
         mLoginBtn = findViewById(R.id.LoginBtn);
         mErrorText = findViewById(R.id.login_form_feedback);
+
+        locationCertification=((RegionActivity)RegionActivity.regional_certification2).isCertified; //지역 인증 여부
+        location=((ChooseTheRegionActivity)ChooseTheRegionActivity.regional_certification1).userLocation; // 사용자가 선택한 지역
 
         mAuth.setLanguageCode("kr");
         mMessageSentBtn.setOnClickListener(new View.OnClickListener() {
@@ -145,19 +157,38 @@ public class AuthActivity extends AppCompatActivity {
                     @Override
                     public void onComplete(@NonNull Task<AuthResult> task) {
                         if (task.isSuccessful()) {
-                            String uid = mCurrentUser.getUid();
+                            String uid = FirebaseAuth.getInstance().getCurrentUser().getUid();
                             mUserDatabase = FirebaseDatabase.getInstance().getReference().child("Users").child(uid);
+                            locationDB=FirebaseDatabase.getInstance().getReference().child("userRegions").child(uid);
+                            Log.e("Credential은 생성되었습니다.","Credential이 생성되었습니다");
                             boolean newuser = task.getResult().getAdditionalUserInfo().isNewUser();
                             if (newuser) {
                                 //신규 사용자라면
-                                HashMap<String, String> userMap = new HashMap<>();
+                                HashMap<String, String> userMap = new HashMap<>(); //User table
                                 userMap.put("Nickname", "default");
-                                userMap.put("Image", "default");
+                                userMap.put("Image", "gs://helping-2d860.appspot.com/profile_images/profile image.png");
                                 userMap.put("Thumb_img", "default");
                                 userMap.put("Gender", "default");
                                 userMap.put("Age", "default");
                                 userMap.put("Score", "default");
                                 userMap.put("Money", "default");
+
+                                HashMap<String,String> locationTable=new HashMap<>(); //location table
+                                locationTable.put("Region1",location);
+                                locationTable.put("Region2",DEFAULT);
+                                locationTable.put("Region3",DEFAULT);
+                                locationTable.put("Region1 state",Boolean.toString(locationCertification));
+                                locationTable.put("Region2 state",DEFAULT);
+                                locationTable.put("Region3 state",DEFAULT);
+                                locationDB.setValue(locationTable).addOnCompleteListener(new OnCompleteListener<Void>() {
+                                    @SuppressLint("LongLogTag")
+                                    @Override
+                                    public void onComplete(@NonNull Task<Void> task) {
+                                        if(task.isSuccessful()){
+                                            Log.e("the location table is updated.","the location table is successfully updated");
+                                        }
+                                    }
+                                });
                                 mUserDatabase.setValue(userMap).addOnCompleteListener(new OnCompleteListener<Void>() {
                                     @Override
                                     public void onComplete(@NonNull Task<Void> task) {
@@ -169,6 +200,7 @@ public class AuthActivity extends AppCompatActivity {
                                         }
                                     }
                                 });
+
                             } else {
                                 Intent MainIntent = new Intent(AuthActivity.this, MainActivity.class);
                                 MainIntent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
@@ -186,5 +218,21 @@ public class AuthActivity extends AppCompatActivity {
 
                     }
                 });
+
+    }
+
+    protected void onStart(){
+        super.onStart();
+        if(mCurrentUser!=null){
+            sendUserToMain();
+        }
+    }
+
+    private void sendUserToMain(){
+        Intent profileIntent = new Intent(AuthActivity.this,MainActivity.class);
+        profileIntent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+        profileIntent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK);
+        startActivity(profileIntent);
+        finish();
     }
 }
