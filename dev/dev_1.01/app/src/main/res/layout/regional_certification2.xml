@@ -98,9 +98,19 @@
             android:textSize="20sp"
             android:background="@drawable/gps_button_shape">
         </Button>
+
+        <Button
+            android:id="@+id/bt_skip"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_margin="20dp"
+            android:layout_below="@id/finish_location"
+            android:text="S K I P"
+            android:textColor="@color/colorWhite"
+            android:textSize="20sp"
+            android:background="@drawable/gps_button_shape">
+        </Button>
     </RelativeLayout>
-
-
 
 
 </LinearLayout>

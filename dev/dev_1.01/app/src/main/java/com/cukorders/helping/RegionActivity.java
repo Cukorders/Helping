@@ -1,6 +1,7 @@
 package com.cukorders.helping;
 
 import android.Manifest;
+import android.annotation.SuppressLint;
 import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager;
@@ -32,10 +33,19 @@ import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
+import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
 
 import java.io.IOException;
+import java.util.HashMap;
 import java.util.List;
 
 import static android.text.Spanned.SPAN_INCLUSIVE_EXCLUSIVE;
@@ -69,6 +79,11 @@ public class RegionActivity  extends FragmentActivity implements OnMapReadyCallb
     public String dong="";
     private TextView result_gps;
     private String errorMSG="인증을 하려면 위치 정보를 불러와야 합니다.";
+    public static Context regional_certification2;
+    public static boolean isCertified=false;
+    private static FirebaseUser firebaseUser= FirebaseAuth.getInstance().getCurrentUser();
+    private static DatabaseReference databaseReference;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -85,13 +100,20 @@ public class RegionActivity  extends FragmentActivity implements OnMapReadyCallb
         findViewById(R.id.currentLocation).setOnClickListener(OnClickListener);
         findViewById(R.id.finish_location).setOnClickListener(OnClickListener);
         findViewById(R.id.bt_back).setOnClickListener(OnClickListener);
-      //  findViewById(R.id.bt_skip).setOnClickListener(OnClickListener);
+        findViewById(R.id.bt_skip).setOnClickListener(OnClickListener);
 
         // 위치 권한 요청을 하기 위한 FusedLocationClient 불러옴
         mFusedLocationClient= LocationServices.getFusedLocationProviderClient(this);
         geocoder=new Geocoder(this);
 
         result_gps=(TextView) findViewById(R.id.result_gps);
+
+        regional_certification2=this;
+      /*
+        if(firebaseUser!=null){
+        databaseReference= FirebaseDatabase.getInstance().getReference().child("userRegions").child(firebaseUser.getUid());
+        }
+        */
 
     }
 
@@ -110,10 +132,12 @@ public class RegionActivity  extends FragmentActivity implements OnMapReadyCallb
                     Log.e("the user's location is ","the user's location is "+dong);
 
                     if(compare.equals(dong)){
-                        //TODO : DB에서 위치 인증이 완료된 유저라고 체크되어야 함.
-                        goPhoneAuth();
+                        isCertified=true;
+                        Log.e("인증 여부","인증 여부 : "+isCertified);
+                        goMain();
                     } else{
                         // 인증 실패 에러 메시지 띄움
+                        isCertified=false;
                         Toast.makeText(context,errorMsg,Toast.LENGTH_LONG).show();
                     }
                     break;
@@ -121,16 +145,18 @@ public class RegionActivity  extends FragmentActivity implements OnMapReadyCallb
                     goBack(); //이전 페이지로 가기(뒤로 가기 버튼이 눌렸을 때)
                     break;
 
-               /* case R.id.bt_skip:
-                    //TODO : DB에서 인증 안 된 유저라고 체크해야 함.
-                    goPhoneAuth(); // 바로 전화 인증으로 건너 뜀.
-                    break;*/
+              case R.id.bt_skip:
+                    isCertified=false;
+                    Log.d("a skip button","a skip button is clicked");
+                    Toast.makeText(context,"지역 인증을 완료하려면 마이페이지>지역 인증에서 완료하시길 바랍니다.",Toast.LENGTH_LONG).show();
+                    goMain();
+                    break;
             }
         }
     };
 
-    private void goPhoneAuth(){
-        Intent intent=new Intent(this,AuthActivity.class);
+    private void goMain(){
+        Intent intent=new Intent(this,MainActivity.class);
         startActivity(intent);
     }
 
@@ -188,6 +214,7 @@ public class RegionActivity  extends FragmentActivity implements OnMapReadyCallb
                 } else{
                     //TODO make the location parameter return non-null value
                     Log.e("location is empty","a location parameter returns null");
+                    Toast.makeText(context,"위치 정보를 불러오는데 실패하였습니다.",Toast.LENGTH_LONG).show();
                 }
             }
         });

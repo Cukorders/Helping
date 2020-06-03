@@ -50,7 +50,7 @@ public class ChooseTheRegionActivity  extends AppCompatActivity {
     private LocationManager locationManager;
     private Geocoder geocoder;
     private TextView editTextQuery;
-    public String userLocation;
+    public static String userLocation;
     private Location nowLocation;
     private Context context=this;
     private ListView search_result;
@@ -58,7 +58,7 @@ public class ChooseTheRegionActivity  extends AppCompatActivity {
     private static String defaultURL="https://maps.googleapis.com/maps/api/geocode/json?address=";
     private String lats[],lngs[];
     private int select=0;
-    public Location userInputLocation;
+    private boolean myPlace;
     Handler handler=new Handler();
 
     // 주변 행정동들 검색할 때 주변 2km 내 행정동들을 불러오기
@@ -80,6 +80,8 @@ public class ChooseTheRegionActivity  extends AppCompatActivity {
         geocoder=new Geocoder(this);
         search_result=(ListView) findViewById(R.id.search_result);
         regional_certification1=this;
+        myPlace=((MyPlaceActivity)MyPlaceActivity.myPlaceActivity).fromMyPlaceActivity;
+        Log.d("myPlace value","myPlace value is "+myPlace);
 
         // 엔터키를 누를 시 줄바꿈이 아니라 검색 버튼이 눌렸을 때랑 같은 이벤트가 발생하기 위한 코드
         editTextQuery.setOnKeyListener(new View.OnKeyListener() {
@@ -125,8 +127,13 @@ public class ChooseTheRegionActivity  extends AppCompatActivity {
     }
 
     private void goBack(){
+        if(myPlace){
+            startActivity(new Intent(context,MyPlaceActivity.class));
+        }
+        else{
         Intent intent=new Intent(this,LoadingActivity.class);
         startActivity(intent);
+        }
     }
 
     private void fetchLocation() {
@@ -184,7 +191,11 @@ public class ChooseTheRegionActivity  extends AppCompatActivity {
                             public void onClick(DialogInterface dialog, int which) {
                                 userLocation=array[select];
                                 Log.e("userLocation_search","the value of a parameter called userLocation in ChooseTheRegionActivity is "+userLocation);
+                                if(myPlace){
+                                    startActivity(new Intent(context,MyPlaceActivity.class));
+                                }else{
                                 startActivity(new Intent(context,RegionActivity.class));
+                                }
                             }
                         }).setNegativeButton("취소",null);
 
@@ -195,7 +206,7 @@ public class ChooseTheRegionActivity  extends AppCompatActivity {
                     }
                 } else{
                     Log.e("error in getting the location","error in getting the location");
-                    Toast.makeText(context,errorMsg,Toast.LENGTH_LONG);
+                    Toast.makeText(context,errorMsg,Toast.LENGTH_LONG).show();
                 }
             }
         });
@@ -243,7 +254,7 @@ public class ChooseTheRegionActivity  extends AppCompatActivity {
             URL url=new URL(urlStr);
             HttpURLConnection conn=(HttpURLConnection) url.openConnection();
             if(conn!=null){
-                conn.setConnectTimeout(5000); // 5초 이상 지연될 시 타임 아웃됐다고 판단
+                conn.setConnectTimeout(10000); // 10초 이상 지연될 시 타임 아웃됐다고 판단
                 conn.setRequestMethod("GET");
                 conn.setDoInput(true);
                 conn.setDoOutput(true);
@@ -278,7 +289,7 @@ public class ChooseTheRegionActivity  extends AppCompatActivity {
             JSONObject jsonObject=new JSONObject(output);
             String status=jsonObject.getString("status");
             String condition=status.trim();
-
+            Log.e("condition",condition);
             if(condition.equals("OK")){
                 JSONArray jsonResultsArray=new JSONArray(jsonObject.getString("results"));
                 int jsonResultsLength=jsonResultsArray.length();
@@ -319,7 +330,11 @@ public class ChooseTheRegionActivity  extends AppCompatActivity {
                             }
                             userLocation=addr.get(0).getThoroughfare();
                             Log.e("userLocation_search","the value of a parameter called userLocation in ChooseTheRegionActivity is "+userLocation);
+                            if(myPlace){
+                                startActivity(new Intent(context,MyPlaceActivity.class));
+                            }else{
                             startActivity(new Intent(context,RegionActivity.class));
+                            }
                         }
                     }).setNegativeButton("취소",null);
 
