@@ -47,13 +47,6 @@
         <activity android:name=".MyPageActivity" />
         <activity android:name=".MissionActivity" />
         <activity android:name=".CustomDialog"/>
-        <activity android:name=".FilterActivity"/>
-        <activity android:name=".SettingActivity"/>
-        <activity android:name=".MyPlaceActivity"/>
-        <activity android:name=".FAQActivity"/>
-        <activity android:name=".ProfileActivity"/>
-        <activity android:name=".NoticeActivity"/>
-        <activity android:name=".HistoryActivity"/>
         <activity
             android:name="com.theartofdev.edmodo.cropper.CropImageActivity"
             android:theme="@style/Base.Theme.AppCompat" />
