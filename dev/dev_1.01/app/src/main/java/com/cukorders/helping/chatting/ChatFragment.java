@@ -56,17 +56,19 @@ public class ChatFragment extends Fragment {
         private List<ChatModel> chatModels = new ArrayList<>();
         private String uid;
         private ArrayList<String> destinationUsers = new ArrayList<>();
+        private List<String> keys = new ArrayList<>();
 
         public ChatRecyclerViewAdapter(){
             uid = FirebaseAuth.getInstance().getCurrentUser().getUid();
 
             //equalTO(true) -> 내가 소속된 방만 뜨도록
-            FirebaseDatabase.getInstance().getReference().child("chatrooms").orderByChild("users/"+uid).equalTo(true).addListenerForSingleValueEvent(new ValueEventListener() {
+            FirebaseDatabase.getInstance().getReference().child("chatrooms").orderByChild("Users/"+uid).equalTo(true).addListenerForSingleValueEvent(new ValueEventListener() {
                 @Override
                 public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                     chatModels.clear();
                     for (DataSnapshot item :dataSnapshot.getChildren()){
                         chatModels.add(item.getValue(ChatModel.class));
+                        keys.add(item.getKey());
                     }
                     notifyDataSetChanged();
                 }
@@ -89,39 +91,52 @@ public class ChatFragment extends Fragment {
 
         @Override
         public void onBindViewHolder(@NonNull RecyclerView.ViewHolder holder, final int position) {
-            final CustomViewHolder customViewHolder = (CustomViewHolder)holder;
+            final CustomViewHolder customViewHolder = (CustomViewHolder) holder;
             String destinationUid = null; // 채팅 상대 받아도기
 
             //챗방에 있는 유저를 체크 (일일히)
-            for(String user: chatModels.get(position).users.keySet()){
-                if(!user.equals(uid)){
+            for (String user : chatModels.get(position).users.keySet()) {
+                if (!user.equals(uid)) {
                     destinationUid = user;
                     destinationUsers.add(destinationUid);
                 }
             }
-            FirebaseDatabase.getInstance().getReference().child("users").child(destinationUid).addListenerForSingleValueEvent(new ValueEventListener() {
-                @Override
-                public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                    UserModel userModel = dataSnapshot.getValue(UserModel.class);
-                    Glide.with(customViewHolder.itemView.getContext())
-                            .load(userModel.profileImageUrl)
-                            .apply(new RequestOptions().circleCrop())
-                            .into(customViewHolder.imageView);
 
-                    customViewHolder.textView_title.setText(userModel.userName);
-                }
+            if (destinationUid != null) {
 
-                @Override
-                public void onCancelled(@NonNull DatabaseError databaseError) {
+                FirebaseDatabase.getInstance().getReference().child("Users").child(destinationUid).addListenerForSingleValueEvent(new ValueEventListener() {
+                    @Override
+                    public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                        UserModel userModel = dataSnapshot.getValue(UserModel.class);
+                        Glide.with(customViewHolder.itemView.getContext())
+                                .load(userModel.profileImageUrl)
+                                .apply(new RequestOptions().circleCrop())
+                                .into(customViewHolder.imageView);
 
-                }
-            });
+                        customViewHolder.textView_title.setText(userModel.userName);
+                    }
 
-            // 메시지를 내림 차순으로 정렬 후 마지막 메세지의 키값을 가져옴옴
+                    @Override
+                    public void onCancelled(@NonNull DatabaseError databaseError) {
+
+                    }
+                });
+            }
+
+            // 채팅방이 여러 개 존재할 때 선택한 채팅방의 채팅을 내림차순으로 정렬 한 후 가장 최근 채팅의 값 불러오기.
            Map<String,ChatModel.Comment> commentMap = new TreeMap<>(Collections.reverseOrder());
             commentMap.putAll(chatModels.get(position).comments);
-            String lastMessageKey = (String) commentMap.keySet().toArray()[0];
-            customViewHolder.textView_last_massage.setText(chatModels.get(position).comments.get(lastMessageKey).message);
+
+            if (commentMap.keySet().size() > 0) {
+                String lastMessageKey = (String)commentMap.keySet().toArray()[0];
+                customViewHolder.textView_last_message.setText(chatModels.get(position).comments.get(lastMessageKey).message);
+
+                //시간 처리
+                simpleDateFormat.setTimeZone(TimeZone.getTimeZone("Asia/Seoul"));
+                long unixTime = (long) chatModels.get(position).comments.get(lastMessageKey).timestamp;
+                Date date = new Date(unixTime);
+                customViewHolder.textView_timestamp.setText(simpleDateFormat.format(date));
+            }
 
             customViewHolder.itemView.setOnClickListener(new View.OnClickListener() {
                 @Override
@@ -134,13 +149,6 @@ public class ChatFragment extends Fragment {
                     startActivity(intent, activityOptions.toBundle());
                 }
             });
-
-            //TimeStamp
-            simpleDateFormat.setTimeZone(TimeZone.getTimeZone("Asia/Seoul"));
-            long unixTime = (long) chatModels.get(position).comments.get(lastMessageKey).timestamp;
-            Date date = new Date(unixTime);
-            customViewHolder.textView_timestamp.setText(simpleDateFormat.format(date));
-
         }
 
         @Override
@@ -152,14 +160,15 @@ public class ChatFragment extends Fragment {
 
             public ImageView imageView;
             public TextView textView_title;
-            public TextView textView_last_massage;
+            public TextView textView_last_message;
             public TextView textView_timestamp;
+
             public CustomViewHolder(View view) {
                 super(view);
 
                 imageView = (ImageView) view.findViewById(R.id.chatitem_imageview);
                 textView_title = (TextView) view.findViewById(R.id.chatitem_textview_title);
-                textView_last_massage = (TextView) view.findViewById(R.id.chatitem_textview_lastMessage);
+                textView_last_message = (TextView) view.findViewById(R.id.chatitem_textview_lastMessage);
                 textView_timestamp = (TextView) view.findViewById(R.id.chatitem_textview_timestamp);
             }
         }

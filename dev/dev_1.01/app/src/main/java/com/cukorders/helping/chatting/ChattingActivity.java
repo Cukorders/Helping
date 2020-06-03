@@ -52,7 +52,7 @@ public class ChattingActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_chatting);
 
-        uid = FirebaseAuth.getInstance().getCurrentUser().getUid(); // 채팅을 요구하는 아이디. 즉 단말기에 로그인된 UID
+        uid = FirebaseAuth.getInstance().getCurrentUser().getUid(); // 채팅을 요구하는 아이디. 즉 단말기에 로그인된 UID[
         destinationUid = getIntent().getStringExtra("destinationUid"); // 채팅을 당하는 아이디
         button = (Button)findViewById(R.id.chattingActivity_button);
         editText = (EditText)findViewById(R.id.chattingActivity_editText);
@@ -94,7 +94,7 @@ public class ChattingActivity extends AppCompatActivity {
     }
 
     void checkChatRoom(){
-        FirebaseDatabase.getInstance().getReference().child("chatrooms").orderByChild("users/"+uid).equalTo(true).addListenerForSingleValueEvent(new ValueEventListener() {
+        FirebaseDatabase.getInstance().getReference().child("chatrooms").orderByChild("Users/"+uid).equalTo(true).addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                  for(DataSnapshot item : dataSnapshot.getChildren()){

@@ -37,10 +37,13 @@
         </activity>
         <activity android:name=".RegionActivity" />
         <activity android:name=".ChooseTheRegionActivity" />
-        <activity android:name=".RegisterActivity" />
+        <activity android:name=".RegisterActivity" />d
         <activity android:name=".RegisterFinishActivity" />
         <activity android:name=".AuthActivity" />
         <activity android:name=".MainActivity" />
+        <activity android:name=".chatting.ChattingActivity" />
+        <activity android:name=".chatting.PeopleFragment" />
+        <activity android:name=".chatting.ChatFragment" />
         <activity android:name=".LogInActivity" />
         <activity android:name=".PostActivity" />
         <activity android:name=".MyPageActivity" />
