@@ -1,47 +1,96 @@
 package com.cukorders.helping;
 
 import android.annotation.SuppressLint;
+import android.app.AlertDialog;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.Color;
+import android.graphics.pdf.PdfDocument;
 import android.os.Bundle;
+
+import com.cukorders.Adapter.PageAdapter;
+import com.cukorders.Adapter.PageAdapter_Mycalling;
+import com.cukorders.Fragment.HelpingFragment;
+import com.cukorders.Fragment.MyCallingFragment;
+import com.cukorders.Fragment.RecentMissionFragment;
+import com.cukorders.Fragment.RequestingFragment;
+import com.google.android.material.floatingactionbutton.FloatingActionButton;
+import com.google.android.material.snackbar.Snackbar;
+import com.google.android.material.tabs.TabItem;
+import com.google.android.material.tabs.TabLayout;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
+
+import androidx.viewpager.widget.ViewPager;
+import androidx.appcompat.app.AppCompatActivity;
+
 import android.util.Log;
+import android.view.Menu;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
 import android.widget.Button;
-import android.widget.Toast;
 import android.widget.Toolbar;
 
-import androidx.annotation.NonNull;
-import androidx.appcompat.app.AppCompatActivity;
-import androidx.recyclerview.widget.LinearLayoutManager;
-import androidx.recyclerview.widget.RecyclerView;
-import androidx.viewpager.widget.PagerAdapter;
-import androidx.viewpager.widget.ViewPager;
 
-import com.google.android.material.floatingactionbutton.FloatingActionButton;
-import com.google.android.material.tabs.TabLayout;
-import com.google.firebase.database.DataSnapshot;
-import com.google.firebase.database.DatabaseError;
-import com.google.firebase.database.DatabaseReference;
-import com.google.firebase.database.FirebaseDatabase;
-import com.google.firebase.database.ValueEventListener;
-
-import java.util.ArrayList;
-
-public class MainActivity extends AppCompatActivity {
+public class Main2Activity extends AppCompatActivity {
     FloatingActionButton fab_plus,fab_write,fab_info,fab_chat;
     Animation FabOpen,FabClose,FabClockwise,FabAntiClockwise;
     private Button myMission,currentMission;
     boolean isOpen=false;
     private final Context context=this;
 
-    private ViewPager mViewPager;
+    FirebaseUser firebaseUser= FirebaseAuth.getInstance().getCurrentUser();
+    private boolean locCertification;
+
+    private TabLayout tabLayout;
+    private ViewPager viewPager;
+    private TabItem tab1,tab2;
+
+    @SuppressLint("LongLogTag")
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_main);
+        setContentView(R.layout.activity_main2);
+        Log.d("The main page is started","The main page is sucessfully started");
+        //main
+        tabLayout = (TabLayout) findViewById(R.id.tab_Main);
+        tab1 = (TabItem) findViewById(R.id.tab_recent_mission);
+        tab2 = (TabItem) findViewById(R.id.tab_my_calling);
+        viewPager = findViewById(R.id.view_pager);
+
+        setUpViewPager(viewPager);
+        tabLayout.setTabTextColors(Color.parseColor("#e1e1e1"),Color.parseColor("#FFFFFF"));
+        tabLayout.setupWithViewPager(viewPager);
+
+        tabLayout.addOnTabSelectedListener(new TabLayout.OnTabSelectedListener() {
+            @Override
+            public void onTabSelected(TabLayout.Tab tab) {
+
+            }
+            @Override
+            public void onTabUnselected(TabLayout.Tab tab) {
+
+            }
+
+            @Override
+            public void onTabReselected(TabLayout.Tab tab) {
+
+            }
+        });
+
+        //Todo 글쓰기 하고 닫기 하면 갑자기 종료됨
+        //로그인 진행 또는 확인 시행
+        locCertification=((RegionActivity)RegionActivity.regional_certification2).isCertified;
+        if(firebaseUser==null){
+            CustomDialog customDialog=new CustomDialog(context);
+            customDialog.callFuction();
+        }
+        else if(!locCertification){ // 로그인은 했지만 지역인증은 하지 않은 케이스
+
+        }
 
         //widget
         fab_plus=(FloatingActionButton) findViewById(R.id.fab_plus);
@@ -52,11 +101,11 @@ public class MainActivity extends AppCompatActivity {
         FabClose= AnimationUtils.loadAnimation(getApplicationContext(),R.anim.fab_close);
         FabClockwise= AnimationUtils.loadAnimation(getApplicationContext(),R.anim.rotate_clockwise);
         FabAntiClockwise= AnimationUtils.loadAnimation(getApplicationContext(),R.anim.rotate_anticlockwise);
-
+/*
         myMission=(Button) findViewById(R.id.myMission);
         currentMission=(Button) findViewById(R.id.currentMission);
-        findViewById(R.id.myMission).setOnClickListener(onClickListener);
         findViewById(R.id.currentMission).setOnClickListener(onClickListener);
+  */
         findViewById(R.id.fab_post).setOnClickListener(onClickListener);
         findViewById(R.id.fab_info).setOnClickListener(onClickListener);
         findViewById(R.id.fab_chat).setOnClickListener(onClickListener);
@@ -74,12 +123,21 @@ public class MainActivity extends AppCompatActivity {
         });
 
     }
+    //tab 이동 설정하는 부분
+    private void setUpViewPager(ViewPager viewPager) {
+        PageAdapter adapter = new PageAdapter(getSupportFragmentManager());
+        adapter.addFragment(new RecentMissionFragment(),"최근 미션");
+        adapter.addFragment(new MyCallingFragment(),"나의 부름");
+        viewPager.setAdapter(adapter);
+
+    }
 
     View.OnClickListener onClickListener=new View.OnClickListener() {
         @SuppressLint("LongLogTag")
         @Override
         public void onClick(View v) {
             switch(v.getId()){
+                /*
                 case R.id.myMission:
                     Log.d("myMission is clicked","myMission button is clicked");
                     myMission.setBackgroundColor(Color.parseColor("#70D398"));
@@ -91,7 +149,7 @@ public class MainActivity extends AppCompatActivity {
                     currentMission.setBackgroundColor(Color.parseColor("#70D398"));
                     myMission.setBackgroundColor(Color.parseColor("#e1e1e1"));
                     break;
-
+*/
                 case R.id.fab_post:
                     Intent intent1 =new Intent(context,PostActivity.class);
                     Log.e("go to post","go to a posting page");
@@ -116,6 +174,20 @@ public class MainActivity extends AppCompatActivity {
         }
     };
 
+    private void caution(){
+        AlertDialog.Builder builder=new AlertDialog.Builder(context);
+        builder.setTitle("로그인이 필요한 작업입니다.");
+        builder.setMessage("이 작업을 수행하시려면 로그인이 필요합니다.");
+        builder.setPositiveButton("로그인/회원가입 하기",
+                new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        startActivity(new Intent(context,AuthActivity.class));
+                    }
+                }).setNegativeButton("취소",null);
+        builder.show();
+    }
+
     private void open(){
         fab_write.startAnimation(FabOpen);
         fab_info.startAnimation(FabOpen);
@@ -137,38 +209,4 @@ public class MainActivity extends AppCompatActivity {
         isOpen=false;
         //  Log.d("close","close");
     }
-
-    /*private void startStartActivity(){
-        Intent intent=new Intent(this,StartActivity.class);
-        startActivity(intent);
-    }
-
-    private void startUserInfo(){
-        Intent intent=new Intent(this,UserInfoActivity.class);
-        startActivity(intent);
-    }*/
-
-   /* @Override
-    public void onBackPressed() {
-        //super.onBackPressed();
-        // 기존 뒤로 가기 버튼의 기능을 막기 위해 주석 처리 또는 삭제
-
-        // 마지막으로 뒤로 가기 버튼을 눌렀던 시간에 2.5초를 더해 현재 시간과 비교 후
-        // 마지막으로 뒤로 가기 버튼을 눌렀던 시간이 2.5초가 지났으면 Toast 출력
-        // 2500 milliseconds = 2.5 seconds
-        if (System.currentTimeMillis() > backKeyPressedTime + 2500) {
-            backKeyPressedTime = System.currentTimeMillis();
-            toast = Toast.makeText(this, "뒤로 가기 버튼을 한 번 더 누르시면 종료됩니다.", Toast.LENGTH_LONG);
-            toast.show();
-            return;
-        }
-        // 마지막으로 뒤로 가기 버튼을 눌렀던 시간에 2.5초를 더해 현재 시간과 비교 후
-        // 마지막으로 뒤로 가기 버튼을 눌렀던 시간이 2.5초가 지나지 않았으면 종료
-        if (System.currentTimeMillis() <= backKeyPressedTime + 2500) {
-            finish();
-            toast.cancel();
-            toast = Toast.makeText(this,"이용해 주셔서 감사합니다.",Toast.LENGTH_LONG);
-            toast.show();
-        }
-    }*/
 }

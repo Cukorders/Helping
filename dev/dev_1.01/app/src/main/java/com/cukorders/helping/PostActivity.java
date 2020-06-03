@@ -21,6 +21,8 @@ import java.util.HashMap;
 import java.util.Map;
 
 public class PostActivity extends AppCompatActivity {
+
+    public final Context regional_certification2=this;
     private final Context context=this;
     private boolean sameGender;
     private boolean ageChecked[]=new boolean[5]; // 연령이 체크 됐는지 안 됐는지를 확인 여부

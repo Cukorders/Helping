@@ -243,7 +243,7 @@ public class ChooseTheRegionActivity  extends AppCompatActivity {
             URL url=new URL(urlStr);
             HttpURLConnection conn=(HttpURLConnection) url.openConnection();
             if(conn!=null){
-                conn.setConnectTimeout(5000); // 5초 이상 지연될 시 타임 아웃됐다고 판단
+                conn.setConnectTimeout(10000); // 10초 이상 지연될 시 타임 아웃됐다고 판단
                 conn.setRequestMethod("GET");
                 conn.setDoInput(true);
                 conn.setDoOutput(true);
@@ -278,7 +278,7 @@ public class ChooseTheRegionActivity  extends AppCompatActivity {
             JSONObject jsonObject=new JSONObject(output);
             String status=jsonObject.getString("status");
             String condition=status.trim();
-
+            Log.e("condition",condition);
             if(condition.equals("OK")){
                 JSONArray jsonResultsArray=new JSONArray(jsonObject.getString("results"));
                 int jsonResultsLength=jsonResultsArray.length();
