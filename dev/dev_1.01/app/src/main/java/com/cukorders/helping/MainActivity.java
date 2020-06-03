@@ -2,18 +2,23 @@ package com.cukorders.helping;
 
 import android.annotation.SuppressLint;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.LayoutInflater;
 import android.view.View;
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
 import android.widget.Button;
 import android.widget.Toast;
 import android.widget.Toolbar;
-
 import androidx.annotation.NonNull;
+import android.widget.LinearLayout;
+import android.widget.TextView;
+import androidx.appcompat.app.AlertDialog;
+
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
@@ -21,6 +26,7 @@ import androidx.viewpager.widget.PagerAdapter;
 import androidx.viewpager.widget.ViewPager;
 
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
+
 import com.google.android.material.tabs.TabLayout;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
@@ -30,20 +36,21 @@ import com.google.firebase.database.ValueEventListener;
 
 import java.util.ArrayList;
 
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
+
+
 public class MainActivity extends AppCompatActivity {
     FloatingActionButton fab_plus,fab_write,fab_info,fab_chat;
     Animation FabOpen,FabClose,FabClockwise,FabAntiClockwise;
     private Button myMission,currentMission;
     boolean isOpen=false;
     private final Context context=this;
-
     private ViewPager mViewPager;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-
-        //widget
         fab_plus=(FloatingActionButton) findViewById(R.id.fab_plus);
         fab_write=(FloatingActionButton) findViewById(R.id.fab_post);
         fab_info=(FloatingActionButton) findViewById(R.id.fab_info);
@@ -52,15 +59,19 @@ public class MainActivity extends AppCompatActivity {
         FabClose= AnimationUtils.loadAnimation(getApplicationContext(),R.anim.fab_close);
         FabClockwise= AnimationUtils.loadAnimation(getApplicationContext(),R.anim.rotate_clockwise);
         FabAntiClockwise= AnimationUtils.loadAnimation(getApplicationContext(),R.anim.rotate_anticlockwise);
+        linearLayout=(LinearLayout) findViewById(R.id.notCertified);
 
         myMission=(Button) findViewById(R.id.myMission);
         currentMission=(Button) findViewById(R.id.currentMission);
+        mainActivity=this;
+
         findViewById(R.id.myMission).setOnClickListener(onClickListener);
         findViewById(R.id.currentMission).setOnClickListener(onClickListener);
         findViewById(R.id.fab_post).setOnClickListener(onClickListener);
         findViewById(R.id.fab_info).setOnClickListener(onClickListener);
         findViewById(R.id.fab_chat).setOnClickListener(onClickListener);
         findViewById(R.id.go_to_mypage).setOnClickListener(onClickListener);
+        findViewById(R.id.filter).setOnClickListener(onClickListener);
 
         fab_plus.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -93,28 +104,78 @@ public class MainActivity extends AppCompatActivity {
                     break;
 
                 case R.id.fab_post:
+                    if(firebaseUser==null){
+                        caution();
+                    }
+                    else if(!locCertification){
+                        AlertDialog.Builder builder=new AlertDialog.Builder(context);
+                        builder.setTitle("지역 인증이 필요한 작업입니다.");
+                        builder.setMessage("글 쓰기를 하시려면 지역 인증을 해야합니다.");
+                        builder.setPositiveButton("지역인증 하기", new DialogInterface.OnClickListener() {
+                            @Override
+                            public void onClick(DialogInterface dialog, int which) {
+                                //TODO 지역인증 페이지로 넘기기
+                                mainLocation=nowLocation.getText().toString();
+                                startActivity(new Intent(context,RegionActivity.class));
+                            }
+                        }).setNegativeButton("취소",null);
+                        builder.show();
+                    }
+                    else{
                     Intent intent1 =new Intent(context,PostActivity.class);
                     Log.e("go to post","go to a posting page");
                     startActivity(intent1);
+                    }
                     break;
 
                 case R.id.fab_info:
+                    if(firebaseUser==null){
+                        caution();
+                    }else{
                     Intent intent2=new Intent(context,MissionActivity.class);
                     startActivity(intent2);
+                    }
                     break;
 
                 case R.id.fab_chat:
-                    //TODO 채팅 연결하기
+                    if(firebaseUser==null){
+                        caution();
+                    }else {
+                        //TODO 채팅 연결하기
+                    }
                     break;
 
                 case R.id.go_to_mypage:
+                    if(firebaseUser==null){
+                        caution();
+                    }else{
                     Intent intent3=new Intent(context,MyPageActivity.class);
                     startActivity(intent3);
+                    }
                     break;
 
+                case R.id.filter:
+                    Intent intent3=new Intent(context,FilterActivity.class);
+                    Log.d("필터로 이동","필터로 이동");
+                    startActivity(intent3);
+                    break;
             }
         }
     };
+
+    private void caution(){
+        AlertDialog.Builder builder=new AlertDialog.Builder(context);
+        builder.setTitle("로그인이 필요한 작업입니다.");
+        builder.setMessage("이 작업을 수행하시려면 로그인이 필요합니다.");
+        builder.setPositiveButton("로그인/회원가입 하기",
+                new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        startActivity(new Intent(context,AuthActivity.class));
+                    }
+                }).setNegativeButton("취소",null);
+        builder.show();
+    }
 
     private void open(){
         fab_write.startAnimation(FabOpen);
@@ -125,7 +186,7 @@ public class MainActivity extends AppCompatActivity {
         fab_write.setClickable(true);
         fab_chat.setClickable(true);
         isOpen=true;
-        // Log.d("open","open");
+        Log.d("open","open");
     }
     private void close(){
         fab_write.startAnimation(FabClose);
@@ -135,8 +196,9 @@ public class MainActivity extends AppCompatActivity {
         fab_info.setClickable(false);
         fab_write.setClickable(false);
         isOpen=false;
-        //  Log.d("close","close");
+        Log.d("close","close");
     }
+
 
     /*private void startStartActivity(){
         Intent intent=new Intent(this,StartActivity.class);
