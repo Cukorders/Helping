@@ -4,25 +4,35 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical">
-    <LinearLayout
+    <RelativeLayout
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:orientation="horizontal">
-        <Button
-            android:id="@+id/currentMission"
+        android:layout_height="wrap_content">
+        <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:background="@drawable/recent_mission_button"
-            android:text="수행중인 미션" />
-        <Button
-            android:id="@+id/myMission"
+            android:layout_alignParentLeft="true"
+            android:layout_centerInParent="true"
+            android:text="지역명"
+            android:textColor="@color/colorBlack"
+            android:textSize="24sp"/>
+        <ImageButton
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:background="@drawable/recent_mission_button"
-            android:text="의뢰중인 미션" />
-    </LinearLayout>
+            android:layout_marginRight="10dp"
+            android:layout_toLeftOf="@+id/recent_mission_filter"
+            android:layout_centerInParent="true"
+            android:background="@android:color/transparent"
+            android:id="@+id/recent_mission_search"
+            android:src="@drawable/search_icon24" />
+        <ImageButton
+            android:id="@+id/recent_mission_filter"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerInParent="true"
+            android:layout_alignParentRight="true"
+            android:background="@android:color/transparent"
+            android:src="@drawable/icon_filter" />
+    </RelativeLayout>
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/main_recyclerview"
         android:layout_width="match_parent"
