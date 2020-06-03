@@ -146,7 +146,7 @@ public class RegionActivity  extends FragmentActivity implements OnMapReadyCallb
     };
 
     private void goMain(){
-        Intent intent=new Intent(this,MainActivity.class);
+        Intent intent=new Intent(this,AuthActivity.class);
         startActivity(intent);
     }
 

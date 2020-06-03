@@ -111,12 +111,12 @@ public class MainActivity extends AppCompatActivity {
                     myMission.setBackgroundColor(Color.parseColor("#e1e1e1"));
                     break;
                 // 채팅방 확인용 (삭제예정)
-                case R.id.chatting:
+  /*              case R.id.chatting:
                     Intent intent4 =new Intent(context, ChattingActivity.class);
                     Log.e("go to post","go to a posting page");
                     startActivity(intent4);
                     break;
-
+*/
                 case R.id.people_list:
                     Intent intent5 =new Intent(context, PeopleFragment.class);
                     Log.e("go to post","go to a posting page");
@@ -147,7 +147,8 @@ public class MainActivity extends AppCompatActivity {
                     break;
 
                 case R.id.fab_chat:
-                    //TODO 채팅 연결하기
+                    Intent intent4 =new Intent(context, ChattingActivity.class);
+                    startActivity(intent4);
                     break;
 
                 case R.id.go_to_mypage:
