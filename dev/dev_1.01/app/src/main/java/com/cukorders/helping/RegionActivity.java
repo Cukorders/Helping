@@ -53,6 +53,7 @@ import static android.text.Spanned.SPAN_INCLUSIVE_EXCLUSIVE;
 
 public class RegionActivity  extends FragmentActivity implements OnMapReadyCallback{
 
+    public static Context regional_certification2;
     private static final int PERMISSIONS_REQUEST_CODE=1000;
     private static final int REQUEST_CODE = 101;
     private static final int GPS_ENABLE_REQUEST_CODE=2001;
@@ -84,6 +85,7 @@ public class RegionActivity  extends FragmentActivity implements OnMapReadyCallb
     private static FirebaseUser firebaseUser= FirebaseAuth.getInstance().getCurrentUser();
     private static DatabaseReference databaseReference;
 
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -108,9 +110,12 @@ public class RegionActivity  extends FragmentActivity implements OnMapReadyCallb
         result_gps=(TextView) findViewById(R.id.result_gps);
 
         regional_certification2=this;
+      /*
         if(firebaseUser!=null){
         databaseReference= FirebaseDatabase.getInstance().getReference().child("userRegions").child(firebaseUser.getUid());
         }
+        */
+
     }
 
     View.OnClickListener OnClickListener=new View.OnClickListener() {
@@ -128,49 +133,9 @@ public class RegionActivity  extends FragmentActivity implements OnMapReadyCallb
                     Log.e("the user's location is ","the user's location is "+dong);
 
                     if(compare.equals(dong)){
-                        if(firebaseUser!=null&&!isCertified){ //인증을 안 했었던 유저가 인증을 한 사례
-                            databaseReference.addValueEventListener(new ValueEventListener() {
-                                @Override
-                                public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                                    String region[]=new String[3];
-                                    boolean status[]=new boolean[3];
-                                    HashMap<String,String> locationUpdate=new HashMap<>();
-                                    region[0]=dataSnapshot.child("Region1").getValue().toString();
-                                    region[1]=dataSnapshot.child("Region2").getValue().toString();
-                                    region[2]=dataSnapshot.child("Region3").getValue().toString();
-                                    status[0]=Boolean.parseBoolean(dataSnapshot.child("Region1 state").getValue().toString());
-                                    status[1]=Boolean.parseBoolean(dataSnapshot.child("Region2 state").getValue().toString());
-                                    status[2]=Boolean.parseBoolean(dataSnapshot.child("Region3 state").getValue().toString());
-                                    for(int i=0;i<3;++i)
-                                        if(region[i]==compare){
-                                            status[i]=true;
-                                            Log.d("DB update","지역 인증 여부 DB 업데이트");
-                                            break;
-                                        }
-                                    for(int i=0;i<3;++i){
-                                        locationUpdate.put("Region "+Integer.valueOf(i+1),region[i]);
-                                        locationUpdate.put("Region "+Integer.valueOf(i+1)+" state",Boolean.toString(status[i]));
-                                    }
-                                    databaseReference.setValue(locationUpdate).addOnCompleteListener(new OnCompleteListener<Void>() {
-                                        @SuppressLint("LongLogTag")
-                                        @Override
-                                        public void onComplete(@NonNull Task<Void> task) {
-                                            if(task.isSuccessful()){
-                                                Log.d("the location table is updated.","the location table is successfully updated");
-                                            }
-                                        }
-                                    });
-                                }
-
-                                @Override
-                                public void onCancelled(@NonNull DatabaseError databaseError) {
-
-                                }
-                            });
-                        }
                         isCertified=true;
-                        Toast.makeText(context,"지역 인증에 성공하였습니다.",Toast.LENGTH_LONG).show();
-                        goMain();
+                        Log.e("인증 여부","인증 여부 : "+isCertified);
+                        goPhoneAuth();
                     } else{
                         // 인증 실패 에러 메시지 띄움
                         isCertified=false;

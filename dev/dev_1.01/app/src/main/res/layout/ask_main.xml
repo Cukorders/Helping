@@ -56,6 +56,7 @@
         android:orientation="horizontal">
 
         <Button
+
             android:id="@+id/bt_loginButton"
             android:layout_width="match_parent"
             android:layout_height="60dp"

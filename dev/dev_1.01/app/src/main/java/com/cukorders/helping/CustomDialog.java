@@ -1,5 +1,4 @@
 package com.cukorders.helping;
-
 import android.app.Dialog;
 import android.content.Context;
 import android.content.Intent;

@@ -29,8 +29,7 @@
             android:padding="3dp"
             android:src="@drawable/linkprofile" />
     </RelativeLayout>
-
-    <LinearLayout
+    <androidx.coordinatorlayout.widget.CoordinatorLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="horizontal">
@@ -43,14 +42,8 @@
             android:backgroundTint="@color/colorLogo"
             android:text="최근 미션" />
 
-        <Button
-            android:id="@+id/myMission"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:backgroundTint="@color/colorGrayButtonPush"
-            android:text="나의 부름" />
-    </LinearLayout>
+
+
 
     <LinearLayout
         android:id="@+id/notCertified"
@@ -90,14 +83,8 @@
         </RelativeLayout>
     </LinearLayout>
 
-    <FrameLayout
-        android:layout_width="match_parent"
-        android:layout_height="match_parent">
 
-        <androidx.recyclerview.widget.RecyclerView
-            android:id="@+id/main_recyclerview"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent" />
+
 
         <com.google.android.material.floatingactionbutton.FloatingActionButton
             android:id="@+id/fab_plus"
@@ -154,9 +141,5 @@
             app:backgroundTint="@color/colorAccent"
             app:pressedTranslationZ="12dp" />
 
-
-    </FrameLayout>
-
-
+    </androidx.coordinatorlayout.widget.CoordinatorLayout>
 </LinearLayout>
-
