@@ -157,15 +157,16 @@ public class AuthActivity extends AppCompatActivity {
                     @Override
                     public void onComplete(@NonNull Task<AuthResult> task) {
                         if (task.isSuccessful()) {
-                            String uid = mCurrentUser.getUid();
+                            String uid = FirebaseAuth.getInstance().getCurrentUser().getUid();
                             mUserDatabase = FirebaseDatabase.getInstance().getReference().child("Users").child(uid);
                             locationDB=FirebaseDatabase.getInstance().getReference().child("userRegions").child(uid);
+                            Log.e("Credential은 생성되었습니다.","Credential이 생성되었습니다");
                             boolean newuser = task.getResult().getAdditionalUserInfo().isNewUser();
                             if (newuser) {
                                 //신규 사용자라면
                                 HashMap<String, String> userMap = new HashMap<>(); //User table
                                 userMap.put("Nickname", "default");
-                                userMap.put("Image", "default");
+                                userMap.put("Image", "gs://helping-2d860.appspot.com/profile_images/profile image.png");
                                 userMap.put("Thumb_img", "default");
                                 userMap.put("Gender", "default");
                                 userMap.put("Age", "default");
@@ -199,7 +200,6 @@ public class AuthActivity extends AppCompatActivity {
                                         }
                                     }
                                 });
-                                //todo 지역을 넣자
 
                             } else {
                                 Intent MainIntent = new Intent(AuthActivity.this, MainActivity.class);
@@ -227,21 +227,9 @@ public class AuthActivity extends AppCompatActivity {
             sendUserToMain();
         }
     }
+
     private void sendUserToMain(){
-        Intent profileIntent = new Intent(AuthActivity.this,MainActivity.class);
-        profileIntent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
-        profileIntent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK);
-        startActivity(profileIntent);
-        finish();
-    }
-    protected void onStart(){
-        super.onStart();
-        if(mCurrentUser!=null){
-            sendUserToMain();
-        }
-    }
-    private void sendUserToMain(){
-        Intent profileIntent = new Intent(AuthActivity.this,MainActivity.class);
+        Intent profileIntent = new Intent(AuthActivity.this,Main2Activity.class);
         profileIntent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
         profileIntent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK);
         startActivity(profileIntent);

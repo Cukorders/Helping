@@ -364,7 +364,7 @@ public class LogInActivity extends AppCompatActivity {
         finish();
     }
     private void sendUserToMain(){
-        Intent profileIntent = new Intent(LogInActivity.this,MainActivity.class);
+        Intent profileIntent = new Intent(LogInActivity.this,Main2Activity.class);
         profileIntent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
         profileIntent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK);
         startActivity(profileIntent);
