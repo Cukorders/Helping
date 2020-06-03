@@ -1,6 +1,7 @@
 package com.cukorders.helping;
 
 import android.Manifest;
+import android.annotation.SuppressLint;
 import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager;
@@ -32,10 +33,19 @@ import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
+import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
 
 import java.io.IOException;
+import java.util.HashMap;
 import java.util.List;
 
 import static android.text.Spanned.SPAN_INCLUSIVE_EXCLUSIVE;
@@ -43,7 +53,6 @@ import static android.text.Spanned.SPAN_INCLUSIVE_EXCLUSIVE;
 
 public class RegionActivity  extends FragmentActivity implements OnMapReadyCallback{
 
-    public static Context regional_certification2;
     private static final int PERMISSIONS_REQUEST_CODE=1000;
     private static final int REQUEST_CODE = 101;
     private static final int GPS_ENABLE_REQUEST_CODE=2001;
@@ -66,11 +75,14 @@ public class RegionActivity  extends FragmentActivity implements OnMapReadyCallb
     private LocationManager locationManager;
     private boolean mLocationPermissionGranted=false;
     private Location currentLocation;
-    private String compare="";
+    private String compare;
     public String dong="";
     private TextView result_gps;
     private String errorMSG="인증을 하려면 위치 정보를 불러와야 합니다.";
-    public boolean isCertified=false; // 지역 인증 여부
+    public static Context regional_certification2;
+    public static boolean isCertified=false;
+    private static FirebaseUser firebaseUser= FirebaseAuth.getInstance().getCurrentUser();
+    private static DatabaseReference databaseReference;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -94,7 +106,11 @@ public class RegionActivity  extends FragmentActivity implements OnMapReadyCallb
         geocoder=new Geocoder(this);
 
         result_gps=(TextView) findViewById(R.id.result_gps);
+
         regional_certification2=this;
+        if(firebaseUser!=null){
+        databaseReference= FirebaseDatabase.getInstance().getReference().child("userRegions").child(firebaseUser.getUid());
+        }
     }
 
     View.OnClickListener OnClickListener=new View.OnClickListener() {
@@ -112,11 +128,52 @@ public class RegionActivity  extends FragmentActivity implements OnMapReadyCallb
                     Log.e("the user's location is ","the user's location is "+dong);
 
                     if(compare.equals(dong)){
+                        if(firebaseUser!=null&&!isCertified){ //인증을 안 했었던 유저가 인증을 한 사례
+                            databaseReference.addValueEventListener(new ValueEventListener() {
+                                @Override
+                                public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                                    String region[]=new String[3];
+                                    boolean status[]=new boolean[3];
+                                    HashMap<String,String> locationUpdate=new HashMap<>();
+                                    region[0]=dataSnapshot.child("Region1").getValue().toString();
+                                    region[1]=dataSnapshot.child("Region2").getValue().toString();
+                                    region[2]=dataSnapshot.child("Region3").getValue().toString();
+                                    status[0]=Boolean.parseBoolean(dataSnapshot.child("Region1 state").getValue().toString());
+                                    status[1]=Boolean.parseBoolean(dataSnapshot.child("Region2 state").getValue().toString());
+                                    status[2]=Boolean.parseBoolean(dataSnapshot.child("Region3 state").getValue().toString());
+                                    for(int i=0;i<3;++i)
+                                        if(region[i]==compare){
+                                            status[i]=true;
+                                            Log.d("DB update","지역 인증 여부 DB 업데이트");
+                                            break;
+                                        }
+                                    for(int i=0;i<3;++i){
+                                        locationUpdate.put("Region "+Integer.valueOf(i+1),region[i]);
+                                        locationUpdate.put("Region "+Integer.valueOf(i+1)+" state",Boolean.toString(status[i]));
+                                    }
+                                    databaseReference.setValue(locationUpdate).addOnCompleteListener(new OnCompleteListener<Void>() {
+                                        @SuppressLint("LongLogTag")
+                                        @Override
+                                        public void onComplete(@NonNull Task<Void> task) {
+                                            if(task.isSuccessful()){
+                                                Log.d("the location table is updated.","the location table is successfully updated");
+                                            }
+                                        }
+                                    });
+                                }
+
+                                @Override
+                                public void onCancelled(@NonNull DatabaseError databaseError) {
+
+                                }
+                            });
+                        }
                         isCertified=true;
-                        Log.e("인증 여부","인증 여부 : "+isCertified);
-                        goPhoneAuth();
+                        Toast.makeText(context,"지역 인증에 성공하였습니다.",Toast.LENGTH_LONG).show();
+                        goMain();
                     } else{
                         // 인증 실패 에러 메시지 띄움
+                        isCertified=false;
                         Toast.makeText(context,errorMsg,Toast.LENGTH_LONG).show();
                     }
                     break;
@@ -124,21 +181,23 @@ public class RegionActivity  extends FragmentActivity implements OnMapReadyCallb
                     goBack(); //이전 페이지로 가기(뒤로 가기 버튼이 눌렸을 때)
                     break;
 
-                case R.id.bt_skip:
-                    Log.e("인증 여부","인증 여부 : "+isCertified);
-                    goPhoneAuth(); // 바로 전화 인증으로 건너 뜀.
+              case R.id.bt_skip:
+                    isCertified=false;
+                    Log.d("a skip button","a skip button is clicked");
+                    Toast.makeText(context,"지역 인증을 완료하려면 마이페이지>지역 인증에서 완료하시길 바랍니다.",Toast.LENGTH_LONG).show();
+                    goMain();
                     break;
             }
         }
     };
 
-    private void goPhoneAuth(){
-        Intent intent=new Intent(context,AuthActivity.class);
+    private void goMain(){
+        Intent intent=new Intent(this,MainActivity.class);
         startActivity(intent);
     }
 
     private void goBack(){
-        Intent intent=new Intent(context,ChooseTheRegionActivity.class); // 뒤로 가기 버튼 누름 => 첫 화면으로 다시 돌아감.
+        Intent intent=new Intent(this,ChooseTheRegionActivity.class); // 뒤로 가기 버튼 누름 => 첫 화면으로 다시 돌아감.
         startActivity(intent);
     }
 
@@ -190,8 +249,8 @@ public class RegionActivity  extends FragmentActivity implements OnMapReadyCallb
                     supportMapFragment.getMapAsync((OnMapReadyCallback) context);
                 } else{
                     //TODO make the location parameter return non-null value
-                    Toast.makeText(context,"위치 정보를 불러오는 데 실패하였습니다.",Toast.LENGTH_LONG).show();
                     Log.e("location is empty","a location parameter returns null");
+                    Toast.makeText(context,"위치 정보를 불러오는데 실패하였습니다.",Toast.LENGTH_LONG).show();
                 }
             }
         });

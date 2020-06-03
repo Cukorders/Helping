@@ -58,7 +58,6 @@ public class AuthActivity extends AppCompatActivity {
     private DatabaseReference locationDB;
 
 
-    @SuppressLint("LongLogTag")
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -75,7 +74,6 @@ public class AuthActivity extends AppCompatActivity {
 
         locationCertification=((RegionActivity)RegionActivity.regional_certification2).isCertified; //지역 인증 여부
         location=((ChooseTheRegionActivity)ChooseTheRegionActivity.regional_certification1).userLocation; // 사용자가 선택한 지역
-        Log.d("a value of the location parameter","a value of the parameter called location in AuthActivity is "+location);
 
         mAuth.setLanguageCode("kr");
         mMessageSentBtn.setOnClickListener(new View.OnClickListener() {
@@ -159,15 +157,16 @@ public class AuthActivity extends AppCompatActivity {
                     @Override
                     public void onComplete(@NonNull Task<AuthResult> task) {
                         if (task.isSuccessful()) {
-                            String uid = mCurrentUser.getUid();
+                            String uid = FirebaseAuth.getInstance().getCurrentUser().getUid();
                             mUserDatabase = FirebaseDatabase.getInstance().getReference().child("Users").child(uid);
                             locationDB=FirebaseDatabase.getInstance().getReference().child("userRegions").child(uid);
+                            Log.e("Credential은 생성되었습니다.","Credential이 생성되었습니다");
                             boolean newuser = task.getResult().getAdditionalUserInfo().isNewUser();
                             if (newuser) {
                                 //신규 사용자라면
                                 HashMap<String, String> userMap = new HashMap<>(); //User table
                                 userMap.put("Nickname", "default");
-                                userMap.put("Image", "default");
+                                userMap.put("Image", "gs://helping-2d860.appspot.com/profile_images/profile image.png");
                                 userMap.put("Thumb_img", "default");
                                 userMap.put("Gender", "default");
                                 userMap.put("Age", "default");
@@ -201,6 +200,7 @@ public class AuthActivity extends AppCompatActivity {
                                         }
                                     }
                                 });
+
                             } else {
                                 Intent MainIntent = new Intent(AuthActivity.this, MainActivity.class);
                                 MainIntent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
@@ -227,6 +227,7 @@ public class AuthActivity extends AppCompatActivity {
             sendUserToMain();
         }
     }
+
     private void sendUserToMain(){
         Intent profileIntent = new Intent(AuthActivity.this,MainActivity.class);
         profileIntent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);

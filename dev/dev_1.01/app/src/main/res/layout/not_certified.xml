@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android" android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    >
+
+    <TextView
+        android:id="@+id/title"
+        android:layout_width="match_parent"
+        android:layout_height="60dp"
+        android:background="@color/colorLogo"
+        android:gravity="center"
+        android:text="지금 지역 인증을 하고 다른 유저의 의뢰를 수행하거나"
+        android:textColor="@color/colorWhite"
+        android:textSize="16dp"
+        android:textStyle="bold" />
+
+    <TextView
+        android:id="@+id/title3"
+        android:layout_width="match_parent"
+        android:layout_height="60dp"
+        android:background="@color/colorLogo"
+        android:gravity="center"
+        android:text="다른 다른 유저에게 의뢰를 맡기세요!"
+        android:textColor="@color/colorWhite"
+        android:textSize="16dp"
+        android:textStyle="bold" />
+
+    <Button
+        android:id="@+id/bt_certificate"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:backgroundTint="@color/colorWhite"
+        android:text="동네 인증하고 시작하기" />
+
+    <View
+        android:id="@+id/view2"
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:background="#000000" />
+
+</LinearLayout>

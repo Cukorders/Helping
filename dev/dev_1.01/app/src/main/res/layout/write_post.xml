@@ -52,27 +52,83 @@
             android:layout_marginLeft="10dp"
             android:layout_marginRight="10dp">
             <RelativeLayout
+            android:layout_width="70dp"
+            android:layout_height="70dp"
+            android:layout_marginTop="10dp"
+            android:background="@drawable/strokebox">
+
+            <ImageButton
+                android:id="@+id/camera_album_add1"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:background="@android:color/transparent"
+                android:src="@drawable/camera_button"
+                android:layout_centerInParent="true"/>
+
+            <TextView
+                android:id="@+id/camera_picture_addnumber1"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_below="@id/camera_album_add1"
+                android:layout_marginBottom="5dp"
+                android:gravity="center"
+                android:text="0/3" />
+        </RelativeLayout>
+
+            <RelativeLayout
+                android:id="@+id/photo2"
                 android:layout_width="70dp"
                 android:layout_height="70dp"
+                android:layout_marginLeft="10dp"
                 android:layout_marginTop="10dp"
-                android:background="@drawable/strokebox">
+                android:background="@drawable/strokebox"
+                android:visibility="invisible">
 
                 <ImageButton
-                    android:id="@+id/camera_album_add1"
+                    android:id="@+id/camera_album_add2"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
+                    android:layout_centerInParent="true"
                     android:background="@android:color/transparent"
-                    android:src="@drawable/camera_button"
-                    android:layout_centerInParent="true"/>
+                    android:src="@drawable/camera_button" />
+
                 <TextView
-                    android:id="@+id/camera_picture_addnumber1"
+                    android:id="@+id/camera_picture_addnumber2"
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
+                    android:layout_below="@id/camera_album_add2"
                     android:layout_marginBottom="5dp"
-                    android:text="0/10"
-                    android:layout_below="@id/camera_album_add1"
-                    android:gravity="center"/>
+                    android:gravity="center"
+                    android:text="1/3" />
             </RelativeLayout>
+
+            <RelativeLayout
+                android:id="@+id/photo3"
+                android:layout_width="70dp"
+                android:layout_height="70dp"
+                android:layout_marginLeft="10dp"
+                android:layout_marginTop="10dp"
+                android:background="@drawable/strokebox"
+                android:visibility="invisible">
+
+                <ImageButton
+                    android:id="@+id/camera_album_add3"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_centerInParent="true"
+                    android:background="@android:color/transparent"
+                    android:src="@drawable/camera_button" />
+
+                <TextView
+                    android:id="@+id/camera_picture_addnumber3"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:layout_below="@id/camera_album_add3"
+                    android:layout_marginBottom="5dp"
+                    android:gravity="center"
+                    android:text="2/3" />
+            </RelativeLayout>
+
         </LinearLayout>
 
         <LinearLayout
@@ -105,22 +161,11 @@
             android:layout_marginRight="10dp"
             android:background="@drawable/stroke_below">
 
-            <TextView
+            <Spinner
                 android:id="@+id/category"
                 android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:layout_weight="7"
-                android:background="@android:color/transparent"
-                android:enabled="true"
-                android:hint="카테고리 선택"
-                android:textSize="18sp" />
-            <ImageButton
-                android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:paddingRight="10dp"
-                android:src="@drawable/next_button"
-                android:background="@android:color/transparent"
-                android:layout_weight="3"/>
+                android:layout_weight="7" />
         </LinearLayout>
 
         <LinearLayout
