@@ -236,7 +236,7 @@ public class PostActivity extends AppCompatActivity {
                     Log.d("title", "title is " + Title);
                     Log.d("Description", "description of the post is " + Description);
 
-                    post = new Post(Title, Description, EndTime, CancelTime, Place, Pay, Due, Price, uid, sameGender, Age,Category,postKey,nowLocation);
+                    post = new Post(Title, Description, EndTime, CancelTime, Place, Pay, Due, Price, uid, sameGender, Age,Category,postKey,nowLocation,false,false);
                     databaseReference= FirebaseDatabase.getInstance().getReference().child("Posting").child(Title);
                     childUpdate= (HashMap<String, Object>) post.toMap();
                     databaseReference.setValue(childUpdate).addOnCompleteListener(new OnCompleteListener<Void>() {
@@ -394,11 +394,11 @@ public class PostActivity extends AppCompatActivity {
         }
     }
 
-    class Post{
+    public class Post{
         String title,description,endTime,cancelTime,place,uid,category,postKey,location;
         int pay,due,price,age;
         boolean sameGender,isMatched,isFinished;
-        public Post(String title,String description,String endTime,String cancelTime,String place,int pay,int due,int price,String uid,boolean sameGender,int age,String category,String postKey,String location){
+        public Post(String title,String description,String endTime,String cancelTime,String place,int pay,int due,int price,String uid,boolean sameGender,int age,String category,String postKey,String location,boolean isMatched,boolean isFinished){
             this.title=title;
             this.description=description;
             this.endTime=endTime;
@@ -413,8 +413,8 @@ public class PostActivity extends AppCompatActivity {
             this.sameGender=sameGender;
             this.age=age;
             this.postKey=postKey;
-            this.isMatched=false;
-            this.isFinished=false;
+            this.isMatched=isMatched;
+            this.isFinished=isFinished;
         }
 
         public String getTitle(){return title;}

@@ -4,19 +4,22 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical">
+
+    <LinearLayout
+        android:id="@+id/linearLayout"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"></LinearLayout>
+
     <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content">
 
-        <TextView
-            android:id="@+id/nowLocation"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_alignParentLeft="true"
-            android:layout_centerInParent="true"
-            android:text="지역명"
-            android:textColor="@color/colorBlack"
-            android:textSize="24sp" />
+        <Spinner
+            android:id="@+id/user_locations"
+            android:layout_width="180dp"
+            android:layout_height="wrap_content" />
+
         <ImageButton
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"

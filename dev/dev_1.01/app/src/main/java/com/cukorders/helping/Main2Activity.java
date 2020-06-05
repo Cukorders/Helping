@@ -6,33 +6,25 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.Color;
-import android.graphics.pdf.PdfDocument;
 import android.os.Bundle;
-
-import com.cukorders.Adapter.PageAdapter;
-import com.cukorders.Adapter.PageAdapter_Mycalling;
-import com.cukorders.Fragment.HelpingFragment;
-import com.cukorders.Fragment.MyCallingFragment;
-import com.cukorders.Fragment.RecentMissionFragment;
-import com.cukorders.Fragment.RequestingFragment;
-import com.google.android.material.floatingactionbutton.FloatingActionButton;
-import com.google.android.material.snackbar.Snackbar;
-import com.google.android.material.tabs.TabItem;
-import com.google.android.material.tabs.TabLayout;
-import com.google.firebase.auth.FirebaseAuth;
-import com.google.firebase.auth.FirebaseUser;
-
-import androidx.viewpager.widget.ViewPager;
-import androidx.appcompat.app.AppCompatActivity;
-
 import android.util.Log;
-import android.view.Menu;
-import android.view.MenuItem;
 import android.view.View;
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
 import android.widget.Button;
-import android.widget.Toolbar;
+import android.widget.LinearLayout;
+
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.viewpager.widget.ViewPager;
+
+import com.cukorders.Adapter.PageAdapter;
+import com.cukorders.Fragment.MyCallingFragment;
+import com.cukorders.Fragment.RecentMissionFragment;
+import com.google.android.material.floatingactionbutton.FloatingActionButton;
+import com.google.android.material.tabs.TabItem;
+import com.google.android.material.tabs.TabLayout;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
 
 
 public class Main2Activity extends AppCompatActivity {
@@ -48,6 +40,7 @@ public class Main2Activity extends AppCompatActivity {
     private TabLayout tabLayout;
     private ViewPager viewPager;
     private TabItem tab1,tab2;
+    private LinearLayout linearLayout;
 
     @SuppressLint("LongLogTag")
     @Override
@@ -64,6 +57,7 @@ public class Main2Activity extends AppCompatActivity {
         setUpViewPager(viewPager);
         tabLayout.setTabTextColors(Color.parseColor("#e1e1e1"),Color.parseColor("#FFFFFF"));
         tabLayout.setupWithViewPager(viewPager);
+        linearLayout=(LinearLayout) findViewById(R.id.linearLayout);
 
         tabLayout.addOnTabSelectedListener(new TabLayout.OnTabSelectedListener() {
             @Override
@@ -101,11 +95,7 @@ public class Main2Activity extends AppCompatActivity {
         FabClose= AnimationUtils.loadAnimation(getApplicationContext(),R.anim.fab_close);
         FabClockwise= AnimationUtils.loadAnimation(getApplicationContext(),R.anim.rotate_clockwise);
         FabAntiClockwise= AnimationUtils.loadAnimation(getApplicationContext(),R.anim.rotate_anticlockwise);
-/*
-        myMission=(Button) findViewById(R.id.myMission);
-        currentMission=(Button) findViewById(R.id.currentMission);
-        findViewById(R.id.currentMission).setOnClickListener(onClickListener);
-  */
+
         findViewById(R.id.fab_post).setOnClickListener(onClickListener);
         findViewById(R.id.fab_info).setOnClickListener(onClickListener);
         findViewById(R.id.fab_chat).setOnClickListener(onClickListener);
@@ -137,19 +127,6 @@ public class Main2Activity extends AppCompatActivity {
         @Override
         public void onClick(View v) {
             switch(v.getId()){
-                /*
-                case R.id.myMission:
-                    Log.d("myMission is clicked","myMission button is clicked");
-                    myMission.setBackgroundColor(Color.parseColor("#70D398"));
-                    currentMission.setBackgroundColor(Color.parseColor("#e1e1e1"));
-                    break;
-
-                case R.id.currentMission:
-                    Log.d("currentMission is clicked","currentMission is clicked");
-                    currentMission.setBackgroundColor(Color.parseColor("#70D398"));
-                    myMission.setBackgroundColor(Color.parseColor("#e1e1e1"));
-                    break;
-*/
                 case R.id.fab_post:
                     Intent intent1 =new Intent(context,PostActivity.class);
                     Log.e("go to post","go to a posting page");

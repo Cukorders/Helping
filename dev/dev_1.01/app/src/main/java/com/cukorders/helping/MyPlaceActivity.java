@@ -3,11 +3,22 @@ package com.cukorders.helping;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.TextView;
+import android.widget.Toast;
 
+import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
+
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
+
+import java.util.HashMap;
 
 public class MyPlaceActivity extends AppCompatActivity {
 
@@ -17,15 +28,19 @@ public class MyPlaceActivity extends AppCompatActivity {
     private Button delete[]=new Button[3];
     private String changedLocation;
     public static Context myPlaceActivity;
-    public static boolean fromMyPlaceActivity;
+    public static boolean fromMyPlaceActivity=false;
+    public static String user_regions[]=new String[3];
+    private static DatabaseReference databaseReference;
+    private static int cnt=0;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.myplace_setting);
+
         context=this;
         myPlaceActivity=this;
-        fromMyPlaceActivity=false;
+        databaseReference= FirebaseDatabase.getInstance().getReference().child("userRegions");
 
         change[0]=(Button) findViewById(R.id.change1);
         change[1]=(Button) findViewById(R.id.change2);
@@ -42,7 +57,8 @@ public class MyPlaceActivity extends AppCompatActivity {
             delete[i].setOnClickListener(onClickListener);
         }
 
-        region[0].setText(((ChooseTheRegionActivity)ChooseTheRegionActivity.regional_certification1).userLocation);
+       checkRegions();
+        setTexts();
     }
 
     View.OnClickListener onClickListener=new View.OnClickListener() {
@@ -80,17 +96,62 @@ public class MyPlaceActivity extends AppCompatActivity {
         }
     };
 
+
     private void changeRegion(TextView txt){
         //TODO DB에 지역 교체 업데이트
         fromMyPlaceActivity=true;
+        Log.d("fromMyPlaceActivity","fromMyPlaceActivity 값: "+fromMyPlaceActivity);
         startActivity(new Intent(context,ChooseTheRegionActivity.class));
-        changedLocation=((ChooseTheRegionActivity)ChooseTheRegionActivity.regional_certification1).userLocation;
-        txt.setText(changedLocation);
-        fromMyPlaceActivity=false;
+        setTexts();
     }
 
     private void delete(int index){
-        //TODO DB에 지역 삭제 업데이트
-        region[index].setText("지역 "+String.valueOf(index+1));
+        if(cnt==1){ // 지역이 하나인데 삭제 시도 → 삭제할 수 없어야 한다.
+            Toast.makeText(context,"하나 이상의 지역이 있어야하므로 삭제할 수 없습니다.",Toast.LENGTH_LONG).show();
+        } else{
+            databaseReference.addListenerForSingleValueEvent(new ValueEventListener() {
+                @Override
+                public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+
+                }
+
+                @Override
+                public void onCancelled(@NonNull DatabaseError databaseError) {
+
+                }
+            });
+            checkRegions();
+            setTexts();
+        }
+    }
+
+    private void checkRegions(){
+        cnt=0;
+        databaseReference.addListenerForSingleValueEvent(new ValueEventListener() {
+            int index=0;
+            @Override
+            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                for(DataSnapshot snapshot:dataSnapshot.getChildren()){
+                    String key=snapshot.getKey();
+                    HashMap<String,String> info=(HashMap<String,String>) snapshot.getValue();
+                    user_regions[index]=info.get("Region "+String.valueOf(index+1));
+                    Log.d("user_regions","user_regions["+String.valueOf(index)+"] = "+user_regions[index]);
+                    if(!user_regions[index].equals("default")){
+                        ++cnt;
+                    }
+                    ++index;
+                }
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError databaseError) {
+                Log.e("에러","userRegions 정보를 가져오는데 실패하였습니다.");
+            }
+        });
+    }
+
+    private void setTexts(){
+        for(int i=0;i<3;++i)
+            region[i].setText((user_regions[i].equals("default")?("지역 "+String.valueOf(i+1)):user_regions[i]));
     }
 }
