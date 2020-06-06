@@ -43,7 +43,7 @@ public class MainActivity extends AppCompatActivity {
     private TabItem tab1,tab2;
 
     private  LinearLayout linearLayout;
-    private boolean locCertification;
+    private boolean locationCertification;
     public static Context mainActivity;
     public String mainLocation="";
     private TextView nowLocation;
@@ -72,6 +72,9 @@ public class MainActivity extends AppCompatActivity {
         findViewById(R.id.fab_chat).setOnClickListener(onClickListener);
         findViewById(R.id.go_to_mypage).setOnClickListener(onClickListener);
         //findViewById(R.id.filter).setOnClickListener(onClickListener);
+
+        locationCertification= ((LoadingActivity)LoadingActivity.loadingActivity).isCertified[0];
+        Log.d("Main-locCertification","locCertification: "+locationCertification);
 
         fab_plus.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -105,7 +108,7 @@ public class MainActivity extends AppCompatActivity {
                     if(firebaseUser==null){
                         caution();
                     }
-                    else if(!locCertification){
+                    else if(!locationCertification){
                         AlertDialog.Builder builder=new AlertDialog.Builder(context);
                         builder.setTitle("지역 인증이 필요한 작업입니다.");
                         builder.setMessage("글 쓰기를 하시려면 지역 인증을 해야합니다.");

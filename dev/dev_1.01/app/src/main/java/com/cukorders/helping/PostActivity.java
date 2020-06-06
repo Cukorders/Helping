@@ -69,7 +69,7 @@ public class PostActivity extends AppCompatActivity {
     private static final int GALLERY_CODE = 10;
     private StorageReference storageReference;
     private static StorageReference firebaseStorage;
-    private int count=0;
+    private static int count=0;
 
     private String imagePath;
     private String images[]=new String[3];
@@ -81,13 +81,6 @@ public class PostActivity extends AppCompatActivity {
         Log.d("init the array ageChecked","init the array ageChecked");
         for(int i=0;i<5;++i)
             ageChecked[i]=false;
-    }
-
-    private static void ageValue(boolean[] ageChecked){
-        boolean flag=false;
-        for(int i=0;i<5;++i){
-
-        }
     }
 
     private static void initPhotoCheck(boolean[] photoCheck){
@@ -147,8 +140,9 @@ public class PostActivity extends AppCompatActivity {
         category=(Spinner) findViewById(R.id.category);
         arrayList=new ArrayList<>();
         arrayList.add("구매 대행(음식)");
-        arrayList.add("구매 대행(음식 외 상품)");
-        arrayList.add("배달");
+        arrayList.add("구매 대행(음식 외 물품)");
+        arrayList.add("배달(음식)");
+        arrayList.add("배달(음식 외 물품)");
         arrayList.add("청소");
         arrayList.add("과외");
         arrayList.add("기타");
@@ -175,23 +169,27 @@ public class PostActivity extends AppCompatActivity {
         pic[1]=(RelativeLayout) findViewById(R.id.photo2);
         pic[2]=(RelativeLayout) findViewById(R.id.photo3);
 
+        for(int i=1;i<=2;++i) photo[i].setEnabled(false);
+
         //기본 기능 버튼
         findViewById(R.id.back_button_write_post).setOnClickListener(onClickListener);
         findViewById(R.id.bt_finish).setOnClickListener(onClickListener);
         findViewById(R.id.bt_post).setOnClickListener(onClickListener);
+
         // 동성 or 무관
         findViewById(R.id.bt_same).setOnClickListener(checkGender);
         findViewById(R.id.bt_dontMind).setOnClickListener(checkGender);
+
         // 연령대 버튼
         findViewById(R.id.button10s).setOnClickListener(checkAge);
         findViewById(R.id.button20s).setOnClickListener(checkAge);
         findViewById(R.id.button30s).setOnClickListener(checkAge);
         findViewById(R.id.button40s).setOnClickListener(checkAge);
         findViewById(R.id.button50s).setOnClickListener(checkAge);
+
         //이미지 삽입
-        findViewById(R.id.camera_album_add1).setOnClickListener(addPhoto);
-        findViewById(R.id.camera_album_add2).setOnClickListener(addPhoto);
-        findViewById(R.id.camera_album_add3).setOnClickListener(addPhoto);
+        for(int i=0;i<3;++i)
+            photo[i].setOnClickListener(addPhoto);
 
         bt_same=(Button) findViewById(R.id.bt_same);
         bt_dontMind=(Button) findViewById(R.id.bt_dontMind);
@@ -208,14 +206,14 @@ public class PostActivity extends AppCompatActivity {
         postValue=new HashMap<>();
         initPhotoCheck(photoCheck);
         storageReference= FirebaseStorage.getInstance().getReference();
-        postKey=getRandomString(25);
+        postKey=getRandomString(50);
         nowLocation= RecentMissionFragment.location_now;
         for(int i=0;i<3;++i)
             images[i]="default";
     }
 
     private String getRandomString(int length) {
-        final String characters="abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ01234567890!@#$%";
+        final String characters="abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ01234567890!@%_&*^+-=\\/";
         StringBuilder stringBuilder=new StringBuilder();
         while(length-- >0){
             Random random=new Random();
@@ -246,7 +244,7 @@ public class PostActivity extends AppCompatActivity {
                     Log.d("Description", "description of the post is " + Description);
 
                     post = new Post(Title, Description, EndTime, CancelTime, Place, Pay, Due, Price, uid, sameGender, Age,Category,postKey,nowLocation,false,false);
-                    databaseReference= FirebaseDatabase.getInstance().getReference().child("Posting").child(Title);
+                    databaseReference= FirebaseDatabase.getInstance().getReference().child("Posting").child(postKey);
                     childUpdate= (HashMap<String, Object>) post.toMap();
                     databaseReference.setValue(childUpdate).addOnCompleteListener(new OnCompleteListener<Void>() {
                         @Override
@@ -271,20 +269,31 @@ public class PostActivity extends AppCompatActivity {
             switch (v.getId()){
                 case R.id.camera_album_add1:
                     photoCheck[0]=true;
-                    ++count;
                     setPhotoButton(photoCheck);
-
+                    photo[1].setEnabled(true);
+                    Log.d("photo button","사진 추가 버튼1이 클릭되었습니다.");
+                    Intent getAlbumIntent = new Intent(Intent.ACTION_PICK);
+                    getAlbumIntent.setType(MediaStore.Images.Media.CONTENT_TYPE);
+                    startActivityForResult(getAlbumIntent,GALLERY_CODE);
                     break;
 
                 case R.id.camera_album_add2:
                     ++count;
                     photoCheck[1]=true;
                     setPhotoButton(photoCheck);
-
+                    photo[2].setEnabled(true);
+                    Log.d("photo button","사진 추가 버튼2이 클릭되었습니다.");
+                    Intent getAlbumIntent2 = new Intent(Intent.ACTION_PICK);
+                    getAlbumIntent2.setType(MediaStore.Images.Media.CONTENT_TYPE);
+                    startActivityForResult(getAlbumIntent2,GALLERY_CODE);
                     break;
 
                 case R.id.camera_album_add3:
-
+                    ++count;
+                    Log.d("photo button","사진 추가 버튼3이 클릭되었습니다.");
+                    Intent getAlbumIntent3 = new Intent(Intent.ACTION_PICK);
+                    getAlbumIntent3.setType(MediaStore.Images.Media.CONTENT_TYPE);
+                    startActivityForResult(getAlbumIntent3,GALLERY_CODE);
                     break;
 
             }
@@ -406,10 +415,10 @@ public class PostActivity extends AppCompatActivity {
             ret.put("age",tmp);
             ret.put("gender",sameGender?"동성":"무관");
             ret.put("category",category);
-            ret.put("post key",postKey);
+            ret.put("postKey",postKey);
             ret.put("location",location);
-            ret.put("매칭 여부",isMatched);
-            ret.put("미션 완료 여부",isFinished);
+            ret.put("isMatched",isMatched);
+            ret.put("isFinished",isFinished);
             return ret;
         }
     }
@@ -431,7 +440,7 @@ public class PostActivity extends AppCompatActivity {
                 Uri resultUri = result.getUri();
                 String currentUser_Uid = uid;
                 //set image Name to random
-                final StorageReference filepath = firebaseStorage.child("profile_images").child(currentUser_Uid+".jpg");
+                final StorageReference filepath = firebaseStorage.child("profile_images").child(currentUser_Uid+postKey+String.valueOf(count)+".jpg");
                 filepath.putFile(resultUri).addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
                     @Override
                     public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
@@ -444,7 +453,7 @@ public class PostActivity extends AppCompatActivity {
                                     @Override
                                     public void onComplete(@NonNull Task<Void> task) {
                                         if(task.isSuccessful()){
-                                            //Picasso.get().load(downloadUrl).into();
+                                           // Picasso.get().load(downloadUrl).into((Target) pic[count]);
                                             Toast.makeText(context,"Succeed in uploading Profile Img",Toast.LENGTH_LONG).show();
                                         }
                                     }

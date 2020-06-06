@@ -40,10 +40,13 @@ import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
 
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import static android.text.Spanned.SPAN_INCLUSIVE_EXCLUSIVE;
 
@@ -85,6 +88,7 @@ public class RegionActivity  extends FragmentActivity implements OnMapReadyCallb
     public static Context regional_certification2;
     private static FirebaseUser firebaseUser= FirebaseAuth.getInstance().getCurrentUser();
     private static DatabaseReference databaseReference;
+    private static String uid;
 
 
     @Override
@@ -144,11 +148,6 @@ public class RegionActivity  extends FragmentActivity implements OnMapReadyCallb
                 Toast.makeText(context,"하나 이상의 카테고리를 설정하세요.",Toast.LENGTH_LONG).show();
             }
         });
-      /*
-        if(firebaseUser!=null){
-        databaseReference= FirebaseDatabase.getInstance().getReference().child("userRegions").child(firebaseUser.getUid());
-        }
-        */
 
     }
 
@@ -168,13 +167,28 @@ public class RegionActivity  extends FragmentActivity implements OnMapReadyCallb
                     if(compare.equals(dong)){
                         ((LoadingActivity)LoadingActivity.loadingActivity).isCertified[index]=true;
                         Log.e("인증 여부","인증 여부 : "+((LoadingActivity)LoadingActivity.loadingActivity).isCertified[index]);
+                        if(firebaseUser!=null){
+                            uid=FirebaseAuth.getInstance().getCurrentUser().getUid();
+                            databaseReference= FirebaseDatabase.getInstance().getReference().child("userRegions").child(uid);
+                            int index=0;
+                            for(index=0;index<3;++index)
+                                if(dong.equals(loc[index])){
+                                    break;
+                                }
+                            Map<String, Object> updates=new HashMap<String, Object>();
+                                updates.put("Region"+String.valueOf(index+1)+" state",true);
+                                Log.d("지역 인증 업데이트","지역 인증이 업데이트 되었습니다.");
+                            databaseReference.updateChildren(updates);
+                        }
                         goMain();
-                    } else{
+                    }
+                    else{
                         // 인증 실패 에러 메시지 띄움
                         ((LoadingActivity)LoadingActivity.loadingActivity).isCertified[index]=false;
                         Toast.makeText(context,errorMsg,Toast.LENGTH_LONG).show();
                     }
                     break;
+
                 case R.id.bt_back:
                     goBack(); //이전 페이지로 가기(뒤로 가기 버튼이 눌렸을 때)
                     break;

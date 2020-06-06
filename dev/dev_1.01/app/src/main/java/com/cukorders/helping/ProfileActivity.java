@@ -35,6 +35,7 @@ import com.squareup.picasso.Picasso;
 import com.theartofdev.edmodo.cropper.CropImage;
 
 import java.util.HashMap;
+import java.util.Map;
 
 import de.hdodenhof.circleimageview.CircleImageView;
 
@@ -68,14 +69,16 @@ public class ProfileActivity extends AppCompatActivity {
 
         bt_male=(Button) findViewById(R.id.button_male);
         bt_female=(Button) findViewById(R.id.button_female);
-        age[0]=(Button) findViewById(R.id.button);
-        age[1]=(Button) findViewById(R.id.button2);
-        age[2]=(Button) findViewById(R.id.button3);
-        age[3]=(Button) findViewById(R.id.button4);
-        age[4]=(Button) findViewById(R.id.button5);
+        age[0]=(Button) findViewById(R.id.bt_10s);
+        age[1]=(Button) findViewById(R.id.bt_20s);
+        age[2]=(Button) findViewById(R.id.bt_30s);
+        age[3]=(Button) findViewById(R.id.bt_40s);
+        age[4]=(Button) findViewById(R.id.bt_50s);
 
-        for(int i=0;i<5;++i)
+        for(int i=0;i<5;++i){
             age[i].setOnClickListener(onClickListener);
+            age[i].setBackgroundColor(Color.parseColor("#e1e1e1"));
+        }
 
         databaseReference.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
@@ -89,7 +92,7 @@ public class ProfileActivity extends AppCompatActivity {
                         image=snapshot.child("Image").getValue().toString();
                         gender=snapshot.child("Gender").getValue().toString();
                         (gender.equals("Male")?bt_male:bt_female).setBackgroundColor(Color.parseColor("#70D398"));
-                        userAge=Integer.parseInt(String.valueOf(snapshot.child("Age").getValue().toString().charAt(0)))-1;
+                        userAge=Integer.parseInt(String.valueOf(snapshot.child("Age").getValue().toString().charAt(0)));
                         Log.d("사용자 나이대","사용자 나이대: "+String.valueOf(userAge));
                         userNickname=snapshot.child("Nickname").getValue().toString();
                         isMale=gender.equals("Male");
@@ -105,7 +108,7 @@ public class ProfileActivity extends AppCompatActivity {
             }
         });
 
-        age[userAge].setBackgroundColor(Color.parseColor("#70D398"));
+        setColors();
 
         findViewById(R.id.profileRegisterBt).setOnClickListener(onClickListener);
         findViewById(R.id.bt_back).setOnClickListener(onClickListener);
@@ -125,13 +128,14 @@ public class ProfileActivity extends AppCompatActivity {
                     break;
 
                 case R.id.profileRegisterBt:
-                    // TODO DB에 수정 내용 업데이트
-                    HashMap<String,String> information=new HashMap<>();
+                    Map<String,Object> information=new HashMap<String,Object>();
                     information.put("Age",String.valueOf(userAge)+"0s");
                     information.put("Gender",isMale?"Male":"Female");
-                    information.put("Nickname",nickname.toString().equals("")?userNickname:nickname.toString());
-
+                    Log.d("닉네임","유저 새 닉네임: "+nickname.getText().toString());
+                    information.put("Nickname",nickname.getText().toString().equals("")?userNickname:nickname.getText().toString());
+                    databaseReference.child(uid).updateChildren(information);
                     Toast.makeText(context,"프로필 수정이 완료되었습니다.",Toast.LENGTH_LONG).show();
+                    startActivity(new Intent(context,MyPageActivity.class));
                     break;
 
                 case R.id.cameraBtn:
@@ -152,26 +156,26 @@ public class ProfileActivity extends AppCompatActivity {
                     (!isMale?bt_male:bt_female).setBackgroundColor(Color.parseColor("#e1e1e1"));
                     break;
 
-                case R.id.button:
+                case R.id.bt_10s:
                     userAge=1;
                     setColors();
                     break;
 
-                case R.id.button2:
+                case R.id.bt_20s:
                     userAge=2;
                     setColors();
                     break;
 
-                case R.id.button3:
+                case R.id.bt_30s:
                     userAge=3;
                     setColors();
                     break;
 
-                case R.id.button4:
+                case R.id.bt_40s:
                     userAge=4;
                     setColors();
                     break;
-                case R.id.button5:
+                case R.id.bt_50s:
                     userAge=5;
                     setColors();
                     break;

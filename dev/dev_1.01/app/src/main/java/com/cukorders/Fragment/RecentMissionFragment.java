@@ -49,7 +49,7 @@ public class RecentMissionFragment extends Fragment {
     private RecyclerView.LayoutManager mLayoutManager;
     private ArrayList<InitPost> mPost=new ArrayList<InitPost>();
     private FirebaseUser firebaseUser= FirebaseAuth.getInstance().getCurrentUser();
-    private Boolean locCertification;
+    public static Boolean locCertification;
     public static Context recentMissionFragment;
     private LinearLayout linearLayout;
     private static Context context;

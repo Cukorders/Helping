@@ -132,11 +132,10 @@ public class MyPlaceActivity extends AppCompatActivity {
                 for(DataSnapshot snapshot:dataSnapshot.getChildren()){
                     String key=snapshot.getKey();
                     HashMap<String,String> info=(HashMap<String,String>) snapshot.getValue();
-                    user_regions[0]=info.get("Region 1");
-                    user_regions[1]=info.get("Region 2");
-                    user_regions[2]=info.get("Region 3");
-                    for(int i=0;i<3;++i)
+                    for(int i=0;i<3;++i){
+                        user_regions[i]=info.get("Region"+String.valueOf(i+1));
                         Log.d("user_regions","user_regions["+String.valueOf(i)+"]의 값: "+user_regions[i]);
+                    }
                 }
             }
 
