@@ -36,10 +36,11 @@
                 android:textColor="@color/colorWhite"/>
 
             <Button
-                android:id="@+id/bt_finish"
+                android:id="@+id/bt_filter"
                 android:layout_width="wrap_content"
                 android:layout_height="match_parent"
                 android:layout_weight="2"
+                android:backgroundTint="@color/colorLogo"
                 android:paddingRight="10dp"
                 android:text="완료"
                 android:textColor="@color/colorWhite"
@@ -204,14 +205,14 @@
                 android:id="@+id/pay"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:hint="보상금 :"
+                android:hint="보상금"
                 android:textSize="18sp" />
 
             <EditText
                 android:id="@+id/due"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:hint="보증금 :"
+                android:hint="보증금"
                 android:textSize="18sp" />
             //물품가격 edittext => 카테고리에서 물품 관련된 경우 입력할 수 있고,물품 관련된 경우가 아닌 경우 입력할 수 없도록
 
@@ -219,7 +220,7 @@
                 android:id="@+id/price"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:hint="물품 가격 :"
+                android:hint="물품 가격"
                 android:textSize="18sp" />
         </LinearLayout>
 
@@ -238,21 +239,21 @@
                 android:id="@+id/endTime"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:hint="미션 완료 시간 :"
+                android:hint="미션 완료 시간"
                 android:textSize="18sp" />
 
             <EditText
                 android:id="@+id/cancelTime"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:hint="미션 취소 가능 시간 :"
+                android:hint="미션 취소 가능 시간 (음식 류는 취소 불가)"
                 android:textSize="18sp" />
 
             <EditText
                 android:id="@+id/place"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:hint="만날 장소(선택) :"
+                android:hint="만날 장소(선택)"
                 android:textSize="18sp" />
         </LinearLayout>
 

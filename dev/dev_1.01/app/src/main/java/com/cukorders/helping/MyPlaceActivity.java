@@ -109,7 +109,7 @@ public class MyPlaceActivity extends AppCompatActivity {
         if(count()==1){ // 지역이 하나인데 삭제 시도 → 삭제할 수 없어야 한다.
             Toast.makeText(context,"하나 이상의 지역이 있어야하므로 삭제할 수 없습니다.",Toast.LENGTH_LONG).show();
         } else{
-            databaseReference.addListenerForSingleValueEvent(new ValueEventListener() {
+            databaseReference.addValueEventListener(new ValueEventListener() {
                 @Override
                 public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
 
@@ -126,7 +126,7 @@ public class MyPlaceActivity extends AppCompatActivity {
     }
 
     private void checkRegions(){
-        databaseReference.addListenerForSingleValueEvent(new ValueEventListener() {
+        databaseReference.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                 for(DataSnapshot snapshot:dataSnapshot.getChildren()){

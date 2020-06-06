@@ -136,6 +136,7 @@ public class PostActivity extends AppCompatActivity {
         price=(TextView) findViewById(R.id.price);
         description=(TextView) findViewById(R.id.description);
         place=(TextView) findViewById(R.id.place);
+
         //카테고리 선택 스피너
         category=(Spinner) findViewById(R.id.category);
         arrayList=new ArrayList<>();
@@ -154,6 +155,11 @@ public class PostActivity extends AppCompatActivity {
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
                 Category=arrayList.get(position);
                 Log.d("카테고리","선택된 카테고리 : "+Category);
+                if(Category.equals("구매 대행(음식)")||Category.equals("배달(음식)")){
+                    cancelTime.setEnabled(false);
+                }else{
+                    cancelTime.setEnabled(true);
+                }
             }
 
             @Override
@@ -161,6 +167,7 @@ public class PostActivity extends AppCompatActivity {
                 Toast.makeText(context,"하나 이상의 카테고리를 설정하세요.",Toast.LENGTH_LONG).show();
             }
         });
+
         // 사진 추가 버튼
         photo[0]=(ImageButton) findViewById(R.id.camera_album_add1);
         photo[1]=(ImageButton) findViewById(R.id.camera_album_add2);
@@ -173,7 +180,7 @@ public class PostActivity extends AppCompatActivity {
 
         //기본 기능 버튼
         findViewById(R.id.back_button_write_post).setOnClickListener(onClickListener);
-        findViewById(R.id.bt_finish).setOnClickListener(onClickListener);
+        findViewById(R.id.bt_filter).setOnClickListener(onClickListener);
         findViewById(R.id.bt_post).setOnClickListener(onClickListener);
 
         // 동성 or 무관
@@ -188,8 +195,9 @@ public class PostActivity extends AppCompatActivity {
         findViewById(R.id.button50s).setOnClickListener(checkAge);
 
         //이미지 삽입
-        for(int i=0;i<3;++i)
-            photo[i].setOnClickListener(addPhoto);
+        findViewById(R.id.camera_album_add1).setOnClickListener(addPhoto);
+        findViewById(R.id.camera_album_add2).setOnClickListener(addPhoto);
+        findViewById(R.id.camera_album_add3).setOnClickListener(addPhoto);
 
         bt_same=(Button) findViewById(R.id.bt_same);
         bt_dontMind=(Button) findViewById(R.id.bt_dontMind);
@@ -213,7 +221,7 @@ public class PostActivity extends AppCompatActivity {
     }
 
     private String getRandomString(int length) {
-        final String characters="abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ01234567890!@%_&*^+-=\\/";
+        final String characters="abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ01234567890!@%_&*^+-=";
         StringBuilder stringBuilder=new StringBuilder();
         while(length-- >0){
             Random random=new Random();
