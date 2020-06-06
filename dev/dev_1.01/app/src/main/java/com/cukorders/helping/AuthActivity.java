@@ -72,8 +72,8 @@ public class AuthActivity extends AppCompatActivity {
         mLoginBtn = findViewById(R.id.LoginBtn);
         mErrorText = findViewById(R.id.login_form_feedback);
 
-        locationCertification=((RegionActivity)RegionActivity.regional_certification2).isCertified; //지역 인증 여부
-        location=((ChooseTheRegionActivity)ChooseTheRegionActivity.regional_certification1).userLocation; // 사용자가 선택한 지역
+        locationCertification=((LoadingActivity)LoadingActivity.loadingActivity).isCertified[0]; //지역 인증 여부
+        location=((LoadingActivity)LoadingActivity.loadingActivity).userLoc[0]; // 사용자가 선택한 지역
 
         mAuth.setLanguageCode("kr");
         mMessageSentBtn.setOnClickListener(new View.OnClickListener() {

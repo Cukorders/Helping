@@ -1,7 +1,6 @@
 package com.cukorders.helping;
 
 import android.Manifest;
-import android.annotation.SuppressLint;
 import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager;
@@ -17,6 +16,9 @@ import android.text.style.ForegroundColorSpan;
 import android.text.style.StyleSpan;
 import android.util.Log;
 import android.view.View;
+import android.widget.AdapterView;
+import android.widget.ArrayAdapter;
+import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -33,19 +35,14 @@ import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
-import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
-import com.google.firebase.database.DataSnapshot;
-import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
-import com.google.firebase.database.FirebaseDatabase;
-import com.google.firebase.database.ValueEventListener;
 
 import java.io.IOException;
-import java.util.HashMap;
+import java.util.ArrayList;
 import java.util.List;
 
 import static android.text.Spanned.SPAN_INCLUSIVE_EXCLUSIVE;
@@ -64,7 +61,13 @@ public class RegionActivity  extends FragmentActivity implements OnMapReadyCallb
     private static final String msg1="현재 위치가 내 지역으로 설정한 ";
     private static final String msg2="에 있습니다.";
     private static final String errorMsg="선택하신 위치와 현 위치가 달라 지역 인증에 실패하였습니다.";
+    private static Spinner spinner;
+    private ArrayList<String> arrayList;
+    private int index;
+    private String loc[]=new String[3];
+    private ArrayAdapter<String> arrayAdapter;
     Context context=this;
+
     //위치 정보 얻는 객체
     private FusedLocationProviderClient mFusedLocationClient;
 
@@ -80,7 +83,6 @@ public class RegionActivity  extends FragmentActivity implements OnMapReadyCallb
     private TextView result_gps;
     private String errorMSG="인증을 하려면 위치 정보를 불러와야 합니다.";
     public static Context regional_certification2;
-    public static boolean isCertified=false;
     private static FirebaseUser firebaseUser= FirebaseAuth.getInstance().getCurrentUser();
     private static DatabaseReference databaseReference;
 
@@ -109,6 +111,39 @@ public class RegionActivity  extends FragmentActivity implements OnMapReadyCallb
         result_gps=(TextView) findViewById(R.id.result_gps);
 
         regional_certification2=this;
+
+        spinner=(Spinner) findViewById(R.id.location_spinner);
+        arrayList=new ArrayList<>();
+        arrayAdapter=new ArrayAdapter<>(getApplicationContext(),
+                android.R.layout.simple_spinner_dropdown_item,arrayList);
+        for(int i=0;i<3;++i){
+            loc[i]=((LoadingActivity)LoadingActivity.loadingActivity).userLoc[i];
+            if(loc[i]==null) loc[i]="default";
+            Log.d("loc[i]의 값","loc["+String.valueOf(i)+"] = "+loc[i]);
+        }
+        for(int i=0;i<3;++i){
+            Log.d("loc","loc["+String.valueOf(i)+"]= "+loc[i]);
+            if(loc[i].equals("default")){
+                continue;
+            }
+            arrayList.add(loc[i]);
+            Log.d("arrayList","새 원소 "+arrayList.get(i)+"가 추가되었습니다.");
+        }
+
+        spinner.setAdapter(arrayAdapter);
+        spinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+            @Override
+            public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+                compare=arrayList.get(position);
+                index=position;
+                Log.d("인증할 지역","인증할 지역 : "+compare);
+            }
+
+            @Override
+            public void onNothingSelected(AdapterView<?> parent) {
+                Toast.makeText(context,"하나 이상의 카테고리를 설정하세요.",Toast.LENGTH_LONG).show();
+            }
+        });
       /*
         if(firebaseUser!=null){
         databaseReference= FirebaseDatabase.getInstance().getReference().child("userRegions").child(firebaseUser.getUid());
@@ -127,17 +162,16 @@ public class RegionActivity  extends FragmentActivity implements OnMapReadyCallb
                     break;
                 case R.id.finish_location:
                     // regional_certification1에서 입력한 위치 정보를 가져온다.
-                    compare=((ChooseTheRegionActivity)ChooseTheRegionActivity.regional_certification1).userLocation;
                     Log.e("compare value","compare value is "+compare);
                     Log.e("the user's location is ","the user's location is "+dong);
 
                     if(compare.equals(dong)){
-                        isCertified=true;
-                        Log.e("인증 여부","인증 여부 : "+isCertified);
+                        ((LoadingActivity)LoadingActivity.loadingActivity).isCertified[index]=true;
+                        Log.e("인증 여부","인증 여부 : "+((LoadingActivity)LoadingActivity.loadingActivity).isCertified[index]);
                         goMain();
                     } else{
                         // 인증 실패 에러 메시지 띄움
-                        isCertified=false;
+                        ((LoadingActivity)LoadingActivity.loadingActivity).isCertified[index]=false;
                         Toast.makeText(context,errorMsg,Toast.LENGTH_LONG).show();
                     }
                     break;
@@ -146,7 +180,7 @@ public class RegionActivity  extends FragmentActivity implements OnMapReadyCallb
                     break;
 
               case R.id.bt_skip:
-                    isCertified=false;
+                  ((LoadingActivity)LoadingActivity.loadingActivity).isCertified[index]=false;
                     Log.d("a skip button","a skip button is clicked");
                     Toast.makeText(context,"지역 인증을 완료하려면 마이페이지>지역 인증에서 완료하시길 바랍니다.",Toast.LENGTH_LONG).show();
                     goMain();

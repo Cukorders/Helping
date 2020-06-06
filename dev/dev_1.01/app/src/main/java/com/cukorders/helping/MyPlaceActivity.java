@@ -29,9 +29,8 @@ public class MyPlaceActivity extends AppCompatActivity {
     private String changedLocation;
     public static Context myPlaceActivity;
     public static boolean fromMyPlaceActivity=false;
-    public static String user_regions[]=new String[3];
+    private static String user_regions[]=new String[3];
     private static DatabaseReference databaseReference;
-    private static int cnt=0;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -57,6 +56,7 @@ public class MyPlaceActivity extends AppCompatActivity {
             delete[i].setOnClickListener(onClickListener);
         }
 
+        user_regions=((LoadingActivity)LoadingActivity.loadingActivity).userLoc;
        checkRegions();
         setTexts();
     }
@@ -106,7 +106,7 @@ public class MyPlaceActivity extends AppCompatActivity {
     }
 
     private void delete(int index){
-        if(cnt==1){ // 지역이 하나인데 삭제 시도 → 삭제할 수 없어야 한다.
+        if(count()==1){ // 지역이 하나인데 삭제 시도 → 삭제할 수 없어야 한다.
             Toast.makeText(context,"하나 이상의 지역이 있어야하므로 삭제할 수 없습니다.",Toast.LENGTH_LONG).show();
         } else{
             databaseReference.addListenerForSingleValueEvent(new ValueEventListener() {
@@ -126,20 +126,17 @@ public class MyPlaceActivity extends AppCompatActivity {
     }
 
     private void checkRegions(){
-        cnt=0;
         databaseReference.addListenerForSingleValueEvent(new ValueEventListener() {
-            int index=0;
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                 for(DataSnapshot snapshot:dataSnapshot.getChildren()){
                     String key=snapshot.getKey();
                     HashMap<String,String> info=(HashMap<String,String>) snapshot.getValue();
-                    user_regions[index]=info.get("Region "+String.valueOf(index+1));
-                    Log.d("user_regions","user_regions["+String.valueOf(index)+"] = "+user_regions[index]);
-                    if(!user_regions[index].equals("default")){
-                        ++cnt;
-                    }
-                    ++index;
+                    user_regions[0]=info.get("Region 1");
+                    user_regions[1]=info.get("Region 2");
+                    user_regions[2]=info.get("Region 3");
+                    for(int i=0;i<3;++i)
+                        Log.d("user_regions","user_regions["+String.valueOf(i)+"]의 값: "+user_regions[i]);
                 }
             }
 
@@ -153,5 +150,14 @@ public class MyPlaceActivity extends AppCompatActivity {
     private void setTexts(){
         for(int i=0;i<3;++i)
             region[i].setText((user_regions[i].equals("default")?("지역 "+String.valueOf(i+1)):user_regions[i]));
+    }
+
+    private int count(){
+        int ret=0;
+        for(int i=0;i<3;++i)
+            if(user_regions[i].equals("default")){
+                ++ret;
+            }
+        return ret;
     }
 }

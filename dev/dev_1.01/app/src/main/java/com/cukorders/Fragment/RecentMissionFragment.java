@@ -8,11 +8,13 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.ImageButton;
 import android.widget.LinearLayout;
 import android.widget.Spinner;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -22,10 +24,10 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.cukorders.Adapter.PostAdapter;
-import com.cukorders.helping.ChooseTheRegionActivity;
 import com.cukorders.helping.CustomDialog;
 import com.cukorders.helping.FilterActivity;
 import com.cukorders.helping.InitPost;
+import com.cukorders.helping.LoadingActivity;
 import com.cukorders.helping.R;
 import com.cukorders.helping.RegionActivity;
 import com.google.firebase.auth.FirebaseAuth;
@@ -48,13 +50,14 @@ public class RecentMissionFragment extends Fragment {
     private ArrayList<InitPost> mPost=new ArrayList<InitPost>();
     private FirebaseUser firebaseUser= FirebaseAuth.getInstance().getCurrentUser();
     private Boolean locCertification;
-    private static Context context;
+    public static Context recentMissionFragment;
     private LinearLayout linearLayout;
+    private static Context context;
     private ImageButton filter;
     private Spinner user_locations;
     private ArrayList<String> arrayList;
     private ArrayAdapter<String> arrayAdapter;
-    private String loc;
+    public static String location_now;
     private DatabaseReference locRef;
     private Button bt_certificate;
 
@@ -85,10 +88,8 @@ public class RecentMissionFragment extends Fragment {
         postRef = FirebaseDatabase.getInstance().getReference().child("Posting");
 
         linearLayout=(LinearLayout) view.findViewById(R.id.linearLayout);
-        context=getContext();
-        loc=((ChooseTheRegionActivity)ChooseTheRegionActivity.regional_certification1).userLocation;
-        locCertification=((RegionActivity)RegionActivity.regional_certification2).isCertified;
-        Log.d("지역 인증","지역 인증 여부: "+locCertification);
+        recentMissionFragment=getContext();
+        context=recentMissionFragment;
 
         locRef=FirebaseDatabase.getInstance().getReference().child("userRegions");
         filter=(ImageButton) view.findViewById(R.id.recent_mission_filter);
@@ -101,13 +102,30 @@ public class RecentMissionFragment extends Fragment {
         });
         user_locations=(Spinner) view.findViewById(R.id.user_locations);
         arrayList=new ArrayList<>();
-        arrayList.add(loc);
+        arrayList.add(((LoadingActivity)LoadingActivity.loadingActivity).userLoc[0]);
+        location_now=((LoadingActivity)LoadingActivity.loadingActivity).userLoc[0];
+        locCertification=((LoadingActivity)LoadingActivity.loadingActivity).isCertified[0];
+
+        user_locations.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+            @Override
+            public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+                location_now=arrayList.get(position);
+                locCertification=((LoadingActivity)LoadingActivity.loadingActivity).isCertified[position];
+                Log.d("사용자 현위치","사용자의 현위치 : "+location_now);
+                Log.d("사용자 현위치 인증","사용자의 현위치 위치 인증여부"+locCertification);
+            }
+
+            @Override
+            public void onNothingSelected(AdapterView<?> parent) {
+                Toast.makeText(context,"하나 이상의 카테고리를 설정하세요.",Toast.LENGTH_LONG).show();
+            }
+        });
 
         if(firebaseUser==null){
             Log.e("user not found","로그인 하지 않은 유저입니다.");
-            CustomDialog customDialog=new CustomDialog(context);
+            CustomDialog customDialog=new CustomDialog(recentMissionFragment);
             customDialog.show();
-            Log.d("유저 지역","유저 지역: "+loc);
+            Log.d("유저 지역","유저 지역: "+arrayList.get(0));
         }else{
             setLocation();
             if(!locCertification){

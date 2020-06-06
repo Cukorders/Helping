@@ -101,7 +101,7 @@ public class MainActivity extends AppCompatActivity {
         public void onClick(View v) {
             switch(v.getId()){
                 case R.id.fab_post:
-                    locCertification=((RegionActivity)RegionActivity.regional_certification2).isCertified;
+                   // locCertification=((RegionActivity)RegionActivity.regional_certification2).isCertified;
                     if(firebaseUser==null){
                         caution();
                     }
@@ -113,7 +113,7 @@ public class MainActivity extends AppCompatActivity {
                             @Override
                             public void onClick(DialogInterface dialog, int which) {
                                 //TODO 지역인증 페이지로 넘기기
-                                mainLocation=((ChooseTheRegionActivity)ChooseTheRegionActivity.regional_certification1).userLocation;
+                               // mainLocation=((ChooseTheRegionActivity)ChooseTheRegionActivity.regional_certification1).userLocation;
                                 startActivity(new Intent(context,RegionActivity.class));
                             }
                         }).setNegativeButton("취소",null);

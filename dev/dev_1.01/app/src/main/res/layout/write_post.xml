@@ -51,29 +51,31 @@
             android:background="@drawable/stroke_below_bold"
             android:layout_marginLeft="10dp"
             android:layout_marginRight="10dp">
+
             <RelativeLayout
-            android:layout_width="70dp"
-            android:layout_height="70dp"
-            android:layout_marginTop="10dp"
-            android:background="@drawable/strokebox">
+                android:id="@+id/photo1"
+                android:layout_width="70dp"
+                android:layout_height="70dp"
+                android:layout_marginTop="10dp"
+                android:background="@drawable/strokebox">
 
-            <ImageButton
-                android:id="@+id/camera_album_add1"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:background="@android:color/transparent"
-                android:src="@drawable/camera_button"
-                android:layout_centerInParent="true"/>
+                <ImageButton
+                    android:id="@+id/camera_album_add1"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_centerInParent="true"
+                    android:background="@android:color/transparent"
+                    android:src="@drawable/camera_button" />
 
-            <TextView
-                android:id="@+id/camera_picture_addnumber1"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:layout_below="@id/camera_album_add1"
-                android:layout_marginBottom="5dp"
-                android:gravity="center"
-                android:text="0/3" />
-        </RelativeLayout>
+                <TextView
+                    android:id="@+id/camera_picture_addnumber1"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:layout_below="@id/camera_album_add1"
+                    android:layout_marginBottom="5dp"
+                    android:gravity="center"
+                    android:text="0/3" />
+            </RelativeLayout>
 
             <RelativeLayout
                 android:id="@+id/photo2"

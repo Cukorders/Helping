@@ -50,15 +50,16 @@ public class ChooseTheRegionActivity  extends AppCompatActivity {
     private LocationManager locationManager;
     private Geocoder geocoder;
     private TextView editTextQuery;
-    public static String userLocation;
     private Location nowLocation;
     private Context context=this;
     private ListView search_result;
+    private String userLocation;
     private String errorMsg="위치 정보를 가져오는데 실패하였습니다.";
     private static String defaultURL="https://maps.googleapis.com/maps/api/geocode/json?address=";
     private String lats[],lngs[];
     private int select=0;
     private boolean myPlace;
+    private int cnt;
     Handler handler=new Handler();
 
     // 주변 행정동들 검색할 때 주변 2km 내 행정동들을 불러오기
@@ -81,7 +82,9 @@ public class ChooseTheRegionActivity  extends AppCompatActivity {
         search_result=(ListView) findViewById(R.id.search_result);
         regional_certification1=this;
         myPlace=((MyPlaceActivity)MyPlaceActivity.myPlaceActivity).fromMyPlaceActivity;
+        cnt=((LoadingActivity)LoadingActivity.loadingActivity).loc_cnt;
         Log.d("myPlace value","myPlace value is "+myPlace);
+        Log.d("cnt value","cnt의 값은 "+String.valueOf(cnt));
 
         // 엔터키를 누를 시 줄바꿈이 아니라 검색 버튼이 눌렸을 때랑 같은 이벤트가 발생하기 위한 코드
         editTextQuery.setOnKeyListener(new View.OnKeyListener() {
@@ -189,8 +192,12 @@ public class ChooseTheRegionActivity  extends AppCompatActivity {
                         }).setPositiveButton("선택", new DialogInterface.OnClickListener() {
                             @Override
                             public void onClick(DialogInterface dialog, int which) {
-                                userLocation=array[select];
+                                if(cnt<3){
+                                    ((LoadingActivity)LoadingActivity.loadingActivity).userLoc[cnt]=array[select];
+                                }
                                 Log.e("userLocation_search","the value of a parameter called userLocation in ChooseTheRegionActivity is "+userLocation);
+                                ((LoadingActivity)LoadingActivity.loadingActivity).loc_cnt=cnt+1;
+                                Log.d("loc_cnt","loc_cnt = "+String.valueOf(((LoadingActivity)LoadingActivity.loadingActivity).loc_cnt));
                                 if(myPlace){
                                     startActivity(new Intent(context,MyPlaceActivity.class));
                                 }else{
@@ -198,8 +205,6 @@ public class ChooseTheRegionActivity  extends AppCompatActivity {
                                 }
                             }
                         }).setNegativeButton("취소",null);
-
-
                         builder.show();
                     }else{
                         Toast.makeText(context,errorMsg,Toast.LENGTH_LONG).show();
@@ -328,8 +333,14 @@ public class ChooseTheRegionActivity  extends AppCompatActivity {
                             } catch (IOException e) {
                                 e.printStackTrace();
                             }
-                            userLocation=addr.get(0).getThoroughfare();
+                            if(cnt<3){
+                            ((LoadingActivity)LoadingActivity.loadingActivity).userLoc[cnt]=addr.get(0).getThoroughfare();
+                            }
                             Log.e("userLocation_search","the value of a parameter called userLocation in ChooseTheRegionActivity is "+userLocation);
+                            for(int i=0;i<3;++i)
+                                Log.d("userLoc","전역 변수 userLoc["+String.valueOf(i)+"] = "+((LoadingActivity)LoadingActivity.loadingActivity).userLoc[i]);
+                            ((LoadingActivity)LoadingActivity.loadingActivity).loc_cnt=cnt+1;
+                            Log.d("loc_cnt","loc_cnt = "+String.valueOf(((LoadingActivity)LoadingActivity.loadingActivity).loc_cnt));
                             if(myPlace){
                                 startActivity(new Intent(context,MyPlaceActivity.class));
                             }else{
@@ -337,7 +348,6 @@ public class ChooseTheRegionActivity  extends AppCompatActivity {
                             }
                         }
                     }).setNegativeButton("취소",null);
-
                     builder.show();
                 } else{
                     Toast.makeText(this,"검색 결과가 존재하지 않습니다.",Toast.LENGTH_LONG).show();
