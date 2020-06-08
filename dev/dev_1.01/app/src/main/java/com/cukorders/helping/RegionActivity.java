@@ -93,8 +93,8 @@ public class RegionActivity  extends FragmentActivity implements OnMapReadyCallb
         findViewById(R.id.currentLocation).setOnClickListener(OnClickListener);
         findViewById(R.id.finish_location).setOnClickListener(OnClickListener);
         findViewById(R.id.bt_back).setOnClickListener(OnClickListener);
-       // findViewById(R.id.bt_skip).setOnClickListener(OnClickListener);
-
+    /*    findViewById(R.id.bt_skip).setOnClickListener(OnClickListener);
+*/
         // 위치 권한 요청을 하기 위한 FusedLocationClient 불러옴
         mFusedLocationClient= LocationServices.getFusedLocationProviderClient(this);
         geocoder=new Geocoder(this);
@@ -135,18 +135,18 @@ public class RegionActivity  extends FragmentActivity implements OnMapReadyCallb
                     goBack(); //이전 페이지로 가기(뒤로 가기 버튼이 눌렸을 때)
                     break;
 
-  /*                case R.id.bt_skip:
+ /*               case R.id.bt_skip:
                     isCertified=false;
                     Log.d("a skip button","a skip button is clicked");
                     Toast.makeText(context,"지역 인증을 완료하려면 마이페이지>지역 인증에서 완료하시길 바랍니다.",Toast.LENGTH_LONG).show();
                     goMain();
-                    break;
- */           }
+                    break;*/
+            }
         }
     };
 
     private void goMain(){
-        Intent intent=new Intent(this,AuthActivity.class);
+        Intent intent=new Intent(this,MainActivity.class);
         startActivity(intent);
     }
 

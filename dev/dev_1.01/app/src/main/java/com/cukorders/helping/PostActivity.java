@@ -35,6 +35,7 @@ public class PostActivity extends AppCompatActivity {
     private int Pay,Due,Price,Age;
     private final FirebaseUser user= FirebaseAuth.getInstance().getCurrentUser(); // 현재 위저를 불러온다. TODO: DB에서 이 유저의 UID를 불러온다.
     private Post post;
+    private String postKey;
 
     @SuppressLint("LongLogTag")
     private static void init_ageChecked(boolean ageChecked[]){

@@ -35,9 +35,11 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
+<!--
         <activity android:name=".RegionActivity" />
+-->
         <activity android:name=".ChooseTheRegionActivity" />
-        <activity android:name=".RegisterActivity" />d
+        <activity android:name=".RegisterActivity" />
         <activity android:name=".RegisterFinishActivity" />
         <activity android:name=".AuthActivity" />
         <activity android:name=".MainActivity" />

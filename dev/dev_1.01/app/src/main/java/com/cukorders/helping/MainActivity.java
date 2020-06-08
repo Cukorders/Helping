@@ -16,16 +16,16 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.cukorders.helping.chatting.ChatFragment;
-import com.cukorders.helping.chatting.PeopleFragment;
 import com.cukorders.helping.chatting.ChattingActivity;
 import com.cukorders.helping.chatting.ClientChatListActivity;
+import com.cukorders.helping.chatting.PeopleFragment;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 
 public class MainActivity extends AppCompatActivity {
     FloatingActionButton fab_plus,fab_write,fab_info,fab_chat;
     Animation FabOpen,FabClose,FabClockwise,FabAntiClockwise;
     private Button myMission,currentMission;
-    private Button chat_list, client_chat_list, chatting; // 채팅방 확인용 (삭제예정)
+    private Button people_list, client_chat_list, chatting, chat_client_list; // 채팅방 확인용 (삭제예정)
     boolean isOpen=false;
     private final Context context=this;
     // private long backKeyPressedTime = 0;
@@ -64,9 +64,10 @@ public class MainActivity extends AppCompatActivity {
         myMission=(Button) findViewById(R.id.myMission);
         currentMission=(Button) findViewById(R.id.currentMission);
         // 채팅방 확인용 (삭제예정)
-        chat_list=(Button) findViewById(R.id.people_list);
+        people_list=(Button) findViewById(R.id.peoplefragment_recyclerview);
         client_chat_list=(Button) findViewById(R.id.client_chat_list);
-        chatting=(Button) findViewById(R.id.chatting);
+        chatting=(Button) findViewById(R.id.chatfragment_recyclerview);
+        chat_client_list=(Button) findViewById(R.id.chat_client_list);
 
         findViewById(R.id.myMission).setOnClickListener(onClickListener);
         findViewById(R.id.currentMission).setOnClickListener(onClickListener);
@@ -78,6 +79,7 @@ public class MainActivity extends AppCompatActivity {
         findViewById(R.id.chatting).setOnClickListener(onClickListener);
         findViewById(R.id.people_list).setOnClickListener(onClickListener);
         findViewById(R.id.client_chat_list).setOnClickListener(onClickListener);
+        findViewById(R.id.chat_client_list).setOnClickListener(onClickListener);
 
         fab_plus.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -111,16 +113,16 @@ public class MainActivity extends AppCompatActivity {
                     myMission.setBackgroundColor(Color.parseColor("#e1e1e1"));
                     break;
                 // 채팅방 확인용 (삭제예정)
-  /*              case R.id.chatting:
-                    Intent intent4 =new Intent(context, ChattingActivity.class);
+                case R.id.chatting:
+                    Intent intent8 =new Intent(context, ChattingActivity.class);
                     Log.e("go to post","go to a posting page");
-                    startActivity(intent4);
+                    startActivity(intent8);
                     break;
-*/
+
                 case R.id.people_list:
-                    Intent intent5 =new Intent(context, PeopleFragment.class);
-                    Log.e("go to post","go to a posting page");
-                    startActivity(intent5);
+                    PeopleFragment peopleFragment = (PeopleFragment) getSupportFragmentManager().findFragmentById(R.id.peoplefragment_recyclerview);
+                    getSupportFragmentManager().beginTransaction().replace(R.id.peoplefragment_recyclerview, peopleFragment).commit();
+                 /*   replaceFragment();*/
                     break;
 
                 case R.id.client_chat_list:
@@ -129,7 +131,7 @@ public class MainActivity extends AppCompatActivity {
                     startActivity(intent6);
                     break;
 
-                case R.id.chat_list:
+                case R.id.chat_client_list:
                     Intent intent7 =new Intent(context, ChatFragment.class);
                     Log.e("go to post","go to a posting page");
                     startActivity(intent7);
@@ -181,6 +183,14 @@ public class MainActivity extends AppCompatActivity {
         isOpen=false;
         //  Log.d("close","close");
     }
+
+ /*   public void replaceFragment(){
+        PeopleFragment peopleFragment = new PeopleFragment();
+        FragmentManager fragmentManager = getSupportFragmentManager();
+        FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
+        fragmentTransaction.replace(R.id.peoplefragment_recyclerview, peopleFragment);
+        fragmentTransaction.commit();
+    }*/
 
     /*private void startStartActivity(){
         Intent intent=new Intent(this,StartActivity.class);
