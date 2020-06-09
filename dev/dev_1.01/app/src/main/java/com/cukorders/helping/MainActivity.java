@@ -20,6 +20,12 @@ import com.cukorders.helping.chatting.ChattingActivity;
 import com.cukorders.helping.chatting.ClientChatListActivity;
 import com.cukorders.helping.chatting.PeopleFragment;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.iid.FirebaseInstanceId;
+
+import java.util.HashMap;
+import java.util.Map;
 
 public class MainActivity extends AppCompatActivity {
     FloatingActionButton fab_plus,fab_write,fab_info,fab_chat;
@@ -92,7 +98,7 @@ public class MainActivity extends AppCompatActivity {
             }
         });
 
-
+        passPushTokenToServer(); // background 팝업
 
     }
 
@@ -182,6 +188,16 @@ public class MainActivity extends AppCompatActivity {
         fab_write.setClickable(false);
         isOpen=false;
         //  Log.d("close","close");
+    }
+
+    // 채팅 팝업 기능
+    void passPushTokenToServer(){
+
+        String uid = FirebaseAuth.getInstance().getCurrentUser().getUid();
+        String token = FirebaseInstanceId.getInstance().getToken();
+        Map<String,Object> map = new HashMap<>();
+        map.put("pushToken",token);
+        FirebaseDatabase.getInstance().getReference().child("users").child(uid).updateChildren(map);
     }
 
  /*   public void replaceFragment(){

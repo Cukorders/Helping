@@ -19,19 +19,21 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.request.RequestOptions;
-import com.cukorders.helping.PostActivity;
 import com.cukorders.helping.R;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
-import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ServerValue;
 import com.google.firebase.database.ValueEventListener;
+import com.google.gson.Gson;
 
+import org.jetbrains.annotations.NotNull;
+
+import java.io.IOException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
@@ -39,6 +41,14 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Random;
 import java.util.TimeZone;
+
+import okhttp3.Call;
+import okhttp3.Callback;
+import okhttp3.MediaType;
+import okhttp3.OkHttpClient;
+import okhttp3.Request;
+import okhttp3.RequestBody;
+import okhttp3.Response;
 
 public class ChattingActivity extends AppCompatActivity {
 
@@ -59,17 +69,27 @@ public class ChattingActivity extends AppCompatActivity {
     private Button accept;
     private Button decline;
 
+    private String postKey;
+
     private DatabaseReference mUserDatabase1, mUserDatabase2, mUserDatabase3;
 
 
     private SimpleDateFormat simpleDateFormat = new SimpleDateFormat(" yyyy.MM.dd HH:mm");
+    private UserModel destinationUserModel;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_chatting);
 
-        uid = FirebaseAuth.getInstance().getCurrentUser().getUid(); // 채팅을 요구하는 아이디. 즉 단말기에 로그인된 UID[
+/*
+        uid = FirebaseAuth.getInstance().getCurrentUser().getUid(); // 채팅을 요구하는 아이디. 즉 단말기에 로그인된 UID
+*/
+        uid = "Dpe0OR0NT8XgXyfoWdObPjfblQh2";
+/*
         destinationUid = getIntent().getStringExtra("destinationUid"); // 채팅을 당하는 아이디
+*/
+        destinationUid = "TIhMFvxLG9awVpVPN931vwXDUXz2";
         button = (Button)findViewById(R.id.chattingActivity_button);
         editText = (EditText)findViewById(R.id.chattingActivity_editText);
 
@@ -91,6 +111,8 @@ public class ChattingActivity extends AppCompatActivity {
                 chatModel.users.put(destinationUid, true);
                 //데이터베이스에 삽입
 
+                postKey=getRandomString(25);
+
                 mUserDatabase1 = FirebaseDatabase.getInstance().getReference().child("Chat_list").child(destinationUid).child(postUid);
                 mUserDatabase2 = FirebaseDatabase.getInstance().getReference().child("Chat_list_client").child(destinationUid).child(postUid);
                 mUserDatabase3 = FirebaseDatabase.getInstance().getReference().child("Chat_list_helper").child(destinationUid).child(postUid);
@@ -98,31 +120,26 @@ public class ChattingActivity extends AppCompatActivity {
                 HashMap<String, String> ChatsMap = new HashMap<>();
                 HashMap<String, String> ClientChatsMap = new HashMap<>();
                 HashMap<String, String> HelperChatsMap = new HashMap<>();
-                PostActivity post = new PostActivity();
 
                 ChatsMap.put("Client Uid",destinationUid);
                 ChatsMap.put("Helper Uid",uid);
                 ChatsMap.put("recent time","");
                 ChatsMap.put("Post Uid",postUid);
 
-                ClientChatsMap.put(chatRoomUid,uid);
-
-                HelperChatsMap.put(postUid,chatRoomUid);
-
-                mUserDatabase1.setValue(ChatsMap);
-                mUserDatabase2.setValue(ClientChatsMap);
-                mUserDatabase3.setValue(HelperChatsMap);
-
                 // 데이터를 입력 받았다고 체크가 되는 순간에 db에 채팅방 올리는 방법
 
                 if (chatRoomUid == null){
                     button.setEnabled(false); // chatroomUid가 null인지 확인하는 사이엔 버튼을 불활성화해놓는다. 버그를 막기 위해
-                    FirebaseDatabase.getInstance().getReference().child("chatrooms").push().setValue(chatModel).addOnSuccessListener(new OnSuccessListener<Void>() {
+                    FirebaseDatabase.getInstance().getReference().child("chatrooms").child(postKey).setValue(chatModel).addOnSuccessListener(new OnSuccessListener<Void>() {
                         @Override
                         public void onSuccess(Void aVoid) {
                             checkChatRoom(); // 채팅방의 중복여부를 조사
                         }
                     });
+
+                    ClientChatsMap.put(postKey,uid);
+                    HelperChatsMap.put(postUid,postKey);
+
                 }else {
                     ChatModel.Comment comment = new ChatModel.Comment();
                     comment.uid = uid;
@@ -132,10 +149,50 @@ public class ChattingActivity extends AppCompatActivity {
 
                         @Override
                         public void onComplete(@NonNull Task<Void> task) {
+                            sendGcm();
                             editText.setText(""); // 채팅치고 보낸 후에 채팅 치는 부분 초기화 시켜주는 부분
                         }
                     });
+
+                    ClientChatsMap.put(chatRoomUid,uid);
+                    HelperChatsMap.put(postUid,chatRoomUid);
                 }
+
+                mUserDatabase1.setValue(ChatsMap);
+                mUserDatabase2.setValue(ClientChatsMap);
+                mUserDatabase3.setValue(HelperChatsMap);
+            }
+        });
+        checkChatRoom();
+    }
+
+    void sendGcm(){
+        Gson gson = new Gson();
+
+        NotificationModel notificationModel = new NotificationModel();
+        notificationModel.to = destinationUserModel.pushToken;
+        notificationModel.notifacation.title = "보낸이 아이디";
+        notificationModel.notifacation.text = editText.getText().toString();
+
+        RequestBody requestBody = RequestBody.create(MediaType.parse("application/json; charset=utf8"),gson.toJson(notificationModel));
+
+        Request request = new Request.Builder()
+                .header("Content-Type","application/json")
+                .addHeader("Authorization","key=AAAArs07U3c:APA91bEUDG39kMs2yJyKzyluHIHruRA2XvfecbptE_0HHR_sJr04PBvblXRx9gCa4Wag39zGJT5hPvvN_twdMok-wBBosJyDFsTt4K7CFJ755AWgxQ8MzHGsYMdgNflmjteHWGUkDrii")
+                .url("https://fcm.googleapis.com/fcm/send")
+                .post(requestBody)
+                .build();
+
+        OkHttpClient okHttpClient = new OkHttpClient();
+        okHttpClient.newCall(request).enqueue(new Callback() {
+            @Override
+            public void onFailure(@NotNull Call call, @NotNull IOException e) {
+
+            }
+
+            @Override
+            public void onResponse(@NotNull Call call, @NotNull Response response) throws IOException {
+
             }
         });
     }
@@ -164,7 +221,6 @@ public class ChattingActivity extends AppCompatActivity {
     class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder>{
 
         List<ChatModel.Comment> comments;
-        UserModel userModel;
         public RecyclerViewAdapter() {
             comments = new ArrayList<>();
 
@@ -172,7 +228,7 @@ public class ChattingActivity extends AppCompatActivity {
                 @Override
                 public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                     comments.clear(); // 항상 list는 선언한 뒤에 본격적으로 쓰기 전에 clear.
-                    userModel = dataSnapshot.getValue(UserModel.class);
+                    destinationUserModel = dataSnapshot.getValue(UserModel.class);
                     getMessageList();
                 }
 
@@ -220,7 +276,6 @@ public class ChattingActivity extends AppCompatActivity {
         public void onBindViewHolder(@NonNull RecyclerView.ViewHolder holder, int position) {
 
             MessageViewHolder messageViewHolder = ((MessageViewHolder)holder);
-
             // 내가 보낸 매세지
             if(comments.get(position).uid.equals(uid)){
                 messageViewHolder.textView_message.setText(comments.get(position).message);
@@ -231,10 +286,10 @@ public class ChattingActivity extends AppCompatActivity {
                 // 상대방이 보낸 메세지
             }else {
                 Glide.with(holder.itemView.getContext())
-                        .load(userModel.profileImageUrl)
+                        .load(destinationUserModel.profileImageUrl)
                         .apply(new RequestOptions().circleCrop())
                         .into(messageViewHolder.imageView_profile);
-                messageViewHolder.textview_name.setText(userModel.userName);
+                messageViewHolder.textview_name.setText(destinationUserModel.userName);
                 messageViewHolder.linearLayout_destination.setVisibility(View.VISIBLE);
                 messageViewHolder.textView_message.setBackgroundResource(R.drawable.leftbubble);
                 messageViewHolder.textView_message.setText(comments.get(position).message);
