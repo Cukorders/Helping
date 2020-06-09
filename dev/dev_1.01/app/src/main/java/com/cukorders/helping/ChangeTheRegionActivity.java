@@ -29,8 +29,6 @@ import com.google.android.gms.location.LocationServices;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
-import com.google.firebase.auth.FirebaseAuth;
-import com.google.firebase.auth.FirebaseUser;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -44,11 +42,11 @@ import java.net.URL;
 import java.util.ArrayList;
 import java.util.List;
 
-import static com.cukorders.helping.LoadingActivity.*;
+import static com.cukorders.helping.LoadingActivity.loadingActivity;
 
-public class ChooseTheRegionActivity  extends AppCompatActivity {
+public class ChangeTheRegionActivity extends AppCompatActivity {
 
-    public static Context regional_certification1;
+    public static Context changeTheRegion;
     private static final int REQUEST_CODE = 101;
     private FusedLocationProviderClient mFusedLocationClient;
     private LocationManager locationManager;
@@ -61,10 +59,11 @@ public class ChooseTheRegionActivity  extends AppCompatActivity {
     private String errorMsg="위치 정보를 가져오는데 실패하였습니다.";
     private static String defaultURL="https://maps.googleapis.com/maps/api/geocode/json?address=";
     private String lats[],lngs[];
-    private static FirebaseUser firebaseUser;
     private int select=0;
     private boolean myPlace;
     private int cnt;
+    private int change;
+    public static String changedRegion;
     Handler handler=new Handler();
 
     // 주변 행정동들 검색할 때 주변 2km 내 행정동들을 불러오기
@@ -74,7 +73,7 @@ public class ChooseTheRegionActivity  extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.regional_certification1);
+        setContentView(R.layout.region_change);
 
         findViewById(R.id.bt_back).setOnClickListener(OnClickListener);
         findViewById(R.id.currentLocation).setOnClickListener(OnClickListener);
@@ -85,12 +84,10 @@ public class ChooseTheRegionActivity  extends AppCompatActivity {
         editTextQuery=(TextView) findViewById(R.id.editTextQuery);
         geocoder=new Geocoder(this);
         search_result=(ListView) findViewById(R.id.search_result);
-        regional_certification1=this;
+        changeTheRegion=this;
         myPlace=((MyPlaceActivity)MyPlaceActivity.myPlaceActivity).fromMyPlaceActivity;
         cnt=((LoadingActivity) loadingActivity).loc_cnt;
-        firebaseUser= FirebaseAuth.getInstance().getCurrentUser();
-        Log.d("myPlace value","myPlace value is "+myPlace);
-        Log.d("cnt value","cnt의 값은 "+String.valueOf(cnt));
+        change=((MyPlaceActivity)MyPlaceActivity.myPlaceActivity).changingIndex;
 
         // 엔터키를 누를 시 줄바꿈이 아니라 검색 버튼이 눌렸을 때랑 같은 이벤트가 발생하기 위한 코드
         editTextQuery.setOnKeyListener(new View.OnKeyListener() {
@@ -113,7 +110,7 @@ public class ChooseTheRegionActivity  extends AppCompatActivity {
         public void onClick(View v) {
             switch(v.getId()){
                 case R.id.bt_back:
-                    goBack(); // 뒤로 가기-> 첫 화면
+                    goBack(); // 뒤로 가기-> 화면 설정 페이지
                     break;
 
                 case R.id.SearchLocationButton:
@@ -136,7 +133,7 @@ public class ChooseTheRegionActivity  extends AppCompatActivity {
     }
 
     private void goBack(){
-        Intent intent=new Intent(this,LoadingActivity.class);
+        Intent intent=new Intent(this,MyPageActivity.class);
         startActivity(intent);
     }
 
@@ -183,7 +180,7 @@ public class ChooseTheRegionActivity  extends AppCompatActivity {
                     if(size>0){
                         final String array[]=dongs.toArray(new String[0]);
                         Log.d("size of the array","the size of the array is "+String.valueOf(array.length));
-                        AlertDialog.Builder builder=new AlertDialog.Builder(ChooseTheRegionActivity.this);
+                        AlertDialog.Builder builder=new AlertDialog.Builder(ChangeTheRegionActivity.this);
                         builder.setTitle("주변 위치 검색 결과입니다.");
                         builder.setSingleChoiceItems(array, select, new DialogInterface.OnClickListener() {
                             @Override
@@ -197,12 +194,21 @@ public class ChooseTheRegionActivity  extends AppCompatActivity {
                                     ((LoadingActivity)LoadingActivity.loadingActivity).userLoc[cnt]=array[select];
                                 }*/
                                 Log.e("userLocation_search","the value of a parameter called userLocation in ChooseTheRegionActivity is "+userLocation);
-                                ((LoadingActivity) loadingActivity).loc_cnt=cnt+1;
-                                if(firebaseUser==null){
-                                ((LoadingActivity) loadingActivity).loc.set(0,array[select]);
-                                }
+                             //   ((LoadingActivity) loadingActivity).loc_cnt=cnt+1;
                                 Log.d("loc_cnt","loc_cnt = "+String.valueOf(((LoadingActivity) loadingActivity).loc_cnt));
-                                startActivity(new Intent(context,RegionActivity.class));
+                                if(((LoadingActivity) loadingActivity).loc.size()==change){
+                                    ((LoadingActivity) loadingActivity).loc.add(array[select]);
+                                    for(int i=0;i<((LoadingActivity) loadingActivity).loc.size();++i){
+                                        Log.d("loc","loc 원소: "+((LoadingActivity)loadingActivity).loc.get(i));
+                                    }
+                                }else{
+                                    ((LoadingActivity)loadingActivity).loc.set(change,array[select]);
+                                    for(int i=0;i<((LoadingActivity) loadingActivity).loc.size();++i){
+                                        Log.d("loc","loc 원소: "+((LoadingActivity)loadingActivity).loc.get(i));
+                                    }
+                                }
+                                Toast.makeText(context,"지역 수정이 완료되었습니다.",Toast.LENGTH_LONG).show();
+                                startActivity(new Intent(context,MyPlaceActivity.class));
                             }
                         }).setNegativeButton("취소",null);
                         builder.show();
@@ -317,7 +323,7 @@ public class ChooseTheRegionActivity  extends AppCompatActivity {
                 }
 
                     // ListView에 클릭 이벤트를 적용하는 것이 까다로워 검색 결과 창을 따로 띄운다.
-                    AlertDialog.Builder builder=new AlertDialog.Builder(ChooseTheRegionActivity.this);
+                    AlertDialog.Builder builder=new AlertDialog.Builder(ChangeTheRegionActivity.this);
                     builder.setTitle(userLocation+"에 관한 검색 결과입니다.");
                     builder.setSingleChoiceItems(addresses, select, new DialogInterface.OnClickListener() {
                         @Override
@@ -333,15 +339,25 @@ public class ChooseTheRegionActivity  extends AppCompatActivity {
                             } catch (IOException e) {
                                 e.printStackTrace();
                             }
-                            if(firebaseUser==null){
-                                ((LoadingActivity) loadingActivity).loc.set(0,addr.get(0).getThoroughfare());
+                            if(((LoadingActivity) loadingActivity).loc.size()+1<change){
+                                ((LoadingActivity) loadingActivity).loc.add(addr.get(0).getThoroughfare());
+                                for(int i=0;i<((LoadingActivity) loadingActivity).loc.size();++i){
+                                    Log.d("loc","loc 원소: "+((LoadingActivity)loadingActivity).loc.get(i));
+                                }
+                            }else{
+                                ((LoadingActivity)loadingActivity).loc.set(change,addr.get(0).getThoroughfare());
+                                for(int i=0;i<((LoadingActivity) loadingActivity).loc.size();++i){
+                                    Log.d("loc","loc 원소: "+((LoadingActivity)loadingActivity).loc.get(i));
+                                }
                             }
+                            Toast.makeText(context,"지역 수정이 완료되었습니다.",Toast.LENGTH_LONG).show();
+                            startActivity(new Intent(context,MyPlaceActivity.class));
                             Log.e("userLocation_search","the value of a parameter called userLocation in ChooseTheRegionActivity is "+userLocation);
                             for(int i = 0; i<((LoadingActivity) loadingActivity).loc.size(); ++i)
                                 Log.d("userLoc","전역 변수 userLoc["+String.valueOf(i)+"] = "+((LoadingActivity) loadingActivity).loc.get(i));
                             Log.d("loc_cnt","loc_cnt = "+String.valueOf(((LoadingActivity) loadingActivity).loc_cnt));
                             Log.d("loc size","연결리스트 loc의 크기: "+((LoadingActivity)LoadingActivity.loadingActivity).loc.size());
-                            startActivity(new Intent(context,RegionActivity.class));
+                            startActivity(new Intent(context,MyPlaceActivity.class));
                         }
                     }).setNegativeButton("취소",null);
                     builder.show();

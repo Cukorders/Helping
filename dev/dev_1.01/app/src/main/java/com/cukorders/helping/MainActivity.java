@@ -15,6 +15,7 @@ import android.widget.ImageButton;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
+import androidx.annotation.NonNull;
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.viewpager.widget.ViewPager;
@@ -27,6 +28,11 @@ import com.google.android.material.tabs.TabItem;
 import com.google.android.material.tabs.TabLayout;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
 
 
 public class MainActivity extends AppCompatActivity {
@@ -37,7 +43,7 @@ public class MainActivity extends AppCompatActivity {
     private final Context context=this;
     private ImageButton filter;
     private FirebaseUser firebaseUser=FirebaseAuth.getInstance().getCurrentUser();
-
+    private DatabaseReference databaseReference;
     private TabLayout tabLayout;
     private ViewPager viewPager;
     private TabItem tab1,tab2;
@@ -47,6 +53,7 @@ public class MainActivity extends AppCompatActivity {
     public static Context mainActivity;
     public String mainLocation="";
     private TextView nowLocation;
+    private String checkKey;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -73,9 +80,33 @@ public class MainActivity extends AppCompatActivity {
         findViewById(R.id.go_to_mypage).setOnClickListener(onClickListener);
         //findViewById(R.id.filter).setOnClickListener(onClickListener);
 
-        locationCertification= ((LoadingActivity)LoadingActivity.loadingActivity).isCertified[0];
+        locationCertification= true;
         Log.d("Main-locCertification","locCertification: "+locationCertification);
 
+        if(firebaseUser!=null){
+        databaseReference= FirebaseDatabase.getInstance().getReference().child("userRegions").child(firebaseUser.getUid());
+        databaseReference.addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                for(DataSnapshot snapshot:dataSnapshot.getChildren()){
+                    String key= snapshot.getKey();
+                    Log.d("value","유저 key: "+key);
+                    if(snapshot.getValue().toString().equals(RecentMissionFragment.location_now)){
+                        checkKey=key+" state";
+                    }else if(key.equals(checkKey)){
+                        Log.d("key값","지역인증 여부: "+snapshot.getValue().toString());
+                        if(snapshot.getValue().toString().equals("default")||snapshot.getValue().toString().equals("false")){
+                            locationCertification=false;
+                            Log.d("locationCertification","locationCertification 값: "+locationCertification);
+                        }
+                    }
+                }
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError databaseError) {}
+        });
+        }
         fab_plus.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -115,7 +146,6 @@ public class MainActivity extends AppCompatActivity {
                         builder.setPositiveButton("지역인증 하기", new DialogInterface.OnClickListener() {
                             @Override
                             public void onClick(DialogInterface dialog, int which) {
-                                //TODO 지역인증 페이지로 넘기기
                                // mainLocation=((ChooseTheRegionActivity)ChooseTheRegionActivity.regional_certification1).userLocation;
                                 startActivity(new Intent(context,RegionActivity.class));
                             }

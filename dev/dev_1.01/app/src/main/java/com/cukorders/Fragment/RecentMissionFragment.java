@@ -51,6 +51,7 @@ public class RecentMissionFragment extends Fragment {
     private FirebaseUser firebaseUser= FirebaseAuth.getInstance().getCurrentUser();
     public static Boolean locCertification;
     public static Context recentMissionFragment;
+    private static DatabaseReference databaseReference;
     private LinearLayout linearLayout;
     private static Context context;
     private ImageButton filter;
@@ -60,6 +61,7 @@ public class RecentMissionFragment extends Fragment {
     public static String location_now;
     private DatabaseReference locRef;
     private Button bt_certificate;
+    private String checkKey;
 
     //DB에서  post 연결
     private DatabaseReference postRef;
@@ -71,9 +73,9 @@ public class RecentMissionFragment extends Fragment {
     //최근 미션 안에 들어갈 내용 넣음
     @Nullable
     @Override
-    public View onCreateView(@NonNull LayoutInflater inflater, @Nullable final ViewGroup container, @Nullable Bundle savedInstanceState) {
+    public View onCreateView(@NonNull final LayoutInflater inflater, @Nullable final ViewGroup container, @Nullable Bundle savedInstanceState) {
 
-        View view = inflater.inflate(R.layout.recent_mission,container,false);
+        final View view = inflater.inflate(R.layout.recent_mission,container,false);
         //recyclerview
         recentPostListsView = (RecyclerView) view.findViewById(R.id.main_recyclerview);
         recentPostListsView.setHasFixedSize(true);
@@ -102,9 +104,9 @@ public class RecentMissionFragment extends Fragment {
         });
         user_locations=(Spinner) view.findViewById(R.id.user_locations);
         arrayList=new ArrayList<>();
-        arrayList.add(((LoadingActivity)LoadingActivity.loadingActivity).userLoc[0]);
-        location_now=((LoadingActivity)LoadingActivity.loadingActivity).userLoc[0];
-        locCertification=((LoadingActivity)LoadingActivity.loadingActivity).isCertified[0];
+        arrayList.add(((LoadingActivity)LoadingActivity.loadingActivity).loc.get(0));
+        location_now=((LoadingActivity)LoadingActivity.loadingActivity).loc.get(0);
+        locCertification=true;
 
         user_locations.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
@@ -128,6 +130,28 @@ public class RecentMissionFragment extends Fragment {
             Log.d("유저 지역","유저 지역: "+arrayList.get(0));
         }else{
             setLocation();
+            databaseReference=FirebaseDatabase.getInstance().getReference().child("userRegions").child(firebaseUser.getUid());
+            databaseReference.addValueEventListener(new ValueEventListener() {
+                @Override
+                public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                    for(DataSnapshot snapshot:dataSnapshot.getChildren()){
+                        String key= snapshot.getKey();
+                        Log.d("value","유저 key: "+key);
+                        if(snapshot.getValue().toString().equals(location_now)){
+                            checkKey=key+" state";
+                        }else if(key.equals(checkKey)){
+                            if(snapshot.getValue().toString().equals("default")||snapshot.getValue().toString().equals("false")){
+                                locCertification=false;
+                                Log.d("locCertification","locCertification의 값: "+locCertification);
+                            }
+                        }
+                    }
+                }
+
+                @Override
+                public void onCancelled(@NonNull DatabaseError databaseError) {}
+            });
+
             if(!locCertification){
                 Log.e("not certified","지역 인증하지 않은 유저입니다.");
                 inflater.inflate(R.layout.not_certified,linearLayout,true);
@@ -141,6 +165,7 @@ public class RecentMissionFragment extends Fragment {
                 });
             }
         }
+
         arrayAdapter=new ArrayAdapter<>(getContext(),
                 android.R.layout.simple_spinner_dropdown_item,arrayList);
         user_locations.setAdapter(arrayAdapter);

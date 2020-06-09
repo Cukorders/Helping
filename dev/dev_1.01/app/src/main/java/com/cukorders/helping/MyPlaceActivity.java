@@ -12,6 +12,8 @@ import android.widget.Toast;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DataSnapshot;
@@ -20,6 +22,7 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 
 public class MyPlaceActivity extends AppCompatActivity {
@@ -32,9 +35,12 @@ public class MyPlaceActivity extends AppCompatActivity {
     private String changedLocation;
     public static Context myPlaceActivity;
     public static boolean fromMyPlaceActivity=false;
-    private static String user_regions[]=new String[3];
+    private static ArrayList<String> user_regions=new ArrayList<>();
     private static DatabaseReference databaseReference;
     private static FirebaseUser firebaseUser;
+    private static String uid;
+    private static boolean check[]=new boolean[3];
+    public static int changingIndex;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -43,8 +49,14 @@ public class MyPlaceActivity extends AppCompatActivity {
 
         context=this;
         myPlaceActivity=this;
-        databaseReference= FirebaseDatabase.getInstance().getReference().child("userRegions");
         firebaseUser= FirebaseAuth.getInstance().getCurrentUser();
+        uid=firebaseUser.getUid();
+        databaseReference= FirebaseDatabase.getInstance().getReference().child("userRegions").child(uid);
+        user_regions=((LoadingActivity)LoadingActivity.loadingActivity).loc;
+        for(int i=0;i<user_regions.size();++i){
+            Log.d("user_regions","user_regions의 값: "+user_regions.get(i));
+            Log.d("loc","loc의 값: "+((LoadingActivity)LoadingActivity.loadingActivity).loc.get(i));
+        }
 
         change[0]=(Button) findViewById(R.id.change1);
         change[1]=(Button) findViewById(R.id.change2);
@@ -60,16 +72,16 @@ public class MyPlaceActivity extends AppCompatActivity {
         for(int i=0;i<3;++i){
             change[i].setOnClickListener(onClickListener);
             delete[i].setOnClickListener(onClickListener);
+            check[i]=false;
         }
 
-        user_regions=((LoadingActivity)LoadingActivity.loadingActivity).userLoc;
+        user_regions=((LoadingActivity)LoadingActivity.loadingActivity).loc;
         findViewById(R.id.profileRegisterBt).setOnClickListener(onClickListener);
         findViewById(R.id.bt_back).setOnClickListener(onClickListener);
         for(int i=0;i<3;++i){
             change[i].setOnClickListener(onClickListener);
             delete[i].setOnClickListener(onClickListener);
         }
-       checkRegions();
         setTexts();
     }
 
@@ -82,39 +94,64 @@ public class MyPlaceActivity extends AppCompatActivity {
                     break;
 
                 case R.id.change1:
-                    changeRegion(region[0]);
+                    changingIndex=0;
+                    changeRegion(region[0],0);
                     break;
 
                 case R.id.change2:
-                    changeRegion(region[1]);
+                    changingIndex=1;
+                    changeRegion(region[1],1);
                     break;
 
                 case R.id.change3:
-                    changeRegion(region[2]);
+                    changingIndex=2;
+                    changeRegion(region[2],2);
                     break;
 
                 case R.id.delete1:
-                    delete(0);
+                    Toast.makeText(context,"하나 이상의 지역이 존재해야하므로 삭제가 불가능합니다.",Toast.LENGTH_LONG).show();
                     break;
 
                 case R.id.delete2:
-                    delete(1);
+                    //delete(1);
                     break;
 
                 case R.id.delete3:
-                    delete(2);
+                    //delete(2);
                     break;
 
                 case R.id.profileRegisterBt:
+                    HashMap<String,Object> update=new HashMap<>();
+                    databaseReference= FirebaseDatabase.getInstance().getReference().child("userRegions").child(firebaseUser.getUid());
                     databaseReference.addValueEventListener(new ValueEventListener() {
                         @Override
                         public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                            //TODO DB 업데이트하기
+                            for(DataSnapshot snapshot:dataSnapshot.getChildren()){
+                                String key= snapshot.getKey();
+                                Log.d("value","유저 key: "+key);
+                                if(key.contains("state")){
+                                check[(key.charAt(key.length()-1)-'0')-1]=snapshot.getValue().toString().equals("true")?true:false;
+                                Log.d("check","check의 값: "+(snapshot.getValue().toString().equals("true")?true:false));
+                                }
+                            }
                         }
 
                         @Override
-                        public void onCancelled(@NonNull DatabaseError databaseError) {
-
+                        public void onCancelled(@NonNull DatabaseError databaseError) {}
+                    });
+                    for(int i=0;i<3;++i){
+                        update.put("Region"+String.valueOf(i+1),(region[i].getText().toString().contains("지역")?"default":region[i].getText().toString()));
+                        update.put("Region"+String.valueOf(i+1),(check[i]?"true":"default"));
+                    }
+                    databaseReference.setValue(update).addOnCompleteListener(new OnCompleteListener<Void>() {
+                        @Override
+                        public void onComplete(@NonNull Task<Void> task) {
+                            if (task.isSuccessful()) {
+                                Toast.makeText(context,"지역 추가가 되었습니다.",Toast.LENGTH_LONG).show();
+                                Log.e("a post is uploaded", "a post is successfully uploaded");
+                            } else{
+                                Toast.makeText(context,"오류가 발생하여 지역 추가에 실패하였습니다. 잠시 후에 다시 시도해주십시오.",Toast.LENGTH_LONG).show();
+                            }
                         }
                     });
                     break;
@@ -123,35 +160,15 @@ public class MyPlaceActivity extends AppCompatActivity {
     };
 
 
-    private void changeRegion(TextView txt){
+    private void changeRegion(TextView txt,int index){
         //TODO DB에 지역 교체 업데이트
-        fromMyPlaceActivity=true;
-        Log.d("fromMyPlaceActivity","fromMyPlaceActivity 값: "+fromMyPlaceActivity);
-        startActivity(new Intent(context,ChooseTheRegionActivity.class));
+      //  fromMyPlaceActivity=true;
+       // Log.d("fromMyPlaceActivity","fromMyPlaceActivity 값: "+fromMyPlaceActivity);
+        startActivity(new Intent(context,ChangeTheRegionActivity.class));
         setTexts();
     }
 
-    private void delete(int index){
-        if(count()==1){ // 지역이 하나인데 삭제 시도 → 삭제할 수 없어야 한다.
-            Toast.makeText(context,"하나 이상의 지역이 있어야하므로 삭제할 수 없습니다.",Toast.LENGTH_LONG).show();
-        } else{
-            databaseReference.addValueEventListener(new ValueEventListener() {
-                @Override
-                public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-
-                }
-
-                @Override
-                public void onCancelled(@NonNull DatabaseError databaseError) {
-
-                }
-            });
-            checkRegions();
-            setTexts();
-        }
-    }
-
-    private void checkRegions(){
+   /* private void checkRegions(){
         databaseReference.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
@@ -159,8 +176,8 @@ public class MyPlaceActivity extends AppCompatActivity {
                     String key=snapshot.getKey();
                     HashMap<String,String> info=(HashMap<String,String>) snapshot.getValue();
                     for(int i=0;i<3;++i){
-                        user_regions[i]=info.get("Region"+String.valueOf(i+1));
-                        Log.d("user_regions","user_regions["+String.valueOf(i)+"]의 값: "+user_regions[i]);
+                       // user_regions[i]=info.get("Region"+String.valueOf(i+1));
+                       // Log.d("user_regions","user_regions["+String.valueOf(i)+"]의 값: "+user_regions[i]);
                     }
                 }
             }
@@ -171,18 +188,16 @@ public class MyPlaceActivity extends AppCompatActivity {
             }
         });
     }
+    */
 
     private void setTexts(){
-        for(int i=0;i<3;++i)
-            region[i].setText((user_regions[i].equals("default")?("지역 "+String.valueOf(i+1)):user_regions[i]));
+        int size=user_regions.size();
+        Log.d("loc size","loc 배열 크기: "+size);
+        for(int i=0;i<size;++i)
+            region[i].setText(user_regions.get(i));
+        if(size==3) return;
+        for(int i=size;i<3;++i)
+            region[i].setText("지역 "+(i+1));
     }
 
-    private int count(){
-        int ret=0;
-        for(int i=0;i<3;++i)
-            if(user_regions[i].equals("default")){
-                ++ret;
-            }
-        return ret;
-    }
 }

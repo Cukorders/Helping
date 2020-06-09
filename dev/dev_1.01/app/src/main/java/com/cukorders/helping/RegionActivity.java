@@ -79,6 +79,7 @@ public class RegionActivity  extends FragmentActivity implements OnMapReadyCallb
     private Marker marker=null;
     private Geocoder geocoder;
     private LocationManager locationManager;
+    private ArrayList<String> now=new ArrayList<>();
     private boolean mLocationPermissionGranted=false;
     private Location currentLocation;
     private String compare;
@@ -120,7 +121,9 @@ public class RegionActivity  extends FragmentActivity implements OnMapReadyCallb
         arrayList=new ArrayList<>();
         arrayAdapter=new ArrayAdapter<>(getApplicationContext(),
                 android.R.layout.simple_spinner_dropdown_item,arrayList);
+       /*
         for(int i=0;i<3;++i){
+
             loc[i]=((LoadingActivity)LoadingActivity.loadingActivity).userLoc[i];
             if(loc[i]==null) loc[i]="default";
             Log.d("loc[i]의 값","loc["+String.valueOf(i)+"] = "+loc[i]);
@@ -132,8 +135,16 @@ public class RegionActivity  extends FragmentActivity implements OnMapReadyCallb
             }
             arrayList.add(loc[i]);
             Log.d("arrayList","새 원소 "+arrayList.get(i)+"가 추가되었습니다.");
-        }
+        }*/
 
+       Log.d("loc size","연결리스트 loc의 크기: "+((LoadingActivity)LoadingActivity.loadingActivity).loc.size());
+       for(int i=0;i<((LoadingActivity)LoadingActivity.loadingActivity).loc.size();++i){
+           String str=(((LoadingActivity)LoadingActivity.loadingActivity).loc).get(i);
+           if(str.equals("default")) continue;
+           arrayList.add(str);
+       }
+
+       compare=arrayList.get(0);
         spinner.setAdapter(arrayAdapter);
         spinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
@@ -171,10 +182,12 @@ public class RegionActivity  extends FragmentActivity implements OnMapReadyCallb
                             uid=FirebaseAuth.getInstance().getCurrentUser().getUid();
                             databaseReference= FirebaseDatabase.getInstance().getReference().child("userRegions").child(uid);
                             int index=0;
-                            for(index=0;index<3;++index)
-                                if(dong.equals(loc[index])){
+                            for(;index<3;++index){
+                                if(compare.equals(dong)){
+                                    Log.d("지역 인증 여부 업데이트",compare+"의 지역 인증여부가 업데이트 되었습니다.");
                                     break;
                                 }
+                            }
                             Map<String, Object> updates=new HashMap<String, Object>();
                                 updates.put("Region"+String.valueOf(index+1)+" state",true);
                                 Log.d("지역 인증 업데이트","지역 인증이 업데이트 되었습니다.");
