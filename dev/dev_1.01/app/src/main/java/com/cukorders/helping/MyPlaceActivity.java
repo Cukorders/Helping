@@ -64,6 +64,11 @@ public class MyPlaceActivity extends AppCompatActivity {
 
         user_regions=((LoadingActivity)LoadingActivity.loadingActivity).userLoc;
         findViewById(R.id.profileRegisterBt).setOnClickListener(onClickListener);
+        findViewById(R.id.bt_back).setOnClickListener(onClickListener);
+        for(int i=0;i<3;++i){
+            change[i].setOnClickListener(onClickListener);
+            delete[i].setOnClickListener(onClickListener);
+        }
        checkRegions();
         setTexts();
     }

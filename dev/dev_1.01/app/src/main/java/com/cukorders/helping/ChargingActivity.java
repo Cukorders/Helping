@@ -88,8 +88,21 @@ public class ChargingActivity extends AppCompatActivity {
         public void onClick(View v) {
             switch (v.getId()){
                 case R.id.bt_charge:
+                    if(points.getText().toString().equals("")){
+                        AlertDialog.Builder builder=new AlertDialog.Builder(context);
+                        builder.setTitle("입력 에러");
+                        builder.setMessage("금액을 입력해주세요");
+                        builder.setPositiveButton("확인", null).setNegativeButton("취소",null);
+                        builder.show();
+                    }else{
                     int input=Integer.parseInt(points.getText().toString());
-                    if(input%1000>0){
+                    if(input<0){
+                        AlertDialog.Builder builder=new AlertDialog.Builder(context);
+                        builder.setTitle("입력 에러");
+                        builder.setMessage("금액은 0 이상이어야 합니다.");
+                        builder.setPositiveButton("확인", null).setNegativeButton("취소",null);
+                        builder.show();
+                    }else if(input%1000>0){
                         AlertDialog.Builder builder=new AlertDialog.Builder(context);
                         builder.setTitle("충전 에러");
                         builder.setMessage("1000원 단위로 충전이 가능합니다. 다시 입력해주세요.");
@@ -101,6 +114,7 @@ public class ChargingActivity extends AppCompatActivity {
                         databaseReference.child(uid).updateChildren(information);
                         Toast.makeText(context,"충전이 완료되었습니다.",Toast.LENGTH_LONG).show();
                         current_point.setText(Integer.toString(db_point+input));
+                    }
                     }
                     break;
 

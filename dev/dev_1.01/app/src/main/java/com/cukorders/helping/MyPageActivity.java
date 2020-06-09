@@ -50,6 +50,7 @@ public class MyPageActivity extends AppCompatActivity {
         findViewById(R.id.bt_choose_region).setOnClickListener(onClickListener);
         findViewById(R.id.bt_faq).setOnClickListener(onClickListener);
         findViewById(R.id.bt_point).setOnClickListener(onClickListener);
+        findViewById(R.id.bt_setting).setOnClickListener(onClickListener);
         findViewById(R.id.bt_regional_certification).setOnClickListener(onClickListener);
 
         firebaseUser= FirebaseAuth.getInstance().getCurrentUser();
@@ -120,6 +121,10 @@ public class MyPageActivity extends AppCompatActivity {
 
                 case R.id.bt_regional_certification:
                     startActivity(new Intent(context,RegionActivity.class));
+                    break;
+
+                case R.id.bt_setting:
+                    startActivity(new Intent(context,SettingActivity.class));
                     break;
             }
         }

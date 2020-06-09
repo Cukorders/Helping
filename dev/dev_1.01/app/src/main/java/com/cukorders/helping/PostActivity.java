@@ -2,7 +2,6 @@ package com.cukorders.helping;
 
 import android.annotation.SuppressLint;
 import android.app.DatePickerDialog;
-import android.app.TimePickerDialog;
 import android.content.Context;
 import android.content.Intent;
 import android.database.Cursor;
@@ -20,7 +19,6 @@ import android.widget.ImageButton;
 import android.widget.RelativeLayout;
 import android.widget.Spinner;
 import android.widget.TextView;
-import android.widget.TimePicker;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
@@ -303,30 +301,30 @@ public class PostActivity extends AppCompatActivity {
     View.OnClickListener setTime=new View.OnClickListener() {
         @Override
         public void onClick(View v) {
-            new DatePickerDialog(context, datePicker, calendar.get(Calendar.YEAR), calendar.get(Calendar.MONTH), calendar.get(Calendar.DAY_OF_MONTH)).show();
-            Calendar time=Calendar.getInstance();
-            int hour=time.get(Calendar.HOUR_OF_DAY);
-            int minute=time.get(Calendar.MINUTE);
-            TimePickerDialog timePickerDialog;
-            timePickerDialog=new TimePickerDialog(context,R.layout.timepicker,new TimePickerDialog.OnTimeSetListener() {
-                @Override
-                public void onTimeSet(TimePicker view, int hourOfDay, int minute) {
-                    String state="AM";
-                    if(hourOfDay>12){
-                        hourOfDay-=12;
-                        state="PM";
-                    }
-                }
-            },hour,minute,false);
-            timePickerDialog.setTitle((v.getId()==R.id.endTime?"미션 완료 시간":"취소 가능 시간")+"을 선택하시오.");
-            if(v.getId()==R.id.endTime){
 
-            }
-            else{
+            switch (v.getId()){
+                case R.id.endTime:
+                    select_times();
+                    Log.e("selectedTime의 값","selectedTime= "+CustomPicker.selectedTime);
+                    endTime.setText(CustomPicker.selectedTime);
+                    Log.e("endTime","endTime의 값 = "+endTime.getText());
+                    break;
 
+                case R.id.cancelTime:
+                    select_times();
+                    Log.e("selectedTime의 값","selectedTime= "+CustomPicker.selectedTime);
+                    cancelTime.setText(CustomPicker.selectedTime);
+                    Log.e("cancelTime","cancelTime의 값: "+cancelTime.getText());
+                    break;
             }
+
         }
     };
+
+    private void select_times(){
+        CustomPicker customPicker=new CustomPicker(context);
+        customPicker.show();
+    }
 
     View.OnClickListener addPhoto=new View.OnClickListener() {
         @Override
@@ -454,9 +452,14 @@ public class PostActivity extends AppCompatActivity {
         public String getCancelTime(){return cancelTime;}
         public String getPlace(){return place;}
         public String getUid(){return uid;}
+        public String getPostKey(){return postKey;}
+        public String getCategory(){return category;}
+        public String getLocation(){return location;}
         public int getPay(){return pay;}
         public int getDue(){return due;}
         public int getPrice(){return price;}
+        public boolean isMatched(){return isMatched;}
+        public boolean isFinished(){return isFinished;}
         public boolean isSameGender(){return sameGender;}
 
         public Map<String,Object> toMap(){
