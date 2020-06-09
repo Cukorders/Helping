@@ -1,6 +1,8 @@
 package com.cukorders.helping;
 
 import android.annotation.SuppressLint;
+import android.app.DatePickerDialog;
+import android.app.TimePickerDialog;
 import android.content.Context;
 import android.content.Intent;
 import android.database.Cursor;
@@ -13,10 +15,12 @@ import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
+import android.widget.DatePicker;
 import android.widget.ImageButton;
 import android.widget.RelativeLayout;
 import android.widget.Spinner;
 import android.widget.TextView;
+import android.widget.TimePicker;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
@@ -37,14 +41,17 @@ import com.google.firebase.storage.StorageReference;
 import com.google.firebase.storage.UploadTask;
 import com.theartofdev.edmodo.cropper.CropImage;
 
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.HashMap;
+import java.util.Locale;
 import java.util.Map;
 import java.util.Random;
 
 public class PostActivity extends AppCompatActivity {
 
-    public final Context regional_certification2=this;
+    public Context postActivity;
     private final Context context=this;
     private boolean sameGender;
     private boolean ageChecked[]=new boolean[5]; // 연령이 체크 됐는지 안 됐는지를 확인 여부
@@ -70,6 +77,15 @@ public class PostActivity extends AppCompatActivity {
     private StorageReference storageReference;
     private static StorageReference firebaseStorage;
     private static int count=0;
+    private static Calendar calendar;
+    private static DatePickerDialog.OnDateSetListener datePicker=new DatePickerDialog.OnDateSetListener() {
+        @Override
+        public void onDateSet(DatePicker view, int year, int month, int dayOfMonth) {
+            calendar.set(Calendar.YEAR,year);
+            calendar.set(Calendar.MONTH,month);
+            calendar.set(Calendar.DAY_OF_MONTH,dayOfMonth);
+        }
+    };
 
     private String imagePath;
     private String images[]=new String[3];
@@ -126,8 +142,11 @@ public class PostActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.write_post);
 
+        postActivity=this;
         firebaseStorage=FirebaseStorage.getInstance().getReference();
         uid=user.getUid();
+        calendar=Calendar.getInstance();
+
         title=(TextView) findViewById(R.id.title);
         due=(TextView) findViewById(R.id.due);
         pay=(TextView) findViewById(R.id.pay);
@@ -199,6 +218,10 @@ public class PostActivity extends AppCompatActivity {
         findViewById(R.id.camera_album_add2).setOnClickListener(addPhoto);
         findViewById(R.id.camera_album_add3).setOnClickListener(addPhoto);
 
+        // 날짜 선택
+        findViewById(R.id.endTime).setOnClickListener(setTime);
+        findViewById(R.id.cancelTime).setOnClickListener(setTime);
+
         bt_same=(Button) findViewById(R.id.bt_same);
         bt_dontMind=(Button) findViewById(R.id.bt_dontMind);
         age[0]=(Button) findViewById(R.id.button10s);
@@ -218,6 +241,12 @@ public class PostActivity extends AppCompatActivity {
         nowLocation= RecentMissionFragment.location_now;
         for(int i=0;i<3;++i)
             images[i]="default";
+    }
+
+    private void updateLabel(TextView txt){
+        String format="yyyy/MM/dd";
+        SimpleDateFormat simpleDateFormat=new SimpleDateFormat(format, Locale.KOREA);
+        txt.setText(simpleDateFormat.format(calendar.getTime()));
     }
 
     private String getRandomString(int length) {
@@ -267,6 +296,34 @@ public class PostActivity extends AppCompatActivity {
                     });
                     startActivity(new Intent(context, MainActivity.class));
                     break;
+            }
+        }
+    };
+
+    View.OnClickListener setTime=new View.OnClickListener() {
+        @Override
+        public void onClick(View v) {
+            new DatePickerDialog(context, datePicker, calendar.get(Calendar.YEAR), calendar.get(Calendar.MONTH), calendar.get(Calendar.DAY_OF_MONTH)).show();
+            Calendar time=Calendar.getInstance();
+            int hour=time.get(Calendar.HOUR_OF_DAY);
+            int minute=time.get(Calendar.MINUTE);
+            TimePickerDialog timePickerDialog;
+            timePickerDialog=new TimePickerDialog(context,R.layout.timepicker,new TimePickerDialog.OnTimeSetListener() {
+                @Override
+                public void onTimeSet(TimePicker view, int hourOfDay, int minute) {
+                    String state="AM";
+                    if(hourOfDay>12){
+                        hourOfDay-=12;
+                        state="PM";
+                    }
+                }
+            },hour,minute,false);
+            timePickerDialog.setTitle((v.getId()==R.id.endTime?"미션 완료 시간":"취소 가능 시간")+"을 선택하시오.");
+            if(v.getId()==R.id.endTime){
+
+            }
+            else{
+
             }
         }
     };
@@ -441,6 +498,7 @@ public class PostActivity extends AppCompatActivity {
                     .setAspectRatio(1,1)
                     .start(this);
         }
+
         //crop에 성공하면 result에 담고, resultUri에 저장
         if(requestCode==CropImage.CROP_IMAGE_ACTIVITY_REQUEST_CODE){
             CropImage.ActivityResult result = CropImage.getActivityResult(data);

@@ -229,7 +229,6 @@ public class RegionActivity  extends FragmentActivity implements OnMapReadyCallb
                 if (location != null) {
                     currentLocation = location;
                     Log.d("current Location is ",currentLocation.toString());
-                    //Toast.makeText(getApplicationContext(), currentLocation.getLatitude() + " " + currentLocation.getLongitude(), Toast.LENGTH_SHORT).show();
                     LatLng now=new LatLng(currentLocation.getLatitude(),currentLocation.getLongitude());
                     List<Address> addr = null;
                     String loc="";

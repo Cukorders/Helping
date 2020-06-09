@@ -22,7 +22,6 @@ public class FilterActivity extends AppCompatActivity {
     private static DatabaseReference databaseReference;
     private static boolean isSame;
 
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);

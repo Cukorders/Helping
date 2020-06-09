@@ -86,6 +86,10 @@ public class MyPageActivity extends AppCompatActivity {
         @Override
         public void onClick(View v) {
             switch(v.getId()){
+                case R.id.bt_point:
+                    startActivity(new Intent(context,ChargingActivity.class));
+                    break;
+
                 case R.id.bt_fav:
                     startActivity(new Intent(context,MissionActivity.class));
                     break;

@@ -54,6 +54,7 @@
         <activity android:name=".MyPlaceActivity"/>
         <activity android:name=".FAQActivity"/>
         <activity android:name=".HistoryActivity"/>
+        <activity android:name=".ChargingActivity"/>
         <activity android:name="com.theartofdev.edmodo.cropper.CropImageActivity"
             android:theme="@style/Base.Theme.AppCompat"/>
     </application>

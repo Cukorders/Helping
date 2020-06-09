@@ -12,6 +12,8 @@ import android.widget.Toast;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
@@ -26,11 +28,13 @@ public class MyPlaceActivity extends AppCompatActivity {
     private TextView region[]=new TextView[3];
     private Button change[]=new Button[3];
     private Button delete[]=new Button[3];
+    private Button profileRegister;
     private String changedLocation;
     public static Context myPlaceActivity;
     public static boolean fromMyPlaceActivity=false;
     private static String user_regions[]=new String[3];
     private static DatabaseReference databaseReference;
+    private static FirebaseUser firebaseUser;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -40,6 +44,7 @@ public class MyPlaceActivity extends AppCompatActivity {
         context=this;
         myPlaceActivity=this;
         databaseReference= FirebaseDatabase.getInstance().getReference().child("userRegions");
+        firebaseUser= FirebaseAuth.getInstance().getCurrentUser();
 
         change[0]=(Button) findViewById(R.id.change1);
         change[1]=(Button) findViewById(R.id.change2);
@@ -50,6 +55,7 @@ public class MyPlaceActivity extends AppCompatActivity {
         region[0]=(TextView) findViewById(R.id.region1);
         region[1]=(TextView) findViewById(R.id.region2);
         region[2]=(TextView) findViewById(R.id.region3);
+        profileRegister=(Button) findViewById(R.id.profileRegisterBt);
 
         for(int i=0;i<3;++i){
             change[i].setOnClickListener(onClickListener);
@@ -57,6 +63,7 @@ public class MyPlaceActivity extends AppCompatActivity {
         }
 
         user_regions=((LoadingActivity)LoadingActivity.loadingActivity).userLoc;
+        findViewById(R.id.profileRegisterBt).setOnClickListener(onClickListener);
        checkRegions();
         setTexts();
     }
@@ -91,6 +98,20 @@ public class MyPlaceActivity extends AppCompatActivity {
 
                 case R.id.delete3:
                     delete(2);
+                    break;
+
+                case R.id.profileRegisterBt:
+                    databaseReference.addValueEventListener(new ValueEventListener() {
+                        @Override
+                        public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                            //TODO DB 업데이트하기
+                        }
+
+                        @Override
+                        public void onCancelled(@NonNull DatabaseError databaseError) {
+
+                        }
+                    });
                     break;
             }
         }
