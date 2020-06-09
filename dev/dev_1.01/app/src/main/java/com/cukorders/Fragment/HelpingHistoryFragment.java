@@ -1,6 +1,10 @@
 package com.cukorders.Fragment;
 
 import android.os.Bundle;
+import android.util.Log;
+import android.view.LayoutInflater;
+import android.view.View;
+import android.view.ViewGroup;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -9,19 +13,9 @@ import androidx.recyclerview.widget.DefaultItemAnimator;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
-import android.renderscript.Script;
-import android.util.Log;
-import android.view.LayoutInflater;
-import android.view.View;
-import android.view.ViewGroup;
-import android.widget.TextView;
-
-import com.cukorders.Adapter.PostAdapter;
 import com.cukorders.Adapter.PostAdapter_helping;
-import com.cukorders.Adapter.PostAdapter_request;
 import com.cukorders.helping.InitPost;
 import com.cukorders.helping.R;
-import com.cukorders.helping.postGet;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DataSnapshot;
@@ -31,17 +25,12 @@ import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.Query;
 import com.google.firebase.database.ValueEventListener;
 
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Date;
-import java.util.HashMap;
-import java.util.Locale;
 
 /**
  * A simple {@link Fragment} subclass.
  */
-public class HelpingFragment extends Fragment {
+public class HelpingHistoryFragment extends Fragment {
 
     private static final String TAG = "RequestingFragment";
 
@@ -51,17 +40,13 @@ public class HelpingFragment extends Fragment {
     private ArrayList<InitPost> mPost=new ArrayList<InitPost>();
 
     private DatabaseReference mHelperPostRef;
-    private DatabaseReference getPostuidRef;
 
     private FirebaseAuth mAuth;
     private FirebaseUser mCurrentUser;
     private String mUid="";
 
-    private String currentTime;
-    private SimpleDateFormat sdf;
-
     //todo 의뢰중인 미션
-    public HelpingFragment(){
+    public HelpingHistoryFragment(){
 
     }
     @Nullable
@@ -87,14 +72,10 @@ public class HelpingFragment extends Fragment {
 
         //client postref
         mHelperPostRef = FirebaseDatabase.getInstance().getReference().child("Posting");
-        getPostuidRef = FirebaseDatabase.getInstance().getReference().child("Chat_list_helper");
-
-        //getCurrentTime
-        sdf = new SimpleDateFormat("yyyyMMddHHmm", Locale.getDefault());
-        currentTime = sdf.format(new Date());
 
         return view;
     }
+
 
     @Override
     public void onStart() {

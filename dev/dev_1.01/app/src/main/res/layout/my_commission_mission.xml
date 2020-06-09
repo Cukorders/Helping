@@ -23,7 +23,7 @@
             >
         </ImageButton>
         <TextView
-            android:id="@+id/recent_mission"
+            android:id="@+id/now_requesting_mission"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:text= "의뢰중인 미션"
@@ -34,7 +34,7 @@
         <Button
             android:layout_width="wrap_content"
             android:layout_height="match_parent"
-            android:layout_alignRight="@+id/recent_mission"
+            android:layout_alignRight="@+id/now_requesting_mission"
             android:gravity="center"
             android:text="신고하기"
             android:textSize="18sp"

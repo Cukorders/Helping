@@ -11,11 +11,8 @@ import androidx.viewpager.widget.ViewPager;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.TextView;
 
-import com.cukorders.Adapter.PageAdapter;
 import com.cukorders.Adapter.PageAdapter_Mycalling;
-import com.cukorders.Adapter.SectionPageAdapter;
 import com.cukorders.helping.R;
 import com.google.android.material.tabs.TabItem;
 import com.google.android.material.tabs.TabLayout;
@@ -77,7 +74,5 @@ public class MyCallingFragment extends Fragment {
         adapter.addFragment(new RequestingFragment(),"의뢰중인 미션");
 
         viewPager.setAdapter(adapter);
-
-
     }
 }

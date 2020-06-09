@@ -1,7 +1,5 @@
 package com.cukorders.Fragment;
 
-import android.content.Context;
-import android.content.Intent;
 import android.os.Bundle;
 
 import androidx.annotation.NonNull;
@@ -10,22 +8,15 @@ import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.DefaultItemAnimator;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
-import androidx.viewpager.widget.ViewPager;
 
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ImageView;
-import android.widget.TextView;
 
 import com.cukorders.Adapter.PostAdapter;
-import com.cukorders.Adapter.SectionPageAdapter;
 import com.cukorders.helping.InitPost;
 import com.cukorders.helping.R;
-import com.firebase.ui.database.FirebaseRecyclerAdapter;
-import com.firebase.ui.database.FirebaseRecyclerOptions;
-import com.google.android.material.tabs.TabLayout;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
@@ -61,9 +52,11 @@ public class RecentMissionFragment extends Fragment {
         recentPostListsView.setLayoutManager(mLayoutManager);
         //맨 밑으로 내려갔을때, 파란색 그라데이션 안뜨도록
         recentPostListsView.scrollToPosition(0);
-        mAdapter = new PostAdapter(mPost);
+
+        mAdapter = new PostAdapter(getActivity(),mPost);
         recentPostListsView.setAdapter(mAdapter);
         recentPostListsView.setItemAnimator(new DefaultItemAnimator());
+
         //postref
         postRef = FirebaseDatabase.getInstance().getReference().child("Posting");
         return view;
@@ -95,7 +88,7 @@ public class RecentMissionFragment extends Fragment {
             }
         });
 
-        mAdapter= new PostAdapter(mPost);
+        mAdapter= new PostAdapter(getActivity(),mPost);
         recentPostListsView.setAdapter(mAdapter);
     }
 

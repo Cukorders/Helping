@@ -2,11 +2,7 @@ package com.cukorders.Adapter;
 
 import android.content.Context;
 import android.content.Intent;
-import android.nfc.Tag;
-import android.os.Build;
 import android.os.Bundle;
-import android.os.Parcelable;
-import android.telecom.Call;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -14,32 +10,27 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import androidx.annotation.NonNull;
-import androidx.annotation.RequiresApi;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.cukorders.helping.InitPost;
-import com.cukorders.helping.MainActivity;
 import com.cukorders.helping.PostContentsViewActivity;
+import com.cukorders.helping.PostContentsView_requestActivity;
 import com.cukorders.helping.R;
-import com.google.android.material.tabs.TabLayout;
 import com.google.firebase.database.DatabaseReference;
 import com.squareup.picasso.Picasso;
 
 import java.util.ArrayList;
 
-import static androidx.constraintlayout.widget.Constraints.TAG;
-
-public class PostAdapter extends RecyclerView.Adapter<PostAdapter.PostViewHolder> {
+public class PostAdapter_request extends RecyclerView.Adapter<PostAdapter_request.PostViewHolder> {
     //Put post info in ArrayList
     private ArrayList<InitPost> initPosts = new ArrayList<>();
     private static final String TAG = "Post Adapter";
     private Context context;
     private DatabaseReference postRef;
 
-    public PostAdapter(Context context, ArrayList<InitPost> initPosts) {
+    public PostAdapter_request(Context context, ArrayList<InitPost> initPosts) {
         this.initPosts = initPosts;
         this.context = context;
     }
@@ -69,7 +60,7 @@ public class PostAdapter extends RecyclerView.Adapter<PostAdapter.PostViewHolder
             @Override
             public void onClick(View v) {
                 Log.d(TAG,"onclick:clicked on " + initPosts.get(position));
-                Intent intent = new Intent(context, PostContentsViewActivity.class);
+                Intent intent = new Intent(context, PostContentsView_requestActivity.class);
                 //intent.putExtra("postUid",)
                 Bundle bundle = new Bundle();
                 bundle.putSerializable("useruid",initPosts.get(position).getUid());
