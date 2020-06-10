@@ -27,7 +27,7 @@ public class MyPlaceActivity extends AppCompatActivity {
         myPlaceActivity=this;
         fromMyPlaceActivity=false;
 
-        change[0]=(Button) findViewById(R.id.change1);
+        /*change[0]=(Button) findViewById(R.id.change1);
         change[1]=(Button) findViewById(R.id.change2);
         change[2]=(Button) findViewById(R.id.change3);
         delete[0]=(Button) findViewById(R.id.delete1);
@@ -35,7 +35,7 @@ public class MyPlaceActivity extends AppCompatActivity {
         delete[2]=(Button) findViewById(R.id.delete3);
         region[0]=(TextView) findViewById(R.id.region1);
         region[1]=(TextView) findViewById(R.id.region2);
-        region[2]=(TextView) findViewById(R.id.region3);
+        region[2]=(TextView) findViewById(R.id.region3);*/
 
         for(int i=0;i<3;++i){
             change[i].setOnClickListener(onClickListener);
@@ -53,7 +53,7 @@ public class MyPlaceActivity extends AppCompatActivity {
                     startActivity(new Intent(context,MyPageActivity.class));
                     break;
 
-                case R.id.change1:
+              /*  case R.id.change1:
                     changeRegion(region[0]);
                     break;
 
@@ -75,7 +75,7 @@ public class MyPlaceActivity extends AppCompatActivity {
 
                 case R.id.delete3:
                     delete(2);
-                    break;
+                    break;*/
             }
         }
     };
