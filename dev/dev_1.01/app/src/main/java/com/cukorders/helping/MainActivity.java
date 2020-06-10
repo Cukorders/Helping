@@ -28,11 +28,22 @@ import com.google.android.material.tabs.TabLayout;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 
+import com.cukorders.helping.chatting.ChatFragment;
+import com.cukorders.helping.chatting.ChattingActivity;
+import com.cukorders.helping.chatting.ClientChatListActivity;
+import com.cukorders.helping.chatting.PeopleFragment;
+import com.google.android.material.floatingactionbutton.FloatingActionButton;
+import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.iid.FirebaseInstanceId;
+
+import java.util.HashMap;
+import java.util.Map;
 
 public class MainActivity extends AppCompatActivity {
     FloatingActionButton fab_plus,fab_write,fab_info,fab_chat;
     Animation FabOpen,FabClose,FabClockwise,FabAntiClockwise;
     private Button myMission,currentMission;
+    private Button people_list, client_chat_list, chatting, chat_client_list; // 채팅방 확인용 (삭제예정)
     boolean isOpen=false;
     private final Context context=this;
     private ImageButton filter;
@@ -52,6 +63,18 @@ public class MainActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main2);
+/*
+        recyclerView = findViewById(R.id.main_recyclerview);
+
+        s1 = getResources().getStringArray(R.array.main_title);
+        s2 = getResources().getStringArray(R.array.main_description);
+
+        MainAdapter mainAdapter = new MainAdapter(this, s1, s2, images);
+        recyclerView.setAdapter(mainAdapter);
+        recyclerView.setLayoutManager(new LinearLayoutManager(this));
+
+        //위가 recyclerview 아래가 widget
+*/
         fab_plus=(FloatingActionButton) findViewById(R.id.fab_plus);
         fab_write=(FloatingActionButton) findViewById(R.id.fab_post);
         fab_info=(FloatingActionButton) findViewById(R.id.fab_info);
@@ -65,13 +88,22 @@ public class MainActivity extends AppCompatActivity {
         nowLocation = (TextView) findViewById(R.id.nowLocation);
         myMission=(Button) findViewById(R.id.myMission);
         currentMission=(Button) findViewById(R.id.currentMission);
+
         //filter=(ImageButton) findViewById(R.id.filter);
         //MainActivity=this;
+
         findViewById(R.id.fab_post).setOnClickListener(onClickListener);
         findViewById(R.id.fab_info).setOnClickListener(onClickListener);
         findViewById(R.id.fab_chat).setOnClickListener(onClickListener);
         findViewById(R.id.go_to_mypage).setOnClickListener(onClickListener);
         //findViewById(R.id.filter).setOnClickListener(onClickListener);
+        // 채팅방 확인용 (삭제예정)
+        /*
+        findViewById(R.id.chatting).setOnClickListener(onClickListener);
+        findViewById(R.id.people_list).setOnClickListener(onClickListener);
+        findViewById(R.id.client_chat_list).setOnClickListener(onClickListener);
+        findViewById(R.id.chat_client_list).setOnClickListener(onClickListener);
+        */
 
         fab_plus.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -93,6 +125,9 @@ public class MainActivity extends AppCompatActivity {
         tabLayout.setTabTextColors(Color.parseColor("#e1e1e1"),Color.parseColor("#FFFFFF"));
         tabLayout.setupWithViewPager(viewPager);
 
+        //token
+        passPushTokenToServer(); // background 팝업
+
     }
 
     View.OnClickListener onClickListener=new View.OnClickListener() {
@@ -100,6 +135,43 @@ public class MainActivity extends AppCompatActivity {
         @Override
         public void onClick(View v) {
             switch(v.getId()){
+/*
+                case R.id.myMission:
+                    Log.d("myMission is clicked","myMission button is clicked");
+                    myMission.setBackgroundColor(Color.parseColor("#70D398"));
+                    currentMission.setBackgroundColor(Color.parseColor("#e1e1e1"));
+                    break;
+
+                case R.id.currentMission:
+                    Log.d("currentMission is clicked","currentMission is clicked");
+                    currentMission.setBackgroundColor(Color.parseColor("#70D398"));
+                    myMission.setBackgroundColor(Color.parseColor("#e1e1e1"));
+                    break;
+                // 채팅방 확인용 (삭제예정)
+                case R.id.chatting:
+                    Intent intent8 =new Intent(context, ChattingActivity.class);
+                    Log.e("go to post","go to a posting page");
+                    startActivity(intent8);
+                    break;
+
+                case R.id.people_list:
+                    Intent intent5 =new Intent(context, PeopleFragment.class);
+                    Log.e("go to post","go to a posting page");
+                    startActivity(intent5);
+                    break;
+
+                case R.id.client_chat_list:
+                    Intent intent6 =new Intent(context, ClientChatListActivity.class);
+                    Log.e("go to post","go to a posting page");
+                    startActivity(intent6);
+                    break;
+
+                case R.id.chat_client_list:
+                    Intent intent7 =new Intent(context, ChatFragment.class);
+                    Log.e("go to post","go to a posting page");
+                    startActivity(intent7);
+                    break;
+*/
                 case R.id.fab_post:
                     locCertification=((RegionActivity)RegionActivity.regional_certification2).isCertified;
                     if(firebaseUser==null){
@@ -142,6 +214,8 @@ public class MainActivity extends AppCompatActivity {
                     }else {
                         //TODO 채팅 연결하기
                     }
+                    Intent intent4 =new Intent(context, ClientChatListActivity.class);
+                    startActivity(intent4);
                     break;
 
                 case R.id.go_to_mypage:
@@ -205,6 +279,16 @@ public class MainActivity extends AppCompatActivity {
         fab_write.setClickable(false);
         isOpen=false;
         Log.d("close","close");
+    }
+
+    // 채팅 팝업 기능
+    void passPushTokenToServer(){
+
+        String uid = "TIhMFvxLG9awVpVPN931vwXDUXz2";
+        String token = FirebaseInstanceId.getInstance().getToken();
+        Map<String,Object> map = new HashMap<>();
+        map.put("pushToken",token);
+        FirebaseDatabase.getInstance().getReference().child("Users").child(uid).updateChildren(map);
     }
 
 

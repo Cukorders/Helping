@@ -12,6 +12,7 @@ import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 
+import com.cukorders.helping.chatting.UserModel;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.FirebaseException;
@@ -173,6 +174,11 @@ public class AuthActivity extends AppCompatActivity {
                                 userMap.put("Score", "default");
                                 userMap.put("Money", "default");
 
+                                // chatting usermodel (추가된 내용)
+                                UserModel userModel = new UserModel();
+                                userModel.uid = uid;
+
+                                
                                 HashMap<String,String> locationTable=new HashMap<>(); //location table
                                 locationTable.put("Region1",location);
                                 locationTable.put("Region2",DEFAULT);

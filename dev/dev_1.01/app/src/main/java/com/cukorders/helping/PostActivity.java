@@ -74,6 +74,7 @@ public class PostActivity extends AppCompatActivity {
     private String imagePath;
     private String postKey;
     private String nowLocation;
+    private String postKey;
 
     @SuppressLint("LongLogTag")
     private static void init_ageChecked(boolean ageChecked[]){

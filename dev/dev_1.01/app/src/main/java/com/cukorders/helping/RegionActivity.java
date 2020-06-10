@@ -134,6 +134,7 @@ public class RegionActivity  extends FragmentActivity implements OnMapReadyCallb
                     if(compare.equals(dong)){
                         isCertified=true;
                         Log.e("인증 여부","인증 여부 : "+isCertified);
+                        Toast.makeText(context,"지역 인증에 성공하였습니다.",Toast.LENGTH_LONG).show();
                         goMain();
                     } else{
                         // 인증 실패 에러 메시지 띄움
@@ -146,11 +147,13 @@ public class RegionActivity  extends FragmentActivity implements OnMapReadyCallb
                     break;
 
               case R.id.bt_skip:
+              /*
                     isCertified=false;
                     Log.d("a skip button","a skip button is clicked");
                     Toast.makeText(context,"지역 인증을 완료하려면 마이페이지>지역 인증에서 완료하시길 바랍니다.",Toast.LENGTH_LONG).show();
                     goMain();
                     break;
+                    */
             }
         }
     };
