@@ -42,6 +42,7 @@ public class PostAdapter_helping extends RecyclerView.Adapter<PostAdapter_helpin
     public PostViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
         View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.recylce_main,parent, false);
         final PostViewHolder holder = new PostViewHolder(view);
+
         return holder;
     }
 
@@ -94,5 +95,7 @@ public class PostAdapter_helping extends RecyclerView.Adapter<PostAdapter_helpin
             postPic = (ImageView) itemView.findViewById(R.id.main_image_view);
             post_single = (LinearLayout) itemView.findViewById(R.id.single_card);
         }
+
+
     }
 }

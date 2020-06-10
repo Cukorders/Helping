@@ -17,6 +17,7 @@ import android.view.ViewGroup;
 import android.widget.TextView;
 
 import com.cukorders.Adapter.PostAdapter;
+import com.cukorders.Adapter.PostAdapter_helping;
 import com.cukorders.Adapter.PostAdapter_request;
 import com.cukorders.helping.InitPost;
 import com.cukorders.helping.R;
@@ -37,6 +38,10 @@ import java.util.ArrayList;
 public class RequestingFragment extends Fragment {
 
     private static final String TAG = "RequestingFragment";
+    private static final String notSended = "0";
+    private static final String onlyClientSented = "1";
+    private static final String matching = "2";
+    private static final String finished = "3";
 
     private RecyclerView recentPostListsView;
     private PostAdapter_request mAdapter;
@@ -65,6 +70,7 @@ public class RequestingFragment extends Fragment {
         //맨 밑으로 내려갔을때, 파란색 그라데이션 안뜨도록
         recentPostListsView.scrollToPosition(0);
 
+
         mAdapter = new PostAdapter_request(getActivity(),mPost);
         recentPostListsView.setAdapter(mAdapter);
         recentPostListsView.setItemAnimator(new DefaultItemAnimator());
@@ -84,33 +90,59 @@ public class RequestingFragment extends Fragment {
     @Override
     public void onStart() {
         super.onStart();
-        Query query = mClientPostRef.orderByChild("uid").equalTo(mUid);
-        Log.d(TAG,"Check my uid "+mUid);
-        query.addValueEventListener(new ValueEventListener() {
+        /*
+        private static final String notSended = "0";
+        private static final String onlyClientSented = "1";
+        private static final String matching = "2";
+        private static final String finished = "3";
+        */
+        //의뢰인의 의뢰중인 미션은 isSended가 2로 시작하면서 끝의 28글자가 나의 uid와 같은 테이블만 불러온다.
+        //String chkdidiaccept = notSended;
+        //String chkdidheaccept = onlyClientSented+mUid;
+        final String chkdidweMatched = matching;
+        //String chkfinished = finished+mUid;
+
+
+        //매칭이 된것들 중에서
+        Query gotMatched = mClientPostRef.orderByChild("isSended").startAt(chkdidweMatched).endAt(chkdidweMatched+"\uf8ff");
+        gotMatched.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                //파이어베이스 데이터베이스의 데이터를 받아옴
                 mPost.clear();
-                Log.d(TAG,"Check my dataSnapshot "+dataSnapshot);
-                if(dataSnapshot.exists()){
-                    for(DataSnapshot snapshot: dataSnapshot.getChildren()){
-                        //반복을 통해서 안에 있는 데이터리스트들을 추출하기
+                Log.d(TAG, "Check my dataSnapshot " + dataSnapshot);
+                if (dataSnapshot.exists()) {
+                    for (DataSnapshot snapshot : dataSnapshot.getChildren()) {
+                        Log.d(TAG, "Check my snapshot " + snapshot);
+                        //mPost = snapshot.getValue(InitPost.class);//InitPost 객체에 담기
+                        Log.d(TAG, "Check my post " + mPost);
 
                         InitPost post = snapshot.getValue(InitPost.class);//InitPost 객체에 담기
                         mPost.add(post); //담은 데이터들을 배열 리스트에 넣고 리사이클러 뷰로 보낼 준비하기
                     }
-                }
-                //데이터 저장 및 새로고침
-                mAdapter.notifyDataSetChanged();
-            }
+                    mAdapter.notifyDataSetChanged();
 
+                    Log.d(TAG, "Check my mPost " + mPost);
+                    ArrayList<InitPost> smallPost = new ArrayList<InitPost>();
+                    for (InitPost object : mPost) {
+                        Log.d(TAG, "Check my mPost " + mPost);
+                        Log.d(TAG, "Check mUid " + mUid);
+                        Log.d(TAG, "Check my check we contain mUid " + object.getIsSended().contains(mUid));
+                        Log.d(TAG, "Check uid " + object.getUid().equals(mUid));
+                        if (object.getIsSended().contains(mUid) && object.getUid().equals(mUid)) {
+                            //담은 데이터들을 배열 리스트에 넣고 리사이클러 뷰로 보낼 준비하기
+                            smallPost.add(object);
+                        }
+                    }
+                    mAdapter = new PostAdapter_request(getActivity(), smallPost);
+                    recentPostListsView.setAdapter(mAdapter);
+                    mAdapter.notifyDataSetChanged();
+                }
+            }
             @Override
             public void onCancelled(@NonNull DatabaseError databaseError) {
                 //디비 가져오는 중 에러 발생시
                 Log.e(TAG, String.valueOf(databaseError.toException()));
             }
         });
-        mAdapter= new PostAdapter_request(getActivity(),mPost);
-        recentPostListsView.setAdapter(mAdapter);
     }
 }

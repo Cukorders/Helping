@@ -270,9 +270,9 @@ public class PostContentsViewActivity extends AppCompatActivity {
                 String nick = dataSnapshot.child("Nickname").getValue().toString();
                 String score = dataSnapshot.child("Score").getValue().toString();
                 String postuserimg = dataSnapshot.child("Image").getValue().toString();
+
                 userUid.setText(nick);
                 Picasso.get().load(postuserimg).into(postUserImg);
-
             }
 
             @Override
@@ -406,10 +406,11 @@ public class PostContentsViewActivity extends AppCompatActivity {
     }
 
     private void goToClientchat(String helperuid){
-        //취소하기를 눌렀을 경우, 바로 채팅창으로 이동해야한다.
+        //취소하기를 눌렀을 경우, 바로 채팅창으로 이동해야한다.!!!
+
         //Todo chat버튼 누르면 화면으로 이동하기
         //채팅방에는 상대방의 uid가 들어가 있어야 한다.
-        //채팅방 리스트를 보여주는 화면에는 헬퍼의 아이디와
+        //채팅방에는 현재 상대방의 정보가 들어가게 되고, orderbyChild(헬퍼 UID)를 통해서 채팅방 고유번호를 찾기
         /*
         Intent goClientChat = new Intent(PostContentsViewActivity.this, );
         Bundle bundle = new Bundle();

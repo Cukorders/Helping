@@ -13,9 +13,10 @@ public class InitPost implements Serializable {
     private String likes;
     private String postKey;
     private String uid;
+    private String isSended;
 
 
-    public InitPost(String title, String sample_image, ImageView post_image, String place, String time, String chat_number, String likes, String postKey, String uid) {
+    public InitPost(String title, String image1,String endTime, String place, String chat_number, String likes, String postKey, String uid, String isSended) {
         this.title = title;
         this.image1 = image1;
         this.place = place;
@@ -24,13 +25,20 @@ public class InitPost implements Serializable {
         this.likes = likes;
         this.postKey = postKey;
         this.uid = uid;
+        this.isSended = isSended;
     }
 
     public InitPost(){
 
     }
 
+    public String getIsSended() {
+        return isSended;
+    }
 
+    public void setIsSended(String isSended) {
+        this.isSended = isSended;
+    }
     public String getUid() {
         return uid;
     }

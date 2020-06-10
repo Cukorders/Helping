@@ -72,13 +72,15 @@ public class RecentMissionFragment extends Fragment {
                 //파이어베이스 데이터베이스의 데이터를 받아옴
                 mPost.clear();
                 //mPost=null;//기존 배열 리스트가 없도록 초기화
-                for(DataSnapshot snapshot: dataSnapshot.getChildren()){
-                    //반복을 통해서 안에 있는 데이터리스트들을 추출하기
-                    InitPost post = snapshot.getValue(InitPost.class);//InitPost 객체에 담기
-                    mPost.add(post); //담은 데이터들을 배열 리스트에 넣고 리사이클러 뷰로 보낼 준비하기
+                if(dataSnapshot.exists()){
+                    for(DataSnapshot snapshot: dataSnapshot.getChildren()){
+                        //반복을 통해서 안에 있는 데이터리스트들을 추출하기
+                        InitPost post = snapshot.getValue(InitPost.class);//InitPost 객체에 담기
+                        mPost.add(post); //담은 데이터들을 배열 리스트에 넣고 리사이클러 뷰로 보낼 준비하기
+                    }
+                    //데이터 저장 및 새로고침
+                    mAdapter.notifyDataSetChanged();
                 }
-                //데이터 저장 및 새로고침
-                mAdapter.notifyDataSetChanged();
             }
 
             @Override

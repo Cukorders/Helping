@@ -80,7 +80,7 @@
                         android:layout_height="match_parent">
                         <TextView
                             android:id="@+id/explain_for_small_chat"
-                            android:layout_width="wrap_content"
+                            android:layout_width="30dp"
                             android:layout_height="wrap_content"
                             android:layout_marginLeft="1dp"
                             android:text="5"
@@ -98,7 +98,7 @@
                             android:layout_alignParentBottom="true"/>
                         <TextView
                             android:id="@+id/explain_for_small_heart"
-                            android:layout_width="wrap_content"
+                            android:layout_width="30dp"
                             android:layout_height="wrap_content"
                             android:layout_marginLeft="1dp"
                             android:text="7"
