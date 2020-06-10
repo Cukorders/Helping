@@ -33,6 +33,8 @@ import java.util.TreeMap;
 
 public class ClientChatListActivity extends AppCompatActivity {
 
+    private RecyclerView recyclerView;
+
     private SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy.MM.dd hh:mm");
 
     @Override
@@ -40,7 +42,7 @@ public class ClientChatListActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_client_chat_list);
 
-        RecyclerView recyclerView = (RecyclerView)findViewById(R.id.activity_client_chat_list_recyclerview);
+        recyclerView = findViewById(R.id.activity_client_chat_list_recyclerview);
         recyclerView.setAdapter(new RecyclerViewAdapter());
         recyclerView.setLayoutManager(new LinearLayoutManager(getLayoutInflater().getContext()));
 
@@ -50,17 +52,14 @@ public class ClientChatListActivity extends AppCompatActivity {
     class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder>{
 
         private List<ChatModel> chatModels = new ArrayList<>();
-        private String uid;
+        private String uid= "TIhMFvxLG9awVpVPN931vwXDUXz2";
         private ArrayList<String> destinationUsers = new ArrayList<>(); // 대화 할 사람들의 데이터가 담기는 부분
         private List<String> keys = new ArrayList<>();
 
-
-
         public RecyclerViewAdapter() {
             /*uid = FirebaseAuth.getInstance().getCurrentUser().getUid();*/
-            uid = "Dpe0OR0NT8XgXyfoWdObPjfblQh2";
 
-            FirebaseDatabase.getInstance().getReference().child("chatrooms").orderByChild("Users/"+uid).equalTo(true).addListenerForSingleValueEvent(new ValueEventListener() {
+            FirebaseDatabase.getInstance().getReference().child("chatrooms").orderByChild("users/"+uid).equalTo(true).addListenerForSingleValueEvent(new ValueEventListener() {
                 @Override
                 public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                     chatModels.clear();
@@ -96,6 +95,7 @@ public class ClientChatListActivity extends AppCompatActivity {
             for(String user: chatModels.get(position).users.keySet()){
                 if(!user.equals(uid)) {
                     destinationUid = user;
+                    destinationUsers.add(destinationUid);
                 }
             }
             FirebaseDatabase.getInstance().getReference().child("Users").child(destinationUid).addListenerForSingleValueEvent(new ValueEventListener() {
@@ -107,7 +107,7 @@ public class ClientChatListActivity extends AppCompatActivity {
                             .apply(new RequestOptions().circleCrop())
                             .into(customViewHolder.imageView);
 
-                    customViewHolder.textView_title.setText(userModel.userName);
+                    customViewHolder.textView_title.setText(userModel.userName); // 채팅리스트 제목
 
                 }
 
@@ -125,16 +125,15 @@ public class ClientChatListActivity extends AppCompatActivity {
                 String lastMessageKey = (String)commentMap.keySet().toArray()[0];
                 customViewHolder.textView_last_message.setText(chatModels.get(position).comments.get(lastMessageKey).message);
 
-                customViewHolder.imageView.setOnClickListener(new View.OnClickListener() {
+                customViewHolder.itemView.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View view) {
-
                         Intent intent = new Intent(view.getContext(), ChattingActivity.class);
                         intent.putExtra("destinationUid",destinationUsers.get(position));
 
-                        ActivityOptions activityOptions = ActivityOptions.makeCustomAnimation(view.getContext(), R.anim.fromright,R.anim.toleft);
+                        ActivityOptions activityOptions = ActivityOptions.makeCustomAnimation(view.getContext(),R.anim.fromright,R.anim.toleft);
 
-                        startActivity(intent, activityOptions.toBundle());
+                        startActivity(intent,activityOptions.toBundle());
                     }
                 });
 

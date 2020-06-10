@@ -10,15 +10,13 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
-import androidx.fragment.app.Fragment;
+import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.request.RequestOptions;
 import com.cukorders.helping.R;
-import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.FirebaseDatabase;
@@ -27,18 +25,19 @@ import com.google.firebase.database.ValueEventListener;
 import java.util.ArrayList;
 import java.util.List;
 
-public class PeopleFragment extends Fragment{
+public class PeopleFragment extends AppCompatActivity {
 
-
-    @Nullable
+    private RecyclerView recyclerView;
     @Override
-    public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-        View view = inflater.inflate(R.layout.item_friend,container,false);
-        RecyclerView recyclerView = (RecyclerView)view.findViewById(R.id.peoplefragment_recyclerview);
-        recyclerView.setLayoutManager(new LinearLayoutManager(inflater.getContext()));
-        recyclerView.setAdapter(new PeopleFragmentRecyclerViewAdapter());
 
-        return view;
+    protected void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        setContentView(R.layout.fragment_people);
+
+        recyclerView = findViewById(R.id.peoplefragment_recyclerview);
+        recyclerView.setAdapter(new PeopleFragmentRecyclerViewAdapter());
+        recyclerView.setLayoutManager(new LinearLayoutManager(getLayoutInflater().getContext()));
+
     }
 
     class PeopleFragmentRecyclerViewAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder>{
@@ -47,7 +46,11 @@ public class PeopleFragment extends Fragment{
 
         private PeopleFragmentRecyclerViewAdapter() {
             userModels = new ArrayList<>();
+/*
             final String myUid = FirebaseAuth.getInstance().getCurrentUser().getUid();// 내 uid가 존재한다면 추가 X
+*/
+
+            final String myUid = "TIhMFvxLG9awVpVPN931vwXDUXz2";
 
             // 데이터를 불러와서 userModels에 넣어주는 부분
             // 리스너는 최초 한번 호출된 후, 데이터 변동이 발생하면 다시 호출
@@ -57,7 +60,6 @@ public class PeopleFragment extends Fragment{
                 public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                     // 친구가 추가된다 할 때 다시 불러오는 부분 (누적되는부분 제거해주는 부분)
                     userModels.clear();
-
 
                     for (DataSnapshot snapshot : dataSnapshot.getChildren()) {
 

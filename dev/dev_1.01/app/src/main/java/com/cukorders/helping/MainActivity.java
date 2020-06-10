@@ -20,7 +20,6 @@ import com.cukorders.helping.chatting.ChattingActivity;
 import com.cukorders.helping.chatting.ClientChatListActivity;
 import com.cukorders.helping.chatting.PeopleFragment;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
-import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.iid.FirebaseInstanceId;
 
@@ -126,9 +125,9 @@ public class MainActivity extends AppCompatActivity {
                     break;
 
                 case R.id.people_list:
-                    PeopleFragment peopleFragment = (PeopleFragment) getSupportFragmentManager().findFragmentById(R.id.peoplefragment_recyclerview);
-                    getSupportFragmentManager().beginTransaction().replace(R.id.peoplefragment_recyclerview, peopleFragment).commit();
-                 /*   replaceFragment();*/
+                    Intent intent5 =new Intent(context, PeopleFragment.class);
+                    Log.e("go to post","go to a posting page");
+                    startActivity(intent5);
                     break;
 
                 case R.id.client_chat_list:
@@ -193,11 +192,11 @@ public class MainActivity extends AppCompatActivity {
     // 채팅 팝업 기능
     void passPushTokenToServer(){
 
-        String uid = FirebaseAuth.getInstance().getCurrentUser().getUid();
+        String uid = "TIhMFvxLG9awVpVPN931vwXDUXz2";
         String token = FirebaseInstanceId.getInstance().getToken();
         Map<String,Object> map = new HashMap<>();
         map.put("pushToken",token);
-        FirebaseDatabase.getInstance().getReference().child("users").child(uid).updateChildren(map);
+        FirebaseDatabase.getInstance().getReference().child("Users").child(uid).updateChildren(map);
     }
 
  /*   public void replaceFragment(){

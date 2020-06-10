@@ -52,11 +52,11 @@ import okhttp3.Response;
 
 public class ChattingActivity extends AppCompatActivity {
 
-    private String destinationUid;
+    private String destinationUid = "Dpe0OR0NT8XgXyfoWdObPjfblQh2";
     private Button button;
     private EditText editText;
 
-    private String uid;
+    private String uid= "TIhMFvxLG9awVpVPN931vwXDUXz2";
     private String chatRoomUid;
     private String postUid = "eUcg_lhlRaRnnO@vhRVw9hkI-TxG6jy0D67REvFIOn9_dcdztZ";
 
@@ -68,10 +68,12 @@ public class ChattingActivity extends AppCompatActivity {
     private ProgressBar pb;
     private Button accept;
     private Button decline;
+    private String key;
 
     private String postKey;
 
     private DatabaseReference mUserDatabase1, mUserDatabase2, mUserDatabase3;
+    private DatabaseReference mDatabase;
 
 
     private SimpleDateFormat simpleDateFormat = new SimpleDateFormat(" yyyy.MM.dd HH:mm");
@@ -84,12 +86,9 @@ public class ChattingActivity extends AppCompatActivity {
 
 /*
         uid = FirebaseAuth.getInstance().getCurrentUser().getUid(); // 채팅을 요구하는 아이디. 즉 단말기에 로그인된 UID
-*/
-        uid = "Dpe0OR0NT8XgXyfoWdObPjfblQh2";
 /*
         destinationUid = getIntent().getStringExtra("destinationUid"); // 채팅을 당하는 아이디
 */
-        destinationUid = "TIhMFvxLG9awVpVPN931vwXDUXz2";
         button = (Button)findViewById(R.id.chattingActivity_button);
         editText = (EditText)findViewById(R.id.chattingActivity_editText);
 
@@ -101,6 +100,21 @@ public class ChattingActivity extends AppCompatActivity {
         decline = (Button)findViewById(R.id.chattingActivity_decline);
 
         recyclerView = (RecyclerView)findViewById(R.id.chattingActivity_recyclerview);
+
+        mDatabase = FirebaseDatabase.getInstance().getReference();
+
+        mDatabase.child("Users").child(uid).addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                userProfileNick.setText(dataSnapshot.child("Nickname").getValue().toString());
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError databaseError) {
+
+            }
+        });
+
         button.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -111,7 +125,7 @@ public class ChattingActivity extends AppCompatActivity {
                 chatModel.users.put(destinationUid, true);
                 //데이터베이스에 삽입
 
-                postKey=getRandomString(25);
+                /*postKey=getRandomString(25);*/
 
                 mUserDatabase1 = FirebaseDatabase.getInstance().getReference().child("Chat_list").child(destinationUid).child(postUid);
                 mUserDatabase2 = FirebaseDatabase.getInstance().getReference().child("Chat_list_client").child(destinationUid).child(postUid);
@@ -130,15 +144,16 @@ public class ChattingActivity extends AppCompatActivity {
 
                 if (chatRoomUid == null){
                     button.setEnabled(false); // chatroomUid가 null인지 확인하는 사이엔 버튼을 불활성화해놓는다. 버그를 막기 위해
-                    FirebaseDatabase.getInstance().getReference().child("chatrooms").child(postKey).setValue(chatModel).addOnSuccessListener(new OnSuccessListener<Void>() {
+                    key =  FirebaseDatabase.getInstance().getReference().child("chatrooms").push().getKey();
+                    FirebaseDatabase.getInstance().getReference().child("chatrooms").child(key).setValue(chatModel).addOnSuccessListener(new OnSuccessListener<Void>() {
                         @Override
                         public void onSuccess(Void aVoid) {
                             checkChatRoom(); // 채팅방의 중복여부를 조사
                         }
                     });
 
-                    ClientChatsMap.put(postKey,uid);
-                    HelperChatsMap.put(postUid,postKey);
+                    ClientChatsMap.put(key,uid);
+                    HelperChatsMap.put(postUid,key);
 
                 }else {
                     ChatModel.Comment comment = new ChatModel.Comment();
@@ -198,13 +213,13 @@ public class ChattingActivity extends AppCompatActivity {
     }
 
     void checkChatRoom(){
-        FirebaseDatabase.getInstance().getReference().child("chatrooms").orderByChild("Users/"+uid).equalTo(true).addListenerForSingleValueEvent(new ValueEventListener() {
+        FirebaseDatabase.getInstance().getReference().child("chatrooms").orderByChild("users/"+uid).equalTo(true).addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                  for(DataSnapshot item : dataSnapshot.getChildren()){
                      ChatModel chatModel = item.getValue(ChatModel.class); // 아이디가 존재하는지
                      if(chatModel.users.containsKey(destinationUid)){ //내가 요구하는 아이디가 존재하는지 확인
-                         chatRoomUid = item.getKey(); // 채팅방 아이디, 내가 원하는 코멘트를 해당하는 방에 넣어놓기 위함
+                         chatRoomUid = item.getKey(); // 채팅방 Uid, 내가 원하는 코멘트를 해당하는 방에 넣어놓기 위함
                          button.setEnabled(true);
                          recyclerView.setLayoutManager(new LinearLayoutManager(ChattingActivity.this));
                          recyclerView.setAdapter(new RecyclerViewAdapter());
@@ -276,6 +291,7 @@ public class ChattingActivity extends AppCompatActivity {
         public void onBindViewHolder(@NonNull RecyclerView.ViewHolder holder, int position) {
 
             MessageViewHolder messageViewHolder = ((MessageViewHolder)holder);
+
             // 내가 보낸 매세지
             if(comments.get(position).uid.equals(uid)){
                 messageViewHolder.textView_message.setText(comments.get(position).message);
