@@ -12,6 +12,7 @@ import android.widget.Toast;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 
+import com.cukorders.Fragment.RecentMissionFragment;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.FirebaseAuth;
@@ -52,10 +53,10 @@ public class MyPlaceActivity extends AppCompatActivity {
         firebaseUser= FirebaseAuth.getInstance().getCurrentUser();
         uid=firebaseUser.getUid();
         databaseReference= FirebaseDatabase.getInstance().getReference().child("userRegions").child(uid);
-        user_regions=((LoadingActivity)LoadingActivity.loadingActivity).loc;
+        user_regions= RecentMissionFragment.loc;
         for(int i=0;i<user_regions.size();++i){
             Log.d("user_regions","user_regions의 값: "+user_regions.get(i));
-            Log.d("loc","loc의 값: "+((LoadingActivity)LoadingActivity.loadingActivity).loc.get(i));
+            Log.d("loc","loc의 값: "+RecentMissionFragment.loc.get(i));
         }
 
         change[0]=(Button) findViewById(R.id.change1);
@@ -75,7 +76,7 @@ public class MyPlaceActivity extends AppCompatActivity {
             check[i]=false;
         }
 
-        user_regions=((LoadingActivity)LoadingActivity.loadingActivity).loc;
+        user_regions=RecentMissionFragment.loc;
         findViewById(R.id.profileRegisterBt).setOnClickListener(onClickListener);
         findViewById(R.id.bt_back).setOnClickListener(onClickListener);
         for(int i=0;i<3;++i){
@@ -130,7 +131,7 @@ public class MyPlaceActivity extends AppCompatActivity {
                                 String key= snapshot.getKey();
                                 Log.d("value","유저 key: "+key);
                                 if(key.contains("state")){
-                                check[(key.charAt(key.length()-1)-'0')-1]=snapshot.getValue().toString().equals("true")?true:false;
+                                check[(key.charAt(6)-'0')-1]=snapshot.getValue().toString().equals("true")?true:false;
                                 Log.d("check","check의 값: "+(snapshot.getValue().toString().equals("true")?true:false));
                                 }
                             }
@@ -140,8 +141,9 @@ public class MyPlaceActivity extends AppCompatActivity {
                         public void onCancelled(@NonNull DatabaseError databaseError) {}
                     });
                     for(int i=0;i<3;++i){
+                        Log.d("region값","region의 값"+region[i]);
                         update.put("Region"+String.valueOf(i+1),(region[i].getText().toString().contains("지역")?"default":region[i].getText().toString()));
-                        update.put("Region"+String.valueOf(i+1),(check[i]?"true":"default"));
+                        update.put("Region"+String.valueOf(i+1)+" state",(check[i]?"true":"default"));
                     }
                     databaseReference.setValue(update).addOnCompleteListener(new OnCompleteListener<Void>() {
                         @Override
@@ -149,6 +151,7 @@ public class MyPlaceActivity extends AppCompatActivity {
                             if (task.isSuccessful()) {
                                 Toast.makeText(context,"지역 추가가 되었습니다.",Toast.LENGTH_LONG).show();
                                 Log.e("a post is uploaded", "a post is successfully uploaded");
+                                startActivity(new Intent(context,MyPageActivity.class));
                             } else{
                                 Toast.makeText(context,"오류가 발생하여 지역 추가에 실패하였습니다. 잠시 후에 다시 시도해주십시오.",Toast.LENGTH_LONG).show();
                             }

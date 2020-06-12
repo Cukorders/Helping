@@ -1,6 +1,7 @@
 package com.cukorders.helping;
 
 import android.Manifest;
+import android.annotation.SuppressLint;
 import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager;
@@ -16,7 +17,9 @@ import android.text.style.ForegroundColorSpan;
 import android.text.style.StyleSpan;
 import android.util.Log;
 import android.view.View;
+import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
+import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -37,7 +40,11 @@ import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
 
 import java.io.IOException;
 import java.util.ArrayList;
@@ -46,7 +53,7 @@ import java.util.List;
 import static android.text.Spanned.SPAN_INCLUSIVE_EXCLUSIVE;
 
 
-public class RegionActivity  extends FragmentActivity implements OnMapReadyCallback{
+public class RegionalCertificationActivity extends FragmentActivity implements OnMapReadyCallback{
 
     private static final int PERMISSIONS_REQUEST_CODE=1000;
     private static final int REQUEST_CODE = 101;
@@ -59,9 +66,10 @@ public class RegionActivity  extends FragmentActivity implements OnMapReadyCallb
     private static final String msg1="현재 위치가 내 지역으로 설정한 ";
     private static final String msg2="에 있습니다.";
     private static final String errorMsg="선택하신 위치와 현 위치가 달라 지역 인증에 실패하였습니다.";
+    private static Spinner spinner;
     private ArrayList<String> arrayList;
     private int index;
-    private String loc[]=new String[3];
+    //private String loc[]=new String[3];
     private ArrayAdapter<String> arrayAdapter;
     Context context=this;
 
@@ -73,34 +81,34 @@ public class RegionActivity  extends FragmentActivity implements OnMapReadyCallb
     private Marker marker=null;
     private Geocoder geocoder;
     private LocationManager locationManager;
-   // private ArrayList<String> now=new ArrayList<>();
+    private ArrayList<String> now=new ArrayList<>();
     private boolean mLocationPermissionGranted=false;
     private Location currentLocation;
     private String compare;
-    public String dong="";
+    private String dong="";
     private TextView result_gps;
     private String errorMSG="인증을 하려면 위치 정보를 불러와야 합니다.";
-    public static Context regional_certification2;
-    private static FirebaseUser firebaseUser= FirebaseAuth.getInstance().getCurrentUser();
+
+   // public static Context regional_certification2;
+    private static FirebaseUser firebaseUser;
     private static DatabaseReference databaseReference;
     private static String uid;
-    private TextView location_txt;
-    public static boolean location_certification;
+    private ArrayList<String> userLocs=new ArrayList<>();
+    public static Context regional_certification3;
+    private static final String TAG="RegionalCertificationActivity";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.regional_certification2);
+        setContentView(R.layout.regional_certification3);
+
+        regional_certification3=this;
 
         //위치 관리자 객체 참조
         locationManager=(LocationManager)getSystemService(Context.LOCATION_SERVICE);
 
         SupportMapFragment supportMapFragment=(SupportMapFragment) getSupportFragmentManager().findFragmentById(R.id.googlemapview);
         supportMapFragment.getMapAsync(this);
-
-        compare=((ChooseTheRegionActivity)ChooseTheRegionActivity.regional_certification1).user_location;
-        location_txt=(TextView) findViewById(R.id.location_txt);
-        location_txt.setText(compare);
 
         // 버튼들이 클릭됐을 때=> OnClickListener 실행 : 확장성을 위해 OnClickListener 함수를 switch-case문으로 작성하였다.
         findViewById(R.id.currentLocation).setOnClickListener(OnClickListener);
@@ -111,15 +119,82 @@ public class RegionActivity  extends FragmentActivity implements OnMapReadyCallb
         // 위치 권한 요청을 하기 위한 FusedLocationClient 불러옴
         mFusedLocationClient= LocationServices.getFusedLocationProviderClient(this);
         geocoder=new Geocoder(this);
+        firebaseUser= FirebaseAuth.getInstance().getCurrentUser();
+        uid=firebaseUser.getUid();
+        databaseReference= FirebaseDatabase.getInstance().getReference().child("userRegions");
 
         result_gps=(TextView) findViewById(R.id.result_gps);
-        location_txt=(TextView) findViewById(R.id.location_txt);
 
-        regional_certification2=this;
-        location_certification=false;
-       }
+       // regional_certification2=this;
 
+        spinner=(Spinner) findViewById(R.id.location_spinner);
+        arrayList=new ArrayList<>();
+        arrayAdapter=new ArrayAdapter<>(getApplicationContext(),
+                android.R.layout.simple_spinner_dropdown_item,arrayList);
 
+        databaseReference.addValueEventListener(new ValueEventListener() {
+            @SuppressLint("LongLogTag")
+            @Override
+            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                for(DataSnapshot snapshot:dataSnapshot.getChildren()){
+                    String key=snapshot.getKey(),val;
+                    Log.d(TAG,"key의 값: "+key);
+                    val=snapshot.getValue().toString();
+                    if(!val.contains("state")){
+                        if(!val.equals("default")){
+                            arrayList.add(val);
+                        }
+                        Log.d(TAG,"arrayList에 "+val+"이 추가되었습니다.");
+                    }
+                }
+
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError databaseError) {}
+        });
+       /*
+        for(int i=0;i<3;++i){
+
+            loc[i]=((LoadingActivity)LoadingActivity.loadingActivity).userLoc[i];
+            if(loc[i]==null) loc[i]="default";
+            Log.d("loc[i]의 값","loc["+String.valueOf(i)+"] = "+loc[i]);
+        }
+        for(int i=0;i<3;++i){
+            Log.d("loc","loc["+String.valueOf(i)+"]= "+loc[i]);
+            if(loc[i].equals("default")){
+                continue;
+            }
+            arrayList.add(loc[i]);
+            Log.d("arrayList","새 원소 "+arrayList.get(i)+"가 추가되었습니다.");
+        }*/
+
+     /*  Log.d("loc size","연결리스트 loc의 크기: "+((LoadingActivity)LoadingActivity.loadingActivity).loc.size());
+       for(int i=0;i<((LoadingActivity)LoadingActivity.loadingActivity).loc.size();++i){
+           String str=(((LoadingActivity)LoadingActivity.loadingActivity).loc).get(i);
+           if(str.equals("default")) continue;
+           arrayList.add(str);
+       }*/
+
+        arrayAdapter=new ArrayAdapter<>(getApplicationContext(),
+                android.R.layout.simple_spinner_dropdown_item,arrayList);
+         compare=arrayList.get(0);
+        spinner.setAdapter(arrayAdapter);
+        spinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+            @Override
+            public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+                compare=arrayList.get(position);
+                index=position;
+                Log.d("인증할 지역","인증할 지역 : "+compare);
+            }
+
+            @Override
+            public void onNothingSelected(AdapterView<?> parent) {
+                Toast.makeText(context,"하나 이상의 카테고리를 설정하세요.",Toast.LENGTH_LONG).show();
+            }
+        });
+
+    }
 
     View.OnClickListener OnClickListener=new View.OnClickListener() {
         @Override
@@ -135,11 +210,11 @@ public class RegionActivity  extends FragmentActivity implements OnMapReadyCallb
                     Log.e("the user's location is ","the user's location is "+dong);
 
                     if(compare.equals(dong)){
-                       Toast.makeText(context,"지역 인증이 완료되었습니다.",Toast.LENGTH_LONG).show();
-                        location_certification=true;
-                        goMain();
+                        goMyPage();
                     }
                     else{
+                        // 인증 실패 에러 메시지 띄움
+                       // ((LoadingActivity)LoadingActivity.loadingActivity).isCertified[index]=false;
                         Toast.makeText(context,errorMsg,Toast.LENGTH_LONG).show();
                     }
                     break;
@@ -149,8 +224,9 @@ public class RegionActivity  extends FragmentActivity implements OnMapReadyCallb
                     break;
 
               case R.id.bt_skip:
+                 // ((LoadingActivity)LoadingActivity.loadingActivity).isCertified[index]=false;
                     Log.d("a skip button","a skip button is clicked");
-                    Toast.makeText(context,"지역 인증을 완료하려면 마이페이지>지역 인증에서 완료하시길 바랍니다.",Toast.LENGTH_LONG).show();
+                    Toast.makeText(context,"의뢰를 맡기거나 의뢰를 수행하시려면 마이페이지>지역 인증에서 지역 인증 하시기 바랍니다.",Toast.LENGTH_LONG).show();
                     goMain();
                     break;
             }
@@ -158,12 +234,16 @@ public class RegionActivity  extends FragmentActivity implements OnMapReadyCallb
     };
 
     private void goMain(){
-        Intent intent=new Intent(this,MainActivity.class);
+        startActivity(new Intent(context,MainActivity.class));
+    }
+
+    private void goMyPage(){
+        Intent intent=new Intent(this,MyPageActivity.class);
         startActivity(intent);
     }
 
     private void goBack(){
-        Intent intent=new Intent(this,ChooseTheRegionActivity.class); // 뒤로 가기 버튼 누름 => 첫 화면으로 다시 돌아감.
+        Intent intent=new Intent(this,MyPageActivity.class); // 뒤로 가기 버튼 누름 => 첫 화면으로 다시 돌아감.
         startActivity(intent);
     }
 
@@ -189,7 +269,7 @@ public class RegionActivity  extends FragmentActivity implements OnMapReadyCallb
                     try {
                         addr=geocoder.getFromLocation(currentLocation.getLatitude(),currentLocation.getLongitude(), 5);
                         if(addr.size()>0){
-                            android.location.Address address = addr.get(0);
+                            Address address = addr.get(0);
                             loc = address.getAddressLine(0)+address.getLocality();
                         }
                     } catch (IOException e) {
@@ -200,7 +280,7 @@ public class RegionActivity  extends FragmentActivity implements OnMapReadyCallb
                     Log.d("current Location",dong);
                     int start=msg1.length(),end=start+dong.length();
                     MarkerOptions markerOptions = new MarkerOptions().position(now).title(dong);
-                    result_gps.setText("현재 위치가 내 지역으로 설정한 "+dong+"에 있습니다.");
+                    result_gps.setText("현재 위치는 "+dong+"입니다.");
                     Spannable span=(Spannable) result_gps.getText();
                     span.setSpan(new StyleSpan(Typeface.BOLD),start,end, SPAN_INCLUSIVE_EXCLUSIVE);
                     span.setSpan(new ForegroundColorSpan(Color.RED),start,end, SPAN_INCLUSIVE_EXCLUSIVE);
@@ -213,6 +293,7 @@ public class RegionActivity  extends FragmentActivity implements OnMapReadyCallb
                     assert supportMapFragment != null;
                     supportMapFragment.getMapAsync((OnMapReadyCallback) context);
                 } else{
+                    //TODO make the location parameter return non-null value
                     Log.e("location is empty","a location parameter returns null");
                     Toast.makeText(context,"위치 정보를 불러오는데 실패하였습니다.",Toast.LENGTH_LONG).show();
                 }

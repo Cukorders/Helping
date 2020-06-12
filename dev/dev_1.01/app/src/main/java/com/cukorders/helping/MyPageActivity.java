@@ -120,7 +120,7 @@ public class MyPageActivity extends AppCompatActivity {
                     break;
 
                 case R.id.bt_regional_certification:
-                    startActivity(new Intent(context,RegionActivity.class));
+                    startActivity(new Intent(context,RegionalCertificationActivity.class)); // spinner가 있는 regional_certification xml로 넘어간다.
                     break;
 
                 case R.id.bt_setting:

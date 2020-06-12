@@ -44,8 +44,6 @@ import java.net.URL;
 import java.util.ArrayList;
 import java.util.List;
 
-import static com.cukorders.helping.LoadingActivity.*;
-
 public class ChooseTheRegionActivity  extends AppCompatActivity {
 
     public static Context regional_certification1;
@@ -55,6 +53,7 @@ public class ChooseTheRegionActivity  extends AppCompatActivity {
     private Geocoder geocoder;
     private TextView editTextQuery;
     private Location nowLocation;
+    public String user_location;
     private Context context=this;
     private ListView search_result;
     private String userLocation;
@@ -87,7 +86,6 @@ public class ChooseTheRegionActivity  extends AppCompatActivity {
         search_result=(ListView) findViewById(R.id.search_result);
         regional_certification1=this;
         myPlace=((MyPlaceActivity)MyPlaceActivity.myPlaceActivity).fromMyPlaceActivity;
-        cnt=((LoadingActivity) loadingActivity).loc_cnt;
         firebaseUser= FirebaseAuth.getInstance().getCurrentUser();
         Log.d("myPlace value","myPlace value is "+myPlace);
         Log.d("cnt value","cnt의 값은 "+String.valueOf(cnt));
@@ -197,11 +195,7 @@ public class ChooseTheRegionActivity  extends AppCompatActivity {
                                     ((LoadingActivity)LoadingActivity.loadingActivity).userLoc[cnt]=array[select];
                                 }*/
                                 Log.e("userLocation_search","the value of a parameter called userLocation in ChooseTheRegionActivity is "+userLocation);
-                                ((LoadingActivity) loadingActivity).loc_cnt=cnt+1;
-                                if(firebaseUser==null){
-                                ((LoadingActivity) loadingActivity).loc.set(0,array[select]);
-                                }
-                                Log.d("loc_cnt","loc_cnt = "+String.valueOf(((LoadingActivity) loadingActivity).loc_cnt));
+                                user_location=array[select];
                                 startActivity(new Intent(context,RegionActivity.class));
                             }
                         }).setNegativeButton("취소",null);
@@ -333,14 +327,7 @@ public class ChooseTheRegionActivity  extends AppCompatActivity {
                             } catch (IOException e) {
                                 e.printStackTrace();
                             }
-                            if(firebaseUser==null){
-                                ((LoadingActivity) loadingActivity).loc.set(0,addr.get(0).getThoroughfare());
-                            }
-                            Log.e("userLocation_search","the value of a parameter called userLocation in ChooseTheRegionActivity is "+userLocation);
-                            for(int i = 0; i<((LoadingActivity) loadingActivity).loc.size(); ++i)
-                                Log.d("userLoc","전역 변수 userLoc["+String.valueOf(i)+"] = "+((LoadingActivity) loadingActivity).loc.get(i));
-                            Log.d("loc_cnt","loc_cnt = "+String.valueOf(((LoadingActivity) loadingActivity).loc_cnt));
-                            Log.d("loc size","연결리스트 loc의 크기: "+((LoadingActivity)LoadingActivity.loadingActivity).loc.size());
+                            user_location=addr.get(0).getThoroughfare();
                             startActivity(new Intent(context,RegionActivity.class));
                         }
                     }).setNegativeButton("취소",null);

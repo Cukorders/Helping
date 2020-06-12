@@ -24,10 +24,10 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.cukorders.Adapter.PostAdapter;
+import com.cukorders.helping.ChooseTheRegionActivity;
 import com.cukorders.helping.CustomDialog;
 import com.cukorders.helping.FilterActivity;
 import com.cukorders.helping.InitPost;
-import com.cukorders.helping.LoadingActivity;
 import com.cukorders.helping.R;
 import com.cukorders.helping.RegionActivity;
 import com.google.firebase.auth.FirebaseAuth;
@@ -62,6 +62,9 @@ public class RecentMissionFragment extends Fragment {
     private DatabaseReference locRef;
     private Button bt_certificate;
     private String checkKey;
+    private final String TAG="RecentMissionActivity";
+
+    public static ArrayList<String> loc=new ArrayList<>();
 
     //DB에서  post 연결
     private DatabaseReference postRef;
@@ -104,15 +107,37 @@ public class RecentMissionFragment extends Fragment {
         });
         user_locations=(Spinner) view.findViewById(R.id.user_locations);
         arrayList=new ArrayList<>();
-        arrayList.add(((LoadingActivity)LoadingActivity.loadingActivity).loc.get(0));
-        location_now=((LoadingActivity)LoadingActivity.loadingActivity).loc.get(0);
+
+        if(firebaseUser==null){
+            arrayList.add(((ChooseTheRegionActivity)ChooseTheRegionActivity.regional_certification1).user_location);
+        }else{
+            databaseReference=FirebaseDatabase.getInstance().getReference().child("userRegions").child(firebaseUser.getUid());
+            databaseReference.addValueEventListener(new ValueEventListener() {
+                @Override
+                public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                    for(DataSnapshot snapshot:dataSnapshot.getChildren()){
+                        String key=snapshot.getKey(),val;
+                        Log.d(TAG,"key의 값: "+key);
+                        val=snapshot.getValue().toString();
+                        if(!key.contains("state")&&!val.equals("default")){
+                            arrayList.add(val);
+                            Log.d(TAG,"arrayList에 "+val+"이 추가되었습니다.");
+                        }
+                    }
+                }
+
+                @Override
+                public void onCancelled(@NonNull DatabaseError databaseError) {}
+            });
+        }
+
         locCertification=true;
 
         user_locations.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
                 location_now=arrayList.get(position);
-                locCertification=((LoadingActivity)LoadingActivity.loadingActivity).isCertified[position];
+               // locCertification=((LoadingActivity)LoadingActivity.loadingActivity).isCertified[position];
                 Log.d("사용자 현위치","사용자의 현위치 : "+location_now);
                 Log.d("사용자 현위치 인증","사용자의 현위치 위치 인증여부"+locCertification);
             }

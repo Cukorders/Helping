@@ -15,7 +15,7 @@ public class CustomDialog extends Dialog{
         super(context);
         setContentView(R.layout.ask_main);
 
-        loc=((LoadingActivity)LoadingActivity.loadingActivity).loc.get(0);
+        loc=((ChooseTheRegionActivity)ChooseTheRegionActivity.regional_certification1).user_location;
         txt=(TextView) findViewById(R.id.txt);
         txt.setText("가입하고 "+loc);
         findViewById(R.id.bt_main).setOnClickListener(new View.OnClickListener() {
