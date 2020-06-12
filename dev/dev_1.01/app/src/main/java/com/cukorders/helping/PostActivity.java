@@ -39,7 +39,6 @@ import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
 import com.google.firebase.storage.UploadTask;
-import com.theartofdev.edmodo.cropper.CropImage;
 
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -90,7 +89,13 @@ public class PostActivity extends AppCompatActivity {
     private String imagePath;
     private String images[]=new String[3];
     private String postKey;
+    private static final String TAG="PostActivity";
     private String nowLocation;
+    private static final int PICK_IMAGE=1;
+    private ArrayList<Uri> ImageList=new ArrayList<Uri>();
+    private Uri ImageUri;
+    private int upload_cnt=0;
+    private static StorageReference imageRef;
 
     @SuppressLint("LongLogTag")
     private static void init_ageChecked(boolean ageChecked[]){
@@ -104,10 +109,10 @@ public class PostActivity extends AppCompatActivity {
             photoCheck[i]=false;
     }
 
-    private static void setPhotoButton(boolean[] photoCheck){
+    /*private static void setPhotoButton(boolean[] photoCheck){
         for(int i=1;i<3;++i)
             pic[i].setVisibility(photoCheck[i]?View.VISIBLE:View.INVISIBLE);
-    }
+    }*/
 
     private static int checkedAge(boolean[] ageChecked){
         int ret=0;
@@ -196,6 +201,8 @@ public class PostActivity extends AppCompatActivity {
         pic[2]=(RelativeLayout) findViewById(R.id.photo3);
 
         for(int i=1;i<=2;++i) photo[i].setEnabled(false);
+
+        imageRef=FirebaseStorage.getInstance().getReference().child("PostImage");
 
         //기본 기능 버튼
         findViewById(R.id.back_button_write_post).setOnClickListener(onClickListener);
@@ -336,31 +343,15 @@ public class PostActivity extends AppCompatActivity {
             switch (v.getId()){
                 case R.id.camera_album_add1:
                     photoCheck[0]=true;
-                    setPhotoButton(photoCheck);
-                    photo[1].setEnabled(true);
-                    Log.d("photo button","사진 추가 버튼1이 클릭되었습니다.");
-                    Intent getAlbumIntent = new Intent(Intent.ACTION_PICK);
-                    getAlbumIntent.setType(MediaStore.Images.Media.CONTENT_TYPE);
-                    startActivityForResult(getAlbumIntent,GALLERY_CODE);
-                    break;
+//                    setPhotoButton(photoCheck);
+  //                  photo[1].setEnabled(true);
+                    Log.d(TAG,"사진 추가 버튼이 클릭되었습니다.");
+                    Intent intent=new Intent(Intent.ACTION_GET_CONTENT);
+                    intent.setType("PostImage/*");
+                    intent.putExtra(Intent.EXTRA_ALLOW_MULTIPLE,true);
+                    startActivityForResult(intent,PICK_IMAGE);
 
-                case R.id.camera_album_add2:
-                    ++count;
-                    photoCheck[1]=true;
-                    setPhotoButton(photoCheck);
-                    photo[2].setEnabled(true);
-                    Log.d("photo button","사진 추가 버튼2이 클릭되었습니다.");
-                    Intent getAlbumIntent2 = new Intent(Intent.ACTION_PICK);
-                    getAlbumIntent2.setType(MediaStore.Images.Media.CONTENT_TYPE);
-                    startActivityForResult(getAlbumIntent2,GALLERY_CODE);
-                    break;
 
-                case R.id.camera_album_add3:
-                    ++count;
-                    Log.d("photo button","사진 추가 버튼3이 클릭되었습니다.");
-                    Intent getAlbumIntent3 = new Intent(Intent.ACTION_PICK);
-                    getAlbumIntent3.setType(MediaStore.Images.Media.CONTENT_TYPE);
-                    startActivityForResult(getAlbumIntent3,GALLERY_CODE);
                     break;
 
             }
@@ -431,6 +422,8 @@ public class PostActivity extends AppCompatActivity {
         String title,description,endTime,cancelTime,place,uid,category,postKey,location;
         int pay,due,price,age;
         boolean sameGender,isMatched,isFinished;
+        String image[]=new String[3];
+
         public Post(String title,String description,String endTime,String cancelTime,String place,int pay,int due,int price,String uid,boolean sameGender,int age,String category,String postKey,String location,boolean isMatched,boolean isFinished){
             this.title=title;
             this.description=description;
@@ -467,7 +460,7 @@ public class PostActivity extends AppCompatActivity {
         public boolean isSameGender(){return sameGender;}
 
         public Map<String,Object> toMap(){
-            HashMap<String,Object> ret=new HashMap<>();
+            final HashMap<String,Object> ret=new HashMap<>();
             ret.put("title",title);
             ret.put("description",description);
             ret.put("endTime",endTime);
@@ -491,6 +484,22 @@ public class PostActivity extends AppCompatActivity {
             ret.put("location",location);
             ret.put("isMatched",isMatched);
             ret.put("isFinished",isFinished);
+            for(upload_cnt=0;upload_cnt<ImageList.size();++upload_cnt){
+                Uri imageUri=ImageList.get(upload_cnt);
+                final StorageReference imageName=imageRef.child("Image"+imageUri.getLastPathSegment());
+                imageName.putFile(imageUri).addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
+                    @Override
+                    public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
+                        imageName.getDownloadUrl().addOnSuccessListener(new OnSuccessListener<Uri>() {
+                            @Override
+                            public void onSuccess(Uri uri) {
+                                String Urival=String.valueOf(uri);
+                                ret.put("image"+(upload_cnt),Urival.toString());
+                            }
+                        });
+                    }
+                });
+            }
             return ret;
         }
     }
@@ -498,47 +507,27 @@ public class PostActivity extends AppCompatActivity {
     @Override
     protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
-        if (requestCode == GALLERY_CODE&& resultCode==RESULT_OK) {
-            imagePath = getPath(data.getData());
-            Uri imageUri = data.getData();
-            CropImage.activity(imageUri)
-                    .setAspectRatio(1,1)
-                    .start(this);
-        }
+       if(requestCode==PICK_IMAGE){
+           if(resultCode==RESULT_OK){
+               if(data.getClipData()!=null){
+                   int countClipData=data.getClipData().getItemCount();
+                   if(countClipData>3){
+                       Toast.makeText(context,"사진은 3장까지만 추가할 수 있습니다.",Toast.LENGTH_LONG).show();
+                   }else {
+                       int currentImageSelect = 0;
+                       while (currentImageSelect < countClipData) {
+                           ImageUri=data.getClipData().getItemAt(currentImageSelect).getUri();
+                           ImageList.add(ImageUri);
+                           ++currentImageSelect;
+                       }
+                   }
+               }else{
+                   Toast.makeText(context,"아무 사진도 선택되지 않았습니다.",Toast.LENGTH_LONG).show();
+               }
+           }
 
-        //crop에 성공하면 result에 담고, resultUri에 저장
-        if(requestCode==CropImage.CROP_IMAGE_ACTIVITY_REQUEST_CODE){
-            CropImage.ActivityResult result = CropImage.getActivityResult(data);
-            if(resultCode ==RESULT_OK){
-                Uri resultUri = result.getUri();
-                String currentUser_Uid = uid;
-                //set image Name to random
-                final StorageReference filepath = firebaseStorage.child("profile_images").child(currentUser_Uid+postKey+String.valueOf(count)+".jpg");
-                filepath.putFile(resultUri).addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
-                    @Override
-                    public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
-                        final Task<Uri> firebaseUri = taskSnapshot.getStorage().getDownloadUrl();
-                        firebaseUri.addOnSuccessListener(new OnSuccessListener<Uri>() {
-                            @Override
-                            public void onSuccess(Uri uri) {
-                                final String downloadUrl = uri.toString();
-                                databaseReference.child("Image").setValue(downloadUrl).addOnCompleteListener(new OnCompleteListener<Void>() {
-                                    @Override
-                                    public void onComplete(@NonNull Task<Void> task) {
-                                        if(task.isSuccessful()){
-                                           // Picasso.get().load(downloadUrl).into((Target) pic[count]);
-                                            Toast.makeText(context,"Succeed in uploading Profile Img",Toast.LENGTH_LONG).show();
-                                        }
-                                    }
-                                });
-                            }
-                        });
-                    }
-                });
-            } else if (resultCode == CropImage.CROP_IMAGE_ACTIVITY_RESULT_ERROR_CODE){
-                Exception error = result.getError();
-            }
-        }
+       }
+
     }
 
 

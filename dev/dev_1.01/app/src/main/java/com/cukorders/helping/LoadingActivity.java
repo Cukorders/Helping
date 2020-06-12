@@ -52,10 +52,15 @@ public class LoadingActivity extends AppCompatActivity {
                         String key= snapshot.getKey();
                         Log.d("value","유저 key: "+key);
                         if(!key.contains("state")){
-                            Log.d("loc","loc의 원소: "+snapshot.getValue().toString());
+                            Log.d(TAG,"loc의 원소: "+snapshot.getValue().toString());
                             if(!snapshot.getValue().toString().equals("default")){
                                 loc.add(snapshot.getValue().toString());
                             }
+                        }else{
+                            int index=(key.charAt(6)-'0')-1;
+                            String val=snapshot.getValue().toString();
+                            isCertified[index]=val.equals("default")||val.equals("false")?false:true;
+                            Log.d(TAG,"isCertified["+index+"]의 값: "+isCertified[index]);
                         }
                     }
                 }

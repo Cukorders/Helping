@@ -30,7 +30,7 @@ import com.cukorders.helping.FilterActivity;
 import com.cukorders.helping.InitPost;
 import com.cukorders.helping.LoadingActivity;
 import com.cukorders.helping.R;
-import com.cukorders.helping.RegionActivity;
+import com.cukorders.helping.RegionalCertificationActivity;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DataSnapshot;
@@ -103,7 +103,7 @@ public class RecentMissionFragment extends Fragment {
         filter.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Log.d("필터","필터 버튼이 클릭되었음.");
+                Log.d(TAG,"필터 버튼이 클릭되었음.");
                 startActivity(new Intent(getContext(), FilterActivity.class));
             }
         });
@@ -113,40 +113,58 @@ public class RecentMissionFragment extends Fragment {
         if(firebaseUser==null){
             // 만약 로그인하지 않은 유저: 시작할 때
             Log.d(TAG,"로그인하지 않은 유저입니다.");
-            arrayList.add(((ChooseTheRegionActivity)ChooseTheRegionActivity.regional_certification1).user_location);
+            ((LoadingActivity)LoadingActivity.loadingActivity).loc.add(((ChooseTheRegionActivity)ChooseTheRegionActivity.regional_certification1).user_location);
         }else{
             Log.d(TAG,"로그인한 유저입니다.");
-            int size=((LoadingActivity)LoadingActivity.loadingActivity).loc.size();
+           // int size=((LoadingActivity)LoadingActivity.loadingActivity).loc.size();
             HashSet<String>tmp=new HashSet<>(((LoadingActivity)LoadingActivity.loadingActivity).loc);
-            arrayList=new ArrayList<>(tmp);
-            Log.d(TAG,"arrayList의 크기: "+arrayList.size());
-            for(int i=0;i<size;++i){
-                Log.d(TAG,"arrayList의 원소: "+arrayList.get(i));
+            ((LoadingActivity)LoadingActivity.loadingActivity).loc=new ArrayList<>(tmp);
+            for(int i=0;i<((LoadingActivity)LoadingActivity.loadingActivity).loc.size();++i){
+                Log.d(TAG,"loc["+i+"]의 원소: "+((LoadingActivity)LoadingActivity.loadingActivity).loc.get(i));
             }
         }
 
         //중복 제거
-        HashSet<String>tmp=new HashSet<>(arrayList);
-        arrayList=new ArrayList<>(tmp);
+        HashSet<String>tmp=new HashSet<>(((LoadingActivity)LoadingActivity.loadingActivity).loc);
+        ((LoadingActivity)LoadingActivity.loadingActivity).loc=new ArrayList<>(tmp);
 
-        locCertification=false;
+       // locCertification=false;
 
-        Log.d(TAG,"arrayList의 크기: "+arrayList.size());
+       /* Log.d(TAG,"arrayList의 크기: "+arrayList.size());
         for(int i=0;i<arrayList.size();++i){
             Log.d(TAG,"arrayList의 원소: "+arrayList.get(i));
-        }
+        }*/
 
         arrayAdapter=new ArrayAdapter<>(getContext(),
-                android.R.layout.simple_spinner_dropdown_item,arrayList);
+                android.R.layout.simple_spinner_dropdown_item,((LoadingActivity)LoadingActivity.loadingActivity).loc);
         user_locations.setAdapter(arrayAdapter);
+
+        locCertification=((LoadingActivity)LoadingActivity.loadingActivity).isCertified[0];
 
         user_locations.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
-                location_now=arrayList.get(position);
-               // locCertification=((LoadingActivity)LoadingActivity.loadingActivity).isCertified[position];
-                Log.d("사용자 현위치","사용자의 현위치 : "+location_now);
-                Log.d("사용자 현위치 인증","사용자의 현위치 위치 인증여부"+locCertification);
+                location_now=((LoadingActivity)LoadingActivity.loadingActivity).loc.get(position);
+                locCertification=((LoadingActivity)LoadingActivity.loadingActivity).isCertified[position];
+                Log.d(TAG,"사용자의 현위치 : "+location_now);
+                Log.d(TAG,"사용자의 현위치 위치 인증여부"+locCertification);
+                if(firebaseUser!=null){
+                if(!locCertification){
+                    inflater.inflate(R.layout.not_certified,linearLayout,false);
+                    Log.d(TAG,"지역 인증하지 않은 유저입니다.");
+                    inflater.inflate(R.layout.not_certified,linearLayout,true);
+                    bt_certificate=(Button) linearLayout.findViewById(R.id.bt_certificate);
+                    linearLayout.findViewById(R.id.bt_certificate).setOnClickListener(new View.OnClickListener() {
+                        @Override
+                        public void onClick(View v) {
+                            Log.d(TAG,"인증 버튼이 클릭되었음.");
+                            startActivity(new Intent(context, RegionalCertificationActivity.class));
+                        }
+                    });
+                } else{
+                    Log.d(TAG,"지역 인증을 한 지역입니다.");
+                    }
+                }
             }
 
             @Override
@@ -159,9 +177,9 @@ public class RecentMissionFragment extends Fragment {
             Log.e("user not found","로그인 하지 않은 유저입니다.");
             CustomDialog customDialog=new CustomDialog(recentMissionFragment);
             customDialog.show();
-            Log.d("유저 지역","유저 지역: "+arrayList.get(0));
-        }else{
-            setLocation();
+            Log.d("유저 지역","유저 지역: "+((LoadingActivity)LoadingActivity.loadingActivity).loc.get(0));
+        }
+           /* setLocation();
             databaseReference=FirebaseDatabase.getInstance().getReference().child("userRegions").child(firebaseUser.getUid());
             databaseReference.addValueEventListener(new ValueEventListener() {
                 @Override
@@ -174,7 +192,7 @@ public class RecentMissionFragment extends Fragment {
                         }else if(key.equals(checkKey)){
                             if(snapshot.getValue().toString().equals("default")||snapshot.getValue().toString().equals("false")){
                                 locCertification=false;
-                                Log.d("locCertification","locCertification의 값: "+locCertification);
+                                Log.d(TAG,"locCertification의 값: "+locCertification);
                             }
                         }
                     }
@@ -182,21 +200,8 @@ public class RecentMissionFragment extends Fragment {
 
                 @Override
                 public void onCancelled(@NonNull DatabaseError databaseError) {}
-            });
+            });*/
 
-            if(!locCertification){
-                Log.e("not certified","지역 인증하지 않은 유저입니다.");
-                inflater.inflate(R.layout.not_certified,linearLayout,true);
-                bt_certificate=(Button) view.findViewById(R.id.bt_certificate);
-                bt_certificate.setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View v) {
-                        Log.d("인증 버튼 클릭","인증 버튼이 클릭되었음.");
-                        startActivity(new Intent(context,RegionActivity.class));
-                    }
-                });
-            }
-        }
 
         return view;
     }

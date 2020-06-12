@@ -96,7 +96,6 @@ public class MyPlaceActivity extends AppCompatActivity {
         for(int i=0;i<3;++i){
             change[i].setOnClickListener(onClickListener);
             delete[i].setOnClickListener(onClickListener);
-            check[i]=false;
         }
 
         findViewById(R.id.profileRegisterBt).setOnClickListener(onClickListener);
@@ -158,7 +157,7 @@ public class MyPlaceActivity extends AppCompatActivity {
                                 String key= snapshot.getKey();
                                 Log.d("value","유저 key: "+key);
                                 if(key.contains("state")){
-                                check[(key.charAt(6)-'0')-1]=snapshot.getValue().toString().equals("true")?true:false;
+                                    ((LoadingActivity)LoadingActivity.loadingActivity).isCertified[(key.charAt(6)-'0')-1]=snapshot.getValue().toString().equals("true")?true:false;
                                 Log.d("check","check의 값: "+(snapshot.getValue().toString().equals("true")?true:false));
                                 }
                             }
@@ -170,7 +169,7 @@ public class MyPlaceActivity extends AppCompatActivity {
                     for(int i=0;i<3;++i){
                         Log.d(TAG,"region의 값"+region[i]);
                         update.put("Region"+String.valueOf(i+1),(region[i].getText().toString().contains("지역")||region[i].getText().toString().contains("default")?"default":region[i].getText().toString()));
-                        update.put("Region"+String.valueOf(i+1)+" state",(check[i]?"true":"default"));
+                        update.put("Region"+String.valueOf(i+1)+" state",(((LoadingActivity)LoadingActivity.loadingActivity).isCertified[i]?"true":"default"));
                     }
                     databaseReference.setValue(update).addOnCompleteListener(new OnCompleteListener<Void>() {
                         @Override
@@ -198,6 +197,7 @@ public class MyPlaceActivity extends AppCompatActivity {
     }
 
     private void delete(int index){
+        if(index<((LoadingActivity)LoadingActivity.loadingActivity).loc.size()){
         ((LoadingActivity)LoadingActivity.loadingActivity).loc.remove(index);
         Log.d(TAG,"loc의 "+index+"번째 원소가 삭제되었습니다.");
         Log.d(TAG,"loc의 크기: "+((LoadingActivity)LoadingActivity.loadingActivity).loc.size());
@@ -211,6 +211,9 @@ public class MyPlaceActivity extends AppCompatActivity {
             Log.d(TAG,"user_regions의 원소: "+user_regions.get(i));
         }
         setTexts();
+        }else{
+            Toast.makeText(context,"삭제할 수 없습니다.",Toast.LENGTH_LONG).show();
+        }
     }
 
    /* private void checkRegions(){

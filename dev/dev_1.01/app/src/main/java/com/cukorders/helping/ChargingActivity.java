@@ -96,10 +96,10 @@ public class ChargingActivity extends AppCompatActivity {
                         builder.show();
                     }else{
                     int input=Integer.parseInt(points.getText().toString());
-                    if(input<0){
+                    if(input<=0){
                         AlertDialog.Builder builder=new AlertDialog.Builder(context);
                         builder.setTitle("입력 에러");
-                        builder.setMessage("금액은 0 이상이어야 합니다.");
+                        builder.setMessage("금액은 0보다 커야합니다.");
                         builder.setPositiveButton("확인", null).setNegativeButton("취소",null);
                         builder.show();
                     }else if(input%1000>0){

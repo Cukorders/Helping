@@ -35,16 +35,20 @@ import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
+import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
 
 import java.io.IOException;
 import java.util.ArrayList;
-import java.util.HashSet;
+import java.util.HashMap;
 import java.util.List;
 
 import static android.text.Spanned.SPAN_INCLUSIVE_EXCLUSIVE;
@@ -124,69 +128,15 @@ public class RegionalCertificationActivity extends FragmentActivity implements O
 
         spinner=(Spinner) findViewById(R.id.location_spinner);
 
-        HashSet<String> tmp=new HashSet<>(((LoadingActivity)LoadingActivity.loadingActivity).loc);
-        arrayList=new ArrayList<>(tmp); //중복 제거
-
-        Log.d(TAG,"arrayList의 크기: "+arrayList.size());
-        Log.d(TAG,"loc의 크기: "+((LoadingActivity)LoadingActivity.loadingActivity).loc.size());
-        for(int i=0;i<arrayList.size();++i){
-            Log.d(TAG,"arrayList의 원소: "+arrayList.get(i));
-            Log.d(TAG,"loc의 원소: "+((LoadingActivity)LoadingActivity.loadingActivity).loc.get(i));
-        }
-
-        /*databaseReference.addValueEventListener(new ValueEventListener() {
-            @SuppressLint("LongLogTag")
-            @Override
-            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                for(DataSnapshot snapshot:dataSnapshot.getChildren()){
-                    String key=snapshot.getKey(),val;
-                    Log.d(TAG,"key의 값: "+key);
-                    val=snapshot.getValue().toString();
-                    if(!val.contains("state")){
-                        if(!val.equals("default")){
-                            arrayList.add(val);
-                        }
-                        Log.d(TAG,"arrayList에 "+val+"이 추가되었습니다.");
-                    }
-                }
-
-            }
-
-            @Override
-            public void onCancelled(@NonNull DatabaseError databaseError) {}
-        });*/
-       /*
-        for(int i=0;i<3;++i){
-
-            loc[i]=((LoadingActivity)LoadingActivity.loadingActivity).userLoc[i];
-            if(loc[i]==null) loc[i]="default";
-            Log.d("loc[i]의 값","loc["+String.valueOf(i)+"] = "+loc[i]);
-        }
-        for(int i=0;i<3;++i){
-            Log.d("loc","loc["+String.valueOf(i)+"]= "+loc[i]);
-            if(loc[i].equals("default")){
-                continue;
-            }
-            arrayList.add(loc[i]);
-            Log.d("arrayList","새 원소 "+arrayList.get(i)+"가 추가되었습니다.");
-        }*/
-
-     /*  Log.d("loc size","연결리스트 loc의 크기: "+((LoadingActivity)LoadingActivity.loadingActivity).loc.size());
-       for(int i=0;i<((LoadingActivity)LoadingActivity.loadingActivity).loc.size();++i){
-           String str=(((LoadingActivity)LoadingActivity.loadingActivity).loc).get(i);
-           if(str.equals("default")) continue;
-           arrayList.add(str);
-       }*/
-
         arrayAdapter=new ArrayAdapter<>(getApplicationContext(),
-                android.R.layout.simple_spinner_dropdown_item,arrayList);
+                android.R.layout.simple_spinner_dropdown_item,((LoadingActivity)LoadingActivity.loadingActivity).loc);
 
-         compare=arrayList.get(0);
+         compare=((LoadingActivity)LoadingActivity.loadingActivity).loc.get(0);
         spinner.setAdapter(arrayAdapter);
         spinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
-                compare=arrayList.get(position);
+                compare=((LoadingActivity)LoadingActivity.loadingActivity).loc.get(position);
                 index=position;
                 Log.d("인증할 지역","인증할 지역 : "+compare);
             }
@@ -213,6 +163,58 @@ public class RegionalCertificationActivity extends FragmentActivity implements O
                     Log.e("the user's location is ","the user's location is "+dong);
 
                     if(compare.equals(dong)){
+                        HashMap<String,Object> update=new HashMap<>();
+                        databaseReference= FirebaseDatabase.getInstance().getReference().child("userRegions").child(firebaseUser.getUid());
+                        ((LoadingActivity)LoadingActivity.loadingActivity).isCertified[index]=true;
+                        for(int i=0;i<3;++i){
+                            Log.d(TAG,"isCertified["+i+"]의 값: "+((LoadingActivity)LoadingActivity.loadingActivity).isCertified[i]);
+                        }
+                        databaseReference.addValueEventListener(new ValueEventListener() {
+                            @Override
+                            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                                for(DataSnapshot snapshot:dataSnapshot.getChildren()){
+                                    String key= snapshot.getKey();
+                                    Log.d("value","유저 key: "+key);
+                                    if(key.contains("state")){
+                                        ((LoadingActivity)LoadingActivity.loadingActivity).isCertified[(key.charAt(6)-'0')-1]=snapshot.getValue().toString().equals("true")?true:false;
+                                        Log.d("check","check의 값: "+(snapshot.getValue().toString().equals("true")?true:false));
+                                    }
+                                }
+                            }
+
+                            @Override
+                            public void onCancelled(@NonNull DatabaseError databaseError) {}
+                        });
+                        String locationTmp[]=new String[3];
+                        int size=((LoadingActivity)LoadingActivity.loadingActivity).loc.size();
+                        for(int i=0;i<size;++i){
+                            locationTmp[i]=((LoadingActivity)LoadingActivity.loadingActivity).loc.get(i);
+                            Log.d(TAG,"location["+i+"]의 값: "+locationTmp[i]);
+                            Log.d(TAG,"loc["+i+"]의 값: "+((LoadingActivity)LoadingActivity.loadingActivity).loc.get(i));
+                        }
+                        for(int i=size;i<3;++i){
+                            locationTmp[i]="default";
+                        }
+                        for(int i=0;i<3;++i){
+                            Log.d(TAG,"location의 값: "+locationTmp[i]);
+                            Log.d(TAG,"isCertified["+i+"]의 값: "+((LoadingActivity)LoadingActivity.loadingActivity).isCertified[i]);
+                            update.put("Region"+String.valueOf(i+1),locationTmp[i]);
+                            update.put("Region"+String.valueOf(i+1)+" state",((LoadingActivity)LoadingActivity.loadingActivity).isCertified[i]);
+                        }
+
+                        databaseReference.setValue(update).addOnCompleteListener(new OnCompleteListener<Void>() {
+                            @Override
+                            public void onComplete(@NonNull Task<Void> task) {
+                                if (task.isSuccessful()) {
+                                  //  Toast.makeText(context,"지역 변경이 되었습니다.",Toast.LENGTH_LONG).show();
+                                    Log.e(TAG, "a post is successfully uploaded");
+                                    startActivity(new Intent(context,MyPageActivity.class));
+                                } else{
+                                    Toast.makeText(context,"오류가 발생하여 지역 인증에 실패하였습니다. 잠시 후에 다시 시도해주십시오.",Toast.LENGTH_LONG).show();
+                                }
+                            }
+                        });
+                        Toast.makeText(context,"지역 인증이 완료되었습니다.",Toast.LENGTH_LONG).show();
                         goMyPage();
                     }
                     else{
@@ -281,7 +283,7 @@ public class RegionalCertificationActivity extends FragmentActivity implements O
                     Address cur=addr.get(0);
                     dong=cur.getThoroughfare();
                     Log.d("current Location",dong);
-                    int start="현재 위치는".length(),end=start+dong.length();
+                    int start="현재 위치는 ".length(),end=start+dong.length();
                     MarkerOptions markerOptions = new MarkerOptions().position(now).title(dong);
                     result_gps.setText("현재 위치는 "+dong+"입니다.");
                     Spannable span=(Spannable) result_gps.getText();

@@ -147,7 +147,7 @@ public class MainActivity extends AppCompatActivity {
                             @Override
                             public void onClick(DialogInterface dialog, int which) {
                                // mainLocation=((ChooseTheRegionActivity)ChooseTheRegionActivity.regional_certification1).userLocation;
-                                startActivity(new Intent(context,RegionActivity.class));
+                                startActivity(new Intent(context,RegionalCertificationActivity.class));
                             }
                         }).setNegativeButton("취소",null);
                         builder.show();
