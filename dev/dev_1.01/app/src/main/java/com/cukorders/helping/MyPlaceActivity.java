@@ -119,6 +119,7 @@ public class MyPlaceActivity extends AppCompatActivity {
                 case R.id.change1:
                     changingIndex=0;
                     changeRegion(region[0],0);
+                    setTexts();
                     break;
 
                 case R.id.change2:
@@ -134,15 +135,17 @@ public class MyPlaceActivity extends AppCompatActivity {
                 case R.id.delete1:
                     if(user_regions.size()==1){
                         Toast.makeText(context,"지역은 하나 이상 설정되어있어야 합니다.",Toast.LENGTH_LONG).show();
+                    }else{
+                        delete(0);
                     }
                     break;
 
                 case R.id.delete2:
-                    //delete(1);
+                    delete(1);
                     break;
 
                 case R.id.delete3:
-                    //delete(2);
+                    delete(2);
                     break;
 
                 case R.id.profileRegisterBt:
@@ -165,15 +168,15 @@ public class MyPlaceActivity extends AppCompatActivity {
                         public void onCancelled(@NonNull DatabaseError databaseError) {}
                     });
                     for(int i=0;i<3;++i){
-                        Log.d("region값","region의 값"+region[i]);
-                        update.put("Region"+String.valueOf(i+1),(region[i].getText().toString().contains("지역")?"default":region[i].getText().toString()));
+                        Log.d(TAG,"region의 값"+region[i]);
+                        update.put("Region"+String.valueOf(i+1),(region[i].getText().toString().contains("지역")||region[i].getText().toString().contains("default")?"default":region[i].getText().toString()));
                         update.put("Region"+String.valueOf(i+1)+" state",(check[i]?"true":"default"));
                     }
                     databaseReference.setValue(update).addOnCompleteListener(new OnCompleteListener<Void>() {
                         @Override
                         public void onComplete(@NonNull Task<Void> task) {
                             if (task.isSuccessful()) {
-                                Toast.makeText(context,"지역 추가가 되었습니다.",Toast.LENGTH_LONG).show();
+                                Toast.makeText(context,"지역 변경이 되었습니다.",Toast.LENGTH_LONG).show();
                                 Log.e("a post is uploaded", "a post is successfully uploaded");
                                 startActivity(new Intent(context,MyPageActivity.class));
                             } else{
@@ -191,6 +194,22 @@ public class MyPlaceActivity extends AppCompatActivity {
       //  fromMyPlaceActivity=true;
        // Log.d("fromMyPlaceActivity","fromMyPlaceActivity 값: "+fromMyPlaceActivity);
         startActivity(new Intent(context,ChangeTheRegionActivity.class));
+        setTexts();
+    }
+
+    private void delete(int index){
+        ((LoadingActivity)LoadingActivity.loadingActivity).loc.remove(index);
+        Log.d(TAG,"loc의 "+index+"번째 원소가 삭제되었습니다.");
+        Log.d(TAG,"loc의 크기: "+((LoadingActivity)LoadingActivity.loadingActivity).loc.size());
+        HashSet<String>tmp=new HashSet<String>(((LoadingActivity)LoadingActivity.loadingActivity).loc);
+        user_regions=new ArrayList<String>(tmp);
+        Log.d(TAG,"user_regions의 크기: "+user_regions.size());
+        for(int i=0;i<((LoadingActivity)LoadingActivity.loadingActivity).loc.size();++i){
+            Log.d(TAG,"loc의 원소: "+((LoadingActivity)LoadingActivity.loadingActivity).loc.get(i));
+        }
+        for(int i=0;i<user_regions.size();++i){
+            Log.d(TAG,"user_regions의 원소: "+user_regions.get(i));
+        }
         setTexts();
     }
 
@@ -217,12 +236,16 @@ public class MyPlaceActivity extends AppCompatActivity {
     */
 
     private void setTexts(){
-        int size=user_regions.size();
+        int size=((LoadingActivity)LoadingActivity.loadingActivity).loc.size();
         Log.d(TAG,"loc 배열 크기: "+size);
-        for(int i=0;i<3;++i)
+        for(int i=0;i<3;++i){
             region[i].setText("지역 "+(i+1));
-        for(int i=0;i<size;++i)
-            region[i].setText(user_regions.get(i));
+            Log.d(TAG,"region["+i+"]의 값: "+region[i].getText().toString());
+        }
+        for(int i=0;i<size;++i){
+            region[i].setText(((LoadingActivity)LoadingActivity.loadingActivity).loc.get(i));
+            Log.d(TAG,"region["+i+"]의 값: "+region[i].getText().toString());
+        }
     }
 
 }

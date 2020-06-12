@@ -24,7 +24,6 @@ import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.app.ActivityCompat;
 
-import com.cukorders.Fragment.RecentMissionFragment;
 import com.google.android.gms.location.FusedLocationProviderClient;
 import com.google.android.gms.location.LocationServices;
 import com.google.android.gms.maps.model.LatLng;
@@ -200,12 +199,12 @@ public class ChangeTheRegionActivity extends AppCompatActivity {
                                 if(((LoadingActivity)LoadingActivity.loadingActivity).loc.size()==change){
                                     ((LoadingActivity)LoadingActivity.loadingActivity).loc.add(array[select]);
                                     for(int i=0;i<((LoadingActivity)LoadingActivity.loadingActivity).loc.size();++i){
-                                        Log.d(TAG,"loc 원소: "+RecentMissionFragment.loc.get(i));
+                                        Log.d(TAG,"loc 원소:"+((LoadingActivity)LoadingActivity.loadingActivity).loc.get(i));
                                     }
                                 }else{
                                     ((LoadingActivity)LoadingActivity.loadingActivity).loc.set(change,array[select]);
                                     for(int i=0;i<((LoadingActivity)LoadingActivity.loadingActivity).loc.size();++i){
-                                        Log.d(TAG,"loc 원소: "+RecentMissionFragment.loc.get(i));
+                                        Log.d(TAG,"loc 원소: "+((LoadingActivity)LoadingActivity.loadingActivity).loc.get(i));
                                     }
                                 }
                                 Toast.makeText(context,"지역 수정이 완료되었습니다.",Toast.LENGTH_LONG).show();

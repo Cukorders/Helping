@@ -112,11 +112,15 @@ public class RecentMissionFragment extends Fragment {
 
         if(firebaseUser==null){
             // 만약 로그인하지 않은 유저: 시작할 때
+            Log.d(TAG,"로그인하지 않은 유저입니다.");
             arrayList.add(((ChooseTheRegionActivity)ChooseTheRegionActivity.regional_certification1).user_location);
         }else{
+            Log.d(TAG,"로그인한 유저입니다.");
             int size=((LoadingActivity)LoadingActivity.loadingActivity).loc.size();
+            HashSet<String>tmp=new HashSet<>(((LoadingActivity)LoadingActivity.loadingActivity).loc);
+            arrayList=new ArrayList<>(tmp);
+            Log.d(TAG,"arrayList의 크기: "+arrayList.size());
             for(int i=0;i<size;++i){
-                arrayList.add(((LoadingActivity)LoadingActivity.loadingActivity).loc.get(i));
                 Log.d(TAG,"arrayList의 원소: "+arrayList.get(i));
             }
         }

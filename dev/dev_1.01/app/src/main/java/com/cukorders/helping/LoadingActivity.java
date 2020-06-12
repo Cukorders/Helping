@@ -29,6 +29,7 @@ public class LoadingActivity extends AppCompatActivity {
   //  public static int loc_cnt=0;
     private static FirebaseUser firebaseUser= FirebaseAuth.getInstance().getCurrentUser();
     private static String uid;
+    private static final String TAG="LoadingActivity";
     private static DatabaseReference databaseReference;
 
     @Override
@@ -41,6 +42,7 @@ public class LoadingActivity extends AppCompatActivity {
 
         Log.d("firebaseUser","firebaseUser in the loading activity: "+firebaseUser);
         if(firebaseUser!=null){
+            Log.d(TAG,"로그인되어있는 유저입니다.");
             uid=firebaseUser.getUid();
             databaseReference= FirebaseDatabase.getInstance().getReference().child("userRegions").child(uid);
             databaseReference.addListenerForSingleValueEvent(new ValueEventListener() {
@@ -63,7 +65,12 @@ public class LoadingActivity extends AppCompatActivity {
             });
             HashSet<String> tmp=new HashSet<>(loc);
             loc=new ArrayList<>(tmp);
-            startActivity(new Intent(this,MainActivity.class));
+            Log.d(TAG,"loc의 크기: "+loc.size());
+            for(int i=0;i<loc.size();++i){
+                Log.d(TAG,"loc의 원소: "+loc.get(i));
+            }
+        } else{
+            Log.d(TAG,"로그인하지 않은 유저입니다.");
         }
     }
 

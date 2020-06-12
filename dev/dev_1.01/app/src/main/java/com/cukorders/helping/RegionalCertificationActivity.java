@@ -1,7 +1,6 @@
 package com.cukorders.helping;
 
 import android.Manifest;
-import android.annotation.SuppressLint;
 import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager;
@@ -40,14 +39,12 @@ import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
-import com.google.firebase.database.DataSnapshot;
-import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
-import com.google.firebase.database.ValueEventListener;
 
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
 
 import static android.text.Spanned.SPAN_INCLUSIVE_EXCLUSIVE;
@@ -95,7 +92,7 @@ public class RegionalCertificationActivity extends FragmentActivity implements O
     private static String uid;
     private ArrayList<String> userLocs=new ArrayList<>();
     public static Context regional_certification3;
-    private static final String TAG="RegionalCertificationActivity";
+    private static final String TAG="regional certification3";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -125,14 +122,19 @@ public class RegionalCertificationActivity extends FragmentActivity implements O
 
         result_gps=(TextView) findViewById(R.id.result_gps);
 
-       // regional_certification2=this;
-
         spinner=(Spinner) findViewById(R.id.location_spinner);
-        arrayList=new ArrayList<>();
-        arrayAdapter=new ArrayAdapter<>(getApplicationContext(),
-                android.R.layout.simple_spinner_dropdown_item,arrayList);
 
-        databaseReference.addValueEventListener(new ValueEventListener() {
+        HashSet<String> tmp=new HashSet<>(((LoadingActivity)LoadingActivity.loadingActivity).loc);
+        arrayList=new ArrayList<>(tmp); //중복 제거
+
+        Log.d(TAG,"arrayList의 크기: "+arrayList.size());
+        Log.d(TAG,"loc의 크기: "+((LoadingActivity)LoadingActivity.loadingActivity).loc.size());
+        for(int i=0;i<arrayList.size();++i){
+            Log.d(TAG,"arrayList의 원소: "+arrayList.get(i));
+            Log.d(TAG,"loc의 원소: "+((LoadingActivity)LoadingActivity.loadingActivity).loc.get(i));
+        }
+
+        /*databaseReference.addValueEventListener(new ValueEventListener() {
             @SuppressLint("LongLogTag")
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
@@ -152,7 +154,7 @@ public class RegionalCertificationActivity extends FragmentActivity implements O
 
             @Override
             public void onCancelled(@NonNull DatabaseError databaseError) {}
-        });
+        });*/
        /*
         for(int i=0;i<3;++i){
 
@@ -178,6 +180,7 @@ public class RegionalCertificationActivity extends FragmentActivity implements O
 
         arrayAdapter=new ArrayAdapter<>(getApplicationContext(),
                 android.R.layout.simple_spinner_dropdown_item,arrayList);
+
          compare=arrayList.get(0);
         spinner.setAdapter(arrayAdapter);
         spinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
@@ -278,7 +281,7 @@ public class RegionalCertificationActivity extends FragmentActivity implements O
                     Address cur=addr.get(0);
                     dong=cur.getThoroughfare();
                     Log.d("current Location",dong);
-                    int start=msg1.length(),end=start+dong.length();
+                    int start="현재 위치는".length(),end=start+dong.length();
                     MarkerOptions markerOptions = new MarkerOptions().position(now).title(dong);
                     result_gps.setText("현재 위치는 "+dong+"입니다.");
                     Spannable span=(Spannable) result_gps.getText();
