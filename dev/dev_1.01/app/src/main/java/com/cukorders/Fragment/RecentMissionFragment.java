@@ -28,6 +28,7 @@ import com.cukorders.helping.ChooseTheRegionActivity;
 import com.cukorders.helping.CustomDialog;
 import com.cukorders.helping.FilterActivity;
 import com.cukorders.helping.InitPost;
+import com.cukorders.helping.LoadingActivity;
 import com.cukorders.helping.R;
 import com.cukorders.helping.RegionActivity;
 import com.google.firebase.auth.FirebaseAuth;
@@ -40,6 +41,7 @@ import com.google.firebase.database.ValueEventListener;
 
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.HashSet;
 
 
 public class RecentMissionFragment extends Fragment {
@@ -109,29 +111,30 @@ public class RecentMissionFragment extends Fragment {
         arrayList=new ArrayList<>();
 
         if(firebaseUser==null){
+            // 만약 로그인하지 않은 유저: 시작할 때
             arrayList.add(((ChooseTheRegionActivity)ChooseTheRegionActivity.regional_certification1).user_location);
         }else{
-            databaseReference=FirebaseDatabase.getInstance().getReference().child("userRegions").child(firebaseUser.getUid());
-            databaseReference.addValueEventListener(new ValueEventListener() {
-                @Override
-                public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                    for(DataSnapshot snapshot:dataSnapshot.getChildren()){
-                        String key=snapshot.getKey(),val;
-                        Log.d(TAG,"key의 값: "+key);
-                        val=snapshot.getValue().toString();
-                        if(!key.contains("state")&&!val.equals("default")){
-                            arrayList.add(val);
-                            Log.d(TAG,"arrayList에 "+val+"이 추가되었습니다.");
-                        }
-                    }
-                }
-
-                @Override
-                public void onCancelled(@NonNull DatabaseError databaseError) {}
-            });
+            int size=((LoadingActivity)LoadingActivity.loadingActivity).loc.size();
+            for(int i=0;i<size;++i){
+                arrayList.add(((LoadingActivity)LoadingActivity.loadingActivity).loc.get(i));
+                Log.d(TAG,"arrayList의 원소: "+arrayList.get(i));
+            }
         }
 
-        locCertification=true;
+        //중복 제거
+        HashSet<String>tmp=new HashSet<>(arrayList);
+        arrayList=new ArrayList<>(tmp);
+
+        locCertification=false;
+
+        Log.d(TAG,"arrayList의 크기: "+arrayList.size());
+        for(int i=0;i<arrayList.size();++i){
+            Log.d(TAG,"arrayList의 원소: "+arrayList.get(i));
+        }
+
+        arrayAdapter=new ArrayAdapter<>(getContext(),
+                android.R.layout.simple_spinner_dropdown_item,arrayList);
+        user_locations.setAdapter(arrayAdapter);
 
         user_locations.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
@@ -190,10 +193,6 @@ public class RecentMissionFragment extends Fragment {
                 });
             }
         }
-
-        arrayAdapter=new ArrayAdapter<>(getContext(),
-                android.R.layout.simple_spinner_dropdown_item,arrayList);
-        user_locations.setAdapter(arrayAdapter);
 
         return view;
     }

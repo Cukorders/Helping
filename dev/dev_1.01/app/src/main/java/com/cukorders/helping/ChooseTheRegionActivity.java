@@ -85,7 +85,7 @@ public class ChooseTheRegionActivity  extends AppCompatActivity {
         geocoder=new Geocoder(this);
         search_result=(ListView) findViewById(R.id.search_result);
         regional_certification1=this;
-        myPlace=((MyPlaceActivity)MyPlaceActivity.myPlaceActivity).fromMyPlaceActivity;
+//        myPlace=((MyPlaceActivity)MyPlaceActivity.myPlaceActivity).fromMyPlaceActivity;
         firebaseUser= FirebaseAuth.getInstance().getCurrentUser();
         Log.d("myPlace value","myPlace value is "+myPlace);
         Log.d("cnt value","cnt의 값은 "+String.valueOf(cnt));

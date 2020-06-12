@@ -12,7 +12,6 @@ import android.widget.Toast;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 
-import com.cukorders.Fragment.RecentMissionFragment;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.FirebaseAuth;
@@ -25,6 +24,7 @@ import com.google.firebase.database.ValueEventListener;
 
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.HashSet;
 
 public class MyPlaceActivity extends AppCompatActivity {
 
@@ -35,13 +35,14 @@ public class MyPlaceActivity extends AppCompatActivity {
     private Button profileRegister;
     private String changedLocation;
     public static Context myPlaceActivity;
-    public static boolean fromMyPlaceActivity=false;
+    //public static boolean fromMyPlaceActivity=false;
     private static ArrayList<String> user_regions=new ArrayList<>();
     private static DatabaseReference databaseReference;
     private static FirebaseUser firebaseUser;
     private static String uid;
     private static boolean check[]=new boolean[3];
     public static int changingIndex;
+    private final static String TAG="MyPlaceActivity";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -53,11 +54,33 @@ public class MyPlaceActivity extends AppCompatActivity {
         firebaseUser= FirebaseAuth.getInstance().getCurrentUser();
         uid=firebaseUser.getUid();
         databaseReference= FirebaseDatabase.getInstance().getReference().child("userRegions").child(uid);
-        user_regions= RecentMissionFragment.loc;
+
+     /*   databaseReference.addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                for(DataSnapshot snapshot:dataSnapshot.getChildren()){
+                    String key=snapshot.getKey(),val;
+                    Log.d(TAG,"key의 값: "+key);
+                    val=snapshot.getValue().toString();
+                    if(!key.contains("state")&&!val.equals("default")){
+                        user_regions.add(val);
+                        Log.d(TAG,"arrayList에 "+val+"이 추가되었습니다.");
+                    }
+                }
+            }
+            @Override
+            public void onCancelled(@NonNull DatabaseError databaseError) {}
+        });*/
+
+        // 중복 제거
+        HashSet<String>tmp=new HashSet<String>(((LoadingActivity)LoadingActivity.loadingActivity).loc);
+        user_regions=new ArrayList<String>(tmp);
+        Log.d(TAG,"user_regions의 크기: "+String.valueOf(user_regions.size()));
         for(int i=0;i<user_regions.size();++i){
-            Log.d("user_regions","user_regions의 값: "+user_regions.get(i));
-            Log.d("loc","loc의 값: "+RecentMissionFragment.loc.get(i));
+            Log.d(TAG,"user_regions의 원소: "+user_regions.get(i));
+            Log.d(TAG,"loc의 원소: "+((LoadingActivity)LoadingActivity.loadingActivity).loc.get(i));
         }
+//        setTexts();
 
         change[0]=(Button) findViewById(R.id.change1);
         change[1]=(Button) findViewById(R.id.change2);
@@ -76,7 +99,6 @@ public class MyPlaceActivity extends AppCompatActivity {
             check[i]=false;
         }
 
-        user_regions=RecentMissionFragment.loc;
         findViewById(R.id.profileRegisterBt).setOnClickListener(onClickListener);
         findViewById(R.id.bt_back).setOnClickListener(onClickListener);
         for(int i=0;i<3;++i){
@@ -110,7 +132,9 @@ public class MyPlaceActivity extends AppCompatActivity {
                     break;
 
                 case R.id.delete1:
-                    Toast.makeText(context,"하나 이상의 지역이 존재해야하므로 삭제가 불가능합니다.",Toast.LENGTH_LONG).show();
+                    if(user_regions.size()==1){
+                        Toast.makeText(context,"지역은 하나 이상 설정되어있어야 합니다.",Toast.LENGTH_LONG).show();
+                    }
                     break;
 
                 case R.id.delete2:
@@ -164,7 +188,6 @@ public class MyPlaceActivity extends AppCompatActivity {
 
 
     private void changeRegion(TextView txt,int index){
-        //TODO DB에 지역 교체 업데이트
       //  fromMyPlaceActivity=true;
        // Log.d("fromMyPlaceActivity","fromMyPlaceActivity 값: "+fromMyPlaceActivity);
         startActivity(new Intent(context,ChangeTheRegionActivity.class));
@@ -195,12 +218,11 @@ public class MyPlaceActivity extends AppCompatActivity {
 
     private void setTexts(){
         int size=user_regions.size();
-        Log.d("loc size","loc 배열 크기: "+size);
+        Log.d(TAG,"loc 배열 크기: "+size);
+        for(int i=0;i<3;++i)
+            region[i].setText("지역 "+(i+1));
         for(int i=0;i<size;++i)
             region[i].setText(user_regions.get(i));
-        if(size==3) return;
-        for(int i=size;i<3;++i)
-            region[i].setText("지역 "+(i+1));
     }
 
 }

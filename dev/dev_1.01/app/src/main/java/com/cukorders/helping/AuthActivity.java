@@ -57,6 +57,8 @@ public class AuthActivity extends AppCompatActivity {
     private DatabaseReference mUserUids;
     private DatabaseReference locationDB;
 
+    private final String TAG="AuthActivity";
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -173,6 +175,8 @@ public class AuthActivity extends AppCompatActivity {
                                 userMap.put("Money", "default");
 
                                 HashMap<String,String> locationTable=new HashMap<>(); //location table
+                                ((LoadingActivity)LoadingActivity.loadingActivity).loc.add(location); // add a user location to a location arraylist
+                                Log.d(TAG,"arrayList에 "+((LoadingActivity)LoadingActivity.loadingActivity).loc.get(0)+"가 추가되었습니다.");
                                 locationTable.put("Region1",location);
                                 locationTable.put("Region2",DEFAULT);
                                 locationTable.put("Region3",DEFAULT);

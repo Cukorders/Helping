@@ -63,6 +63,7 @@ public class ChangeTheRegionActivity extends AppCompatActivity {
     private boolean myPlace;
     private int cnt;
     private int change;
+    private static final String TAG="ChangeTheRegionActivity";
     public static String changedRegion;
    // private ArrayList<String> location;
     Handler handler=new Handler();
@@ -86,7 +87,7 @@ public class ChangeTheRegionActivity extends AppCompatActivity {
         geocoder=new Geocoder(this);
         search_result=(ListView) findViewById(R.id.search_result);
         changeTheRegion=this;
-        myPlace=((MyPlaceActivity)MyPlaceActivity.myPlaceActivity).fromMyPlaceActivity;
+//        myPlace=((MyPlaceActivity)MyPlaceActivity.myPlaceActivity).fromMyPlaceActivity;
      //   cnt=((LoadingActivity) loadingActivity).loc_cnt;
         change=((MyPlaceActivity)MyPlaceActivity.myPlaceActivity).changingIndex;
 
@@ -111,7 +112,7 @@ public class ChangeTheRegionActivity extends AppCompatActivity {
         public void onClick(View v) {
             switch(v.getId()){
                 case R.id.bt_back:
-                    goBack(); // 뒤로 가기-> 화면 설정 페이지
+                    goBack(); // 뒤로 가기-> 내 지역 설정 페이지
                     break;
 
                 case R.id.SearchLocationButton:
@@ -134,7 +135,7 @@ public class ChangeTheRegionActivity extends AppCompatActivity {
     }
 
     private void goBack(){
-        Intent intent=new Intent(this,MyPageActivity.class);
+        Intent intent=new Intent(this,MyPlaceActivity.class);
         startActivity(intent);
     }
 
@@ -196,15 +197,15 @@ public class ChangeTheRegionActivity extends AppCompatActivity {
                                 }*/
                                 Log.e("userLocation_search","the value of a parameter called userLocation in ChooseTheRegionActivity is "+userLocation);
                              //   ((LoadingActivity) loadingActivity).loc_cnt=cnt+1;
-                                if(RecentMissionFragment.loc.size()==change){
-                                    RecentMissionFragment.loc.add(array[select]);
-                                    for(int i=0;i<RecentMissionFragment.loc.size();++i){
-                                        Log.d("loc","loc 원소: "+RecentMissionFragment.loc.get(i));
+                                if(((LoadingActivity)LoadingActivity.loadingActivity).loc.size()==change){
+                                    ((LoadingActivity)LoadingActivity.loadingActivity).loc.add(array[select]);
+                                    for(int i=0;i<((LoadingActivity)LoadingActivity.loadingActivity).loc.size();++i){
+                                        Log.d(TAG,"loc 원소: "+RecentMissionFragment.loc.get(i));
                                     }
                                 }else{
-                                    RecentMissionFragment.loc.set(change,array[select]);
-                                    for(int i=0;i<RecentMissionFragment.loc.size();++i){
-                                        Log.d("loc","loc 원소: "+RecentMissionFragment.loc.get(i));
+                                    ((LoadingActivity)LoadingActivity.loadingActivity).loc.set(change,array[select]);
+                                    for(int i=0;i<((LoadingActivity)LoadingActivity.loadingActivity).loc.size();++i){
+                                        Log.d(TAG,"loc 원소: "+RecentMissionFragment.loc.get(i));
                                     }
                                 }
                                 Toast.makeText(context,"지역 수정이 완료되었습니다.",Toast.LENGTH_LONG).show();
@@ -339,24 +340,24 @@ public class ChangeTheRegionActivity extends AppCompatActivity {
                             } catch (IOException e) {
                                 e.printStackTrace();
                             }
-                            if(RecentMissionFragment.loc.size()+1<change){
-                               RecentMissionFragment.loc.add(addr.get(0).getThoroughfare());
-                                for(int i=0;i<RecentMissionFragment.loc.size();++i){
-                                    Log.d("loc","loc 원소: "+RecentMissionFragment.loc.get(i));
+                            if(((LoadingActivity)LoadingActivity.loadingActivity).loc.size()<=change){
+                                ((LoadingActivity)LoadingActivity.loadingActivity).loc.add(addr.get(0).getThoroughfare());
+                                for(int i=0;i<((LoadingActivity)LoadingActivity.loadingActivity).loc.size();++i){
+                                    Log.d(TAG,"loc 원소: "+((LoadingActivity)LoadingActivity.loadingActivity).loc.get(i));
                                 }
                             }else{
-                                RecentMissionFragment.loc.set(change,addr.get(0).getThoroughfare());
-                                for(int i=0;i<RecentMissionFragment.loc.size();++i){
-                                    Log.d("loc","loc 원소: "+RecentMissionFragment.loc.get(i));
+                                ((LoadingActivity)LoadingActivity.loadingActivity).loc.set(change,addr.get(0).getThoroughfare());
+                                for(int i=0;i<((LoadingActivity)LoadingActivity.loadingActivity).loc.size();++i){
+                                    Log.d(TAG,"loc 원소: "+((LoadingActivity)LoadingActivity.loadingActivity).loc.get(i));
                                 }
                             }
                             Toast.makeText(context,"지역 수정이 완료되었습니다.",Toast.LENGTH_LONG).show();
-                            startActivity(new Intent(context,MyPlaceActivity.class));
+                            //startActivity(new Intent(context,MyPlaceActivity.class));
                             Log.e("userLocation_search","the value of a parameter called userLocation in ChooseTheRegionActivity is "+userLocation);
-                       /*     for(int i = 0; i<((LoadingActivity) loadingActivity).loc.size(); ++i)
-                                Log.d("userLoc","전역 변수 userLoc["+String.valueOf(i)+"] = "+((LoadingActivity) loadingActivity).loc.get(i));
-                            Log.d("loc_cnt","loc_cnt = "+String.valueOf(((LoadingActivity) loadingActivity).loc_cnt));
-                            Log.d("loc size","연결리스트 loc의 크기: "+((LoadingActivity)LoadingActivity.loadingActivity).loc.size());*/
+                            for(int i = 0; i<((LoadingActivity)LoadingActivity.loadingActivity).loc.size(); ++i)
+                                Log.d(TAG,"전역 변수 userLoc["+String.valueOf(i)+"] = "+((LoadingActivity)LoadingActivity.loadingActivity).loc.get(i));
+                          //  Log.d("loc_cnt","loc_cnt = "+String.valueOf(((LoadingActivity)LoadingActivity.loadingActivity).loc_cnt));
+                            Log.d(TAG,"연결리스트 loc의 크기: "+((LoadingActivity)LoadingActivity.loadingActivity).loc.size());
                             startActivity(new Intent(context,MyPlaceActivity.class));
                         }
                     }).setNegativeButton("취소",null);
