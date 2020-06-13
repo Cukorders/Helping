@@ -83,44 +83,6 @@
         </RelativeLayout>
     </LinearLayout>
 
-
-
-
-        <Button
-            android:id="@+id/chat_client_list"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:backgroundTint="@color/colorLogo"
-            android:layout_gravity="bottom|start"
-            android:layout_marginBottom="150dp"
-            android:text="의뢰자 채팅 목록" />
-
-        <Button
-            android:id="@+id/people_list"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:backgroundTint="@color/colorLogo"
-            android:layout_gravity="bottom|start"
-            android:layout_marginBottom="100dp"
-            android:text="사용자 목록" />
-
-        <Button
-            android:id="@+id/chatting"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:backgroundTint="@color/colorLogo"
-            android:layout_gravity="bottom|start"
-            android:layout_marginBottom="50dp"
-            android:text="채팅방" />
-
-        <Button
-            android:id="@+id/client_chat_list"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:backgroundTint="@color/colorLogo"
-            android:layout_gravity="bottom|start"
-            android:text="의뢰자 입장 채팅 리스트" />
-
         <com.google.android.material.floatingactionbutton.FloatingActionButton
             android:id="@+id/fab_plus"
             android:layout_width="wrap_content"
@@ -169,6 +131,20 @@
             android:layout_gravity="bottom|end"
             android:layout_marginRight="16dp"
             android:layout_marginBottom="260dp"
+            android:backgroundTint="@color/colorLogo"
+            android:elevation="6dp"
+            android:src="@drawable/chat_icon"
+            android:visibility="invisible"
+            app:backgroundTint="@color/colorAccent"
+            app:pressedTranslationZ="12dp" />
+
+        <com.google.android.material.floatingactionbutton.FloatingActionButton
+            android:id="@+id/fab_chatlist"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="bottom|end"
+            android:layout_marginRight="16dp"
+            android:layout_marginBottom="320dp"
             android:backgroundTint="@color/colorLogo"
             android:elevation="6dp"
             android:src="@drawable/chat_icon"

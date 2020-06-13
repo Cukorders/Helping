@@ -295,9 +295,9 @@ public class ChattingActivity extends AppCompatActivity {
             // 내가 보낸 매세지
             if(comments.get(position).uid.equals(uid)){
                 messageViewHolder.textView_message.setText(comments.get(position).message);
-                messageViewHolder.textView_message.setBackgroundResource(R.drawable.rightbuuble);
+                messageViewHolder.textView_message.setBackgroundResource(R.drawable.my_message);
                 messageViewHolder.linearLayout_destination.setVisibility(View.INVISIBLE);
-                messageViewHolder.textView_message.setTextSize(25);
+                messageViewHolder.textView_message.setTextSize(20);
                 messageViewHolder.linearLayout_main.setGravity(Gravity.RIGHT);
                 // 상대방이 보낸 메세지
             }else {
@@ -307,9 +307,9 @@ public class ChattingActivity extends AppCompatActivity {
                         .into(messageViewHolder.imageView_profile);
                 messageViewHolder.textview_name.setText(destinationUserModel.userName);
                 messageViewHolder.linearLayout_destination.setVisibility(View.VISIBLE);
-                messageViewHolder.textView_message.setBackgroundResource(R.drawable.leftbubble);
+                messageViewHolder.textView_message.setBackgroundResource(R.drawable.their_message);
                 messageViewHolder.textView_message.setText(comments.get(position).message);
-                messageViewHolder.textView_message.setTextSize(25);
+                messageViewHolder.textView_message.setTextSize(20);
                 messageViewHolder.linearLayout_main.setGravity(Gravity.LEFT);
             }
             // database에 (현재시각 - 1970.01.01) 로 계산되는 시간값 제대로 나오게 설정

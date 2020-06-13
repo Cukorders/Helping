@@ -1,6 +1,10 @@
 package com.cukorders.Fragment;
 
 import android.os.Bundle;
+import android.util.Log;
+import android.view.LayoutInflater;
+import android.view.View;
+import android.view.ViewGroup;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -9,15 +13,6 @@ import androidx.recyclerview.widget.DefaultItemAnimator;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
-import android.renderscript.Script;
-import android.util.Log;
-import android.view.LayoutInflater;
-import android.view.View;
-import android.view.ViewGroup;
-import android.widget.TextView;
-
-import com.cukorders.Adapter.PostAdapter;
-import com.cukorders.Adapter.PostAdapter_helping;
 import com.cukorders.Adapter.PostAdapter_request;
 import com.cukorders.helping.InitPost;
 import com.cukorders.helping.R;
@@ -52,7 +47,7 @@ public class RequestingFragment extends Fragment {
 
     private FirebaseAuth mAuth;
     private FirebaseUser mCurrentUser;
-    private String mUid="";
+    private String mUid="TIhMFvxLG9awVpVPN931vwXDUXz2";
 
     //todo 의뢰중인 미션
     public RequestingFragment(){
@@ -78,7 +73,9 @@ public class RequestingFragment extends Fragment {
         //set mUid
         mAuth= FirebaseAuth.getInstance();
         mCurrentUser = mAuth.getCurrentUser();
+/*
         mUid = mCurrentUser.getUid();
+*/
 
         //client postref
         mClientPostRef = FirebaseDatabase.getInstance().getReference().child("Posting");

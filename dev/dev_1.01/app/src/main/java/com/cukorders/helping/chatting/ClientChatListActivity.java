@@ -53,6 +53,7 @@ public class ClientChatListActivity extends AppCompatActivity {
 
         private List<ChatModel> chatModels = new ArrayList<>();
         private String uid= "TIhMFvxLG9awVpVPN931vwXDUXz2";
+        private String postKey = "eUcg_lhlRaRnnO@vhRVw9hkI-TxG6jy0D67REvFIOn9_dcdztZ";
         private ArrayList<String> destinationUsers = new ArrayList<>(); // 대화 할 사람들의 데이터가 담기는 부분
         private List<String> keys = new ArrayList<>();
 
@@ -107,7 +108,17 @@ public class ClientChatListActivity extends AppCompatActivity {
                             .apply(new RequestOptions().circleCrop())
                             .into(customViewHolder.imageView);
 
-                    customViewHolder.textView_title.setText(userModel.userName); // 채팅리스트 제목
+                    FirebaseDatabase.getInstance().getReference().child("Posting").child(postKey).addListenerForSingleValueEvent(new ValueEventListener() {
+                        @Override
+                        public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                            customViewHolder.textView_title.setText(dataSnapshot.child("title").getValue().toString()); // 채팅리스트 제목
+                        }
+
+                        @Override
+                        public void onCancelled(@NonNull DatabaseError databaseError) {
+
+                        }
+                    });
 
                 }
 
