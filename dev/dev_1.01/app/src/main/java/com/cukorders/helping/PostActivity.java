@@ -506,8 +506,8 @@ public class PostActivity extends AppCompatActivity {
             ret.put("category",category);
             ret.put("postKey",postKey);
             ret.put("location",location);
-            ret.put("isMatched",isMatched);
-            ret.put("isFinished",isFinished);
+            ret.put("isMatched",isMatched?"1":"0");
+            ret.put("isFinished",isFinished?"1":"0");
             for(int i=0;i<3;++i)
                 ret.put("image"+(i+1),img[i]);
             /*for(int i=0;i<3;++i){
