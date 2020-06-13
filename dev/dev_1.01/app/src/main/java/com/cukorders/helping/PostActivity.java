@@ -508,28 +508,9 @@ public class PostActivity extends AppCompatActivity {
             ret.put("location",location);
             ret.put("isMatched",isMatched?"1":"0");
             ret.put("isFinished",isFinished?"1":"0");
+            ret.put("isSended","0");
             for(int i=0;i<3;++i)
                 ret.put("image"+(i+1),img[i]);
-            /*for(int i=0;i<3;++i){
-                if(mImageUri[i]!=null){
-                    index=i+1;
-                    StorageReference filepath=mStorage.child("post_images").child(postKey+(i+1)+".jpg");
-                    filepath.putFile(mImageUri[i]).addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
-                        @Override
-                        public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
-                            final Task<Uri> firebaseUri = taskSnapshot.getStorage().getDownloadUrl();
-                            firebaseUri.addOnSuccessListener(new OnSuccessListener<Uri>() {
-                                @Override
-                                public void onSuccess(Uri uri) {
-                                    final String downloadUrl = uri.toString();
-                                    ret.put("image"+index,downloadUrl);
-                                    Log.d(TAG,"이미지 uri db업데이트");
-                                }
-                            });
-                        }
-                    });
-            }
-            }*/
             return ret;
         }
     }
@@ -611,7 +592,6 @@ public class PostActivity extends AppCompatActivity {
         });
         }
     }
-
 
     //사진 경로 가져오는 코드
     public String getPath(Uri uri){

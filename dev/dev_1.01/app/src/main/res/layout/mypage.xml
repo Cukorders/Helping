@@ -267,84 +267,128 @@
                 android:textSize="20sp" />
         </LinearLayout>
     </LinearLayout>
-    <LinearLayout
+
+    <ScrollView
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:orientation="vertical"
-        android:paddingTop="20dp"
-        android:paddingBottom="20dp"
-        android:layout_marginLeft="10dp"
-        android:layout_marginRight="10dp"
-        android:background="@drawable/stroke_below_bold">
-        <LinearLayout
-            android:layout_width="wrap_content"
-            android:layout_height="match_parent"
-            android:layout_marginBottom="5dp">
-            <ImageButton
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginRight="5dp"
-                android:src="@drawable/notify32"
-                android:layout_gravity="center_vertical"
-                android:background="@android:color/transparent"/>
+        android:layout_height="match_parent">
 
-            <Button
-                android:id="@+id/bt_notice"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_gravity="center_vertical"
-                android:layout_marginLeft="5dp"
-                android:background="@android:color/transparent"
-                android:text="공지사항"
-                android:textSize="20sp" />
-        </LinearLayout>
         <LinearLayout
-            android:layout_width="wrap_content"
-            android:layout_height="match_parent"
-            android:layout_marginBottom="5dp">
-            <ImageButton
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginRight="5dp"
-                android:src="@drawable/ask_icon"
-                android:layout_gravity="center_vertical"
-                android:background="@android:color/transparent"/>
+            android:layout_width="match_parent"
+            android:layout_height="185dp"
+            android:layout_marginLeft="10dp"
+            android:layout_marginRight="10dp"
+            android:background="@drawable/stroke_below_bold"
+            android:orientation="vertical"
+            android:paddingTop="20dp"
+            android:paddingBottom="20dp">
 
-            <Button
-                android:id="@+id/bt_faq"
+            <LinearLayout
                 android:layout_width="wrap_content"
                 android:layout_height="match_parent"
-                android:layout_gravity="center_vertical"
-                android:layout_marginLeft="5dp"
-                android:background="@android:color/transparent"
-                android:text="문의하기"
-                android:textSize="20sp" />
-        </LinearLayout>
-        <LinearLayout
-            android:layout_width="wrap_content"
-            android:layout_height="match_parent"
-            android:layout_marginBottom="5dp">
-            <ImageButton
+                android:layout_marginBottom="5dp">
+
+                <ImageButton
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center_vertical"
+                    android:layout_marginRight="5dp"
+                    android:background="@android:color/transparent"
+                    android:src="@drawable/notify32" />
+
+                <Button
+                    android:id="@+id/bt_notice"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center_vertical"
+                    android:layout_marginLeft="5dp"
+                    android:background="@android:color/transparent"
+                    android:text="공지사항"
+                    android:textSize="20sp" />
+            </LinearLayout>
+
+            <LinearLayout
                 android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginRight="5dp"
-                android:src="@drawable/setting_icon"
-                android:layout_gravity="center_vertical"
-                android:background="@android:color/transparent"/>
+                android:layout_height="match_parent"
+                android:layout_marginBottom="5dp">
 
-            <Button
-                android:id="@+id/bt_setting"
+                <ImageButton
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center_vertical"
+                    android:layout_marginRight="5dp"
+                    android:background="@android:color/transparent"
+                    android:src="@drawable/ask_icon" />
+
+                <Button
+                    android:id="@+id/bt_faq"
+                    android:layout_width="wrap_content"
+                    android:layout_height="match_parent"
+                    android:layout_gravity="center_vertical"
+                    android:layout_marginLeft="5dp"
+                    android:background="@android:color/transparent"
+                    android:text="문의하기"
+                    android:textSize="20sp" />
+            </LinearLayout>
+
+            <LinearLayout
                 android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_gravity="center_vertical"
-                android:layout_marginLeft="5dp"
-                android:background="@android:color/transparent"
-                android:text="앱 설정"
-                android:textSize="20sp" />
+                android:layout_height="match_parent"
+                android:layout_marginBottom="5dp">
+
+                <ImageButton
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center_vertical"
+                    android:layout_marginRight="5dp"
+                    android:background="@android:color/transparent"
+                    android:src="@drawable/setting_icon" />
+
+                <Button
+                    android:id="@+id/bt_setting"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center_vertical"
+                    android:layout_marginLeft="5dp"
+                    android:background="@android:color/transparent"
+                    android:text="앱 설정"
+                    android:textSize="20sp" />
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:orientation="horizontal">
+
+                <ImageButton
+                    android:id="@+id/imageButton"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center_vertical"
+                    android:layout_marginRight="5dp"
+                    android:layout_weight="1"
+                    android:background="@android:color/transparent"
+                    android:src="@drawable/ic_logout" />
+
+                <Button
+                    android:id="@+id/bt_logout"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center_vertical"
+                    android:layout_marginLeft="5dp"
+                    android:layout_weight="1"
+                    android:background="@android:color/transparent"
+                    android:text="로그아웃"
+                    android:textSize="20sp" />
+
+                <View
+                    android:id="@+id/view4"
+                    android:layout_width="240dp"
+                    android:layout_height="30dp"
+                    android:layout_weight="1" />
+            </LinearLayout>
+
         </LinearLayout>
-    </LinearLayout>
-
-
+    </ScrollView>
 
 
 </LinearLayout>

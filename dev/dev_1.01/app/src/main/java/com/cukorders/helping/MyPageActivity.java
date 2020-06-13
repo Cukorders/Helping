@@ -7,6 +7,7 @@ import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
@@ -32,6 +33,7 @@ public class MyPageActivity extends AppCompatActivity {
     private static DatabaseReference databaseReference;
     private static String uid;
     private CircleImageView profilePic;
+    private FirebaseAuth firebaseAuth;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -52,9 +54,12 @@ public class MyPageActivity extends AppCompatActivity {
         findViewById(R.id.bt_point).setOnClickListener(onClickListener);
         findViewById(R.id.bt_setting).setOnClickListener(onClickListener);
         findViewById(R.id.bt_regional_certification).setOnClickListener(onClickListener);
+        findViewById(R.id.bt_logout).setOnClickListener(onClickListener);
 
         firebaseUser= FirebaseAuth.getInstance().getCurrentUser();
         databaseReference= FirebaseDatabase.getInstance().getReference().child("Users");
+        firebaseAuth=FirebaseAuth.getInstance();
+        if(firebaseUser!=null){
         uid=firebaseUser.getUid();
         Log.d("유저 UID","유저 UID: "+uid);
 
@@ -81,6 +86,7 @@ public class MyPageActivity extends AppCompatActivity {
                 Log.e("error in getting the nickname","유저 닉네임을 불러오는데 실패하였습니다.");
             }
         });
+        }
     }
 
     View.OnClickListener onClickListener=new View.OnClickListener() {
@@ -125,6 +131,12 @@ public class MyPageActivity extends AppCompatActivity {
 
                 case R.id.bt_setting:
                     startActivity(new Intent(context,SettingActivity.class));
+                    break;
+
+                case R.id.bt_logout:
+                    firebaseAuth.signOut();
+                    Toast.makeText(context,"로그아웃되었습니다.",Toast.LENGTH_LONG).show();
+                    startActivity(new Intent(context,LoadingActivity.class));
                     break;
             }
         }
