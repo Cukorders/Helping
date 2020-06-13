@@ -94,8 +94,14 @@ public class PostActivity extends AppCompatActivity {
     private static final int PICK_IMAGE=1;
     private ArrayList<Uri> ImageList=new ArrayList<Uri>();
     private Uri ImageUri;
-    private int upload_cnt=0;
-    private static StorageReference imageRef;
+    private int index;
+    private final int GALLERY_REQUEST=1;
+    private final int GALLERY_REQUEST2=2;
+    private final int GALLERY_REQUEST3=3;
+    private final int GET_GALLERY_IMAGE=200;
+    private Uri mImageUri[]=new Uri[3];
+    private static StorageReference mStorage;
+    private static String img[]=new String[3];
 
     @SuppressLint("LongLogTag")
     private static void init_ageChecked(boolean ageChecked[]){
@@ -161,6 +167,11 @@ public class PostActivity extends AppCompatActivity {
         description=(TextView) findViewById(R.id.description);
         place=(TextView) findViewById(R.id.place);
 
+        for(int i=0;i<3;++i){
+            mImageUri[i]=null;
+        }
+        mStorage=FirebaseStorage.getInstance().getReference();
+
         //카테고리 선택 스피너
         category=(Spinner) findViewById(R.id.category);
         arrayList=new ArrayList<>();
@@ -202,7 +213,7 @@ public class PostActivity extends AppCompatActivity {
 
         for(int i=1;i<=2;++i) photo[i].setEnabled(false);
 
-        imageRef=FirebaseStorage.getInstance().getReference().child("PostImage");
+       // imageRef=FirebaseStorage.getInstance().getReference().child("PostImage");
 
         //기본 기능 버튼
         findViewById(R.id.back_button_write_post).setOnClickListener(onClickListener);
@@ -246,8 +257,10 @@ public class PostActivity extends AppCompatActivity {
         storageReference= FirebaseStorage.getInstance().getReference();
         postKey=getRandomString(50);
         nowLocation= RecentMissionFragment.location_now;
-        for(int i=0;i<3;++i)
+        for(int i=0;i<3;++i){
             images[i]="default";
+            img[i]="default";
+        }
     }
 
     private void updateLabel(TextView txt){
@@ -343,17 +356,31 @@ public class PostActivity extends AppCompatActivity {
             switch (v.getId()){
                 case R.id.camera_album_add1:
                     photoCheck[0]=true;
-//                    setPhotoButton(photoCheck);
-  //                  photo[1].setEnabled(true);
+                  //  setPhotoButton(photoCheck);
+                  photo[1].setEnabled(true);
                     Log.d(TAG,"사진 추가 버튼이 클릭되었습니다.");
                     Intent intent=new Intent(Intent.ACTION_GET_CONTENT);
-                    intent.setType("PostImage/*");
+                    intent.setType("image/*");
                     intent.putExtra(Intent.EXTRA_ALLOW_MULTIPLE,true);
-                    startActivityForResult(intent,PICK_IMAGE);
-
-
+                    startActivityForResult(intent,GALLERY_REQUEST);
                     break;
 
+                case R.id.camera_album_add2:
+                    Log.d(TAG,"사진 추가 버튼이 클릭되었습니다.");
+                    Intent intent2=new Intent(Intent.ACTION_GET_CONTENT);
+                    photo[2].setEnabled(true);
+                    intent2.setType("image/*");
+                    intent2.putExtra(Intent.EXTRA_ALLOW_MULTIPLE,true);
+                    startActivityForResult(intent2,GALLERY_REQUEST2);
+                    break;
+
+                case R.id.camera_album_add3:
+                    Log.d(TAG,"사진 추가 버튼이 클릭되었습니다.");
+                    Intent intent3=new Intent(Intent.ACTION_GET_CONTENT);
+                    intent3.setType("image/*");
+                    intent3.putExtra(Intent.EXTRA_ALLOW_MULTIPLE,true);
+                    startActivityForResult(intent3,GALLERY_REQUEST3);
+                    break;
             }
         }
     };
@@ -470,9 +497,6 @@ public class PostActivity extends AppCompatActivity {
             ret.put("due",due);
             ret.put("price",price);
             ret.put("uid",uid);
-            ret.put("image1","default");
-            ret.put("image2","default");
-            ret.put("image3","default");
             String tmp="";
             for(int i=0;i<5;++i)
                 if(ageChecked[i])
@@ -484,22 +508,28 @@ public class PostActivity extends AppCompatActivity {
             ret.put("location",location);
             ret.put("isMatched",isMatched);
             ret.put("isFinished",isFinished);
-            for(upload_cnt=0;upload_cnt<ImageList.size();++upload_cnt){
-                Uri imageUri=ImageList.get(upload_cnt);
-                final StorageReference imageName=imageRef.child("Image"+imageUri.getLastPathSegment());
-                imageName.putFile(imageUri).addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
-                    @Override
-                    public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
-                        imageName.getDownloadUrl().addOnSuccessListener(new OnSuccessListener<Uri>() {
-                            @Override
-                            public void onSuccess(Uri uri) {
-                                String Urival=String.valueOf(uri);
-                                ret.put("image"+(upload_cnt),Urival.toString());
-                            }
-                        });
-                    }
-                });
+            for(int i=0;i<3;++i)
+                ret.put("image"+(i+1),img[i]);
+            /*for(int i=0;i<3;++i){
+                if(mImageUri[i]!=null){
+                    index=i+1;
+                    StorageReference filepath=mStorage.child("post_images").child(postKey+(i+1)+".jpg");
+                    filepath.putFile(mImageUri[i]).addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
+                        @Override
+                        public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
+                            final Task<Uri> firebaseUri = taskSnapshot.getStorage().getDownloadUrl();
+                            firebaseUri.addOnSuccessListener(new OnSuccessListener<Uri>() {
+                                @Override
+                                public void onSuccess(Uri uri) {
+                                    final String downloadUrl = uri.toString();
+                                    ret.put("image"+index,downloadUrl);
+                                    Log.d(TAG,"이미지 uri db업데이트");
+                                }
+                            });
+                        }
+                    });
             }
+            }*/
             return ret;
         }
     }
@@ -507,27 +537,79 @@ public class PostActivity extends AppCompatActivity {
     @Override
     protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
-       if(requestCode==PICK_IMAGE){
-           if(resultCode==RESULT_OK){
-               if(data.getClipData()!=null){
-                   int countClipData=data.getClipData().getItemCount();
-                   if(countClipData>3){
-                       Toast.makeText(context,"사진은 3장까지만 추가할 수 있습니다.",Toast.LENGTH_LONG).show();
-                   }else {
-                       int currentImageSelect = 0;
-                       while (currentImageSelect < countClipData) {
-                           ImageUri=data.getClipData().getItemAt(currentImageSelect).getUri();
-                           ImageList.add(ImageUri);
-                           ++currentImageSelect;
-                       }
-                   }
-               }else{
-                   Toast.makeText(context,"아무 사진도 선택되지 않았습니다.",Toast.LENGTH_LONG).show();
-               }
-           }
 
-       }
+        if(resultCode==RESULT_OK&&data!=null&&data.getData()!=null){
+            switch (requestCode){
+                case GALLERY_REQUEST:
+                    mImageUri[0]=data.getData();
+                    photo[0].setImageURI(mImageUri[0]);
+                    break;
 
+                case GALLERY_REQUEST2:
+                    mImageUri[1]=data.getData();
+                    photo[1].setImageURI(mImageUri[1]);
+                    break;
+
+                case GALLERY_REQUEST3:
+                    mImageUri[2]=data.getData();
+                    photo[2].setImageURI(mImageUri[2]);
+                    break;
+            }
+        }
+        StorageReference filepath=mStorage.child("post_images").child(postKey+"1.jpg");
+        StorageReference filepath2=mStorage.child("post_images").child(postKey+"2.jpg");
+        StorageReference filepath3=mStorage.child("post_images").child(postKey+"3.jpg");
+        if(mImageUri[0]!=null){
+        filepath.putFile(mImageUri[0]).addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
+                        @Override
+                        public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
+                            final Task<Uri> firebaseUri = taskSnapshot.getStorage().getDownloadUrl();
+                            firebaseUri.addOnSuccessListener(new OnSuccessListener<Uri>() {
+                                @Override
+                                public void onSuccess(Uri uri) {
+                                    final String downloadUrl = uri.toString();
+                                    Log.d(TAG,"downloadUrl의 값: "+downloadUrl);
+                                    img[0]=downloadUrl;
+                                    Log.d(TAG,"img[1]의 값: "+img[0]);
+                                }
+                            });
+                        }
+                    });
+        }
+        if(mImageUri[1]!=null){
+        filepath2.putFile(mImageUri[1]).addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
+            @Override
+            public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
+                final Task<Uri> firebaseUri = taskSnapshot.getStorage().getDownloadUrl();
+                firebaseUri.addOnSuccessListener(new OnSuccessListener<Uri>() {
+                    @Override
+                    public void onSuccess(Uri uri) {
+                        final String downloadUrl = uri.toString();
+                        Log.d(TAG,"downloadUrl의 값: "+downloadUrl);
+                        img[1]=downloadUrl;
+                        Log.d(TAG,"img[1]의 값: "+img[1]);
+                    }
+                });
+            }
+        });
+        }
+        if(mImageUri[2]!=null){
+        filepath3.putFile(mImageUri[2]).addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
+            @Override
+            public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
+                final Task<Uri> firebaseUri = taskSnapshot.getStorage().getDownloadUrl();
+                firebaseUri.addOnSuccessListener(new OnSuccessListener<Uri>() {
+                    @Override
+                    public void onSuccess(Uri uri) {
+                        final String downloadUrl = uri.toString();
+                        Log.d(TAG,"downloadUrl의 값: "+downloadUrl);
+                        img[2]=downloadUrl;
+                        Log.d(TAG,"img[1]의 값: "+img[2]);
+                    }
+                });
+            }
+        });
+        }
     }
 
 

@@ -62,8 +62,8 @@
 
                 <ImageButton
                     android:id="@+id/camera_album_add1"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
+                    android:layout_width="70dp"
+                    android:layout_height="70dp"
                     android:layout_centerInParent="true"
                     android:background="@android:color/transparent"
                     android:src="@drawable/camera_button" />
@@ -84,13 +84,12 @@
                 android:layout_height="70dp"
                 android:layout_marginLeft="10dp"
                 android:layout_marginTop="10dp"
-                android:background="@drawable/strokebox"
-                android:visibility="invisible">
+                android:background="@drawable/strokebox">
 
                 <ImageButton
                     android:id="@+id/camera_album_add2"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
+                    android:layout_width="70dp"
+                    android:layout_height="70dp"
                     android:layout_centerInParent="true"
                     android:background="@android:color/transparent"
                     android:src="@drawable/camera_button" />
@@ -112,12 +111,12 @@
                 android:layout_marginLeft="10dp"
                 android:layout_marginTop="10dp"
                 android:background="@drawable/strokebox"
-                android:visibility="invisible">
+                >
 
                 <ImageButton
                     android:id="@+id/camera_album_add3"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
+                    android:layout_width="70dp"
+                    android:layout_height="70dp"
                     android:layout_centerInParent="true"
                     android:background="@android:color/transparent"
                     android:src="@drawable/camera_button" />
