@@ -61,6 +61,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="사용자 닉네임"
+                    android:id="@+id/nickname"
                     android:textSize="18sp"
                     android:textStyle="bold"
                     android:textColor="@color/colorBlack"/>
@@ -113,10 +114,11 @@
                         android:layout_height="wrap_content"
                         android:src="@drawable/ic_money"/>
                     <TextView
+                        android:id="@+id/current_point"
                         android:layout_width="wrap_content"
                         android:layout_height="match_parent"
                         android:gravity="center_vertical"
-                        android:text="10,000points"/>
+                        android:textSize="10sp"/>
                 </LinearLayout>
 
             </LinearLayout>
@@ -168,6 +170,7 @@
             android:background="@drawable/strokebox"
             android:weightSum="10">
             <EditText
+                android:id="@+id/points"
                 android:layout_width="wrap_content"
                 android:layout_height="match_parent"
                 android:layout_weight="9"
@@ -176,6 +179,7 @@
                 android:textSize="18sp"
                 android:textColor="@color/colorBlack"/>
             <Button
+                android:id="@+id/bt_charge"
                 android:layout_width="wrap_content"
                 android:layout_height="match_parent"
                 android:layout_weight="1"
