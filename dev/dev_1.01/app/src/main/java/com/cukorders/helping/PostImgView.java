@@ -64,5 +64,4 @@ public class PostImgView extends AppCompatActivity {
         PicAdapter adapter = new PicAdapter(this, mImageUrls);
         recyclerView.setAdapter(adapter);
     }
-
 }

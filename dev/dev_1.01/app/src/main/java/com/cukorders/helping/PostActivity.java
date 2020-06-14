@@ -460,9 +460,6 @@ public class PostActivity extends AppCompatActivity {
             ret.put("미션 완료 여부",isFinished);
             return ret;
         }
-
-
-
     }
 
 }
