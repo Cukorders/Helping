@@ -3,6 +3,7 @@ package com.cukorders.helping.chatting;
 import android.app.ActivityOptions;
 import android.content.Intent;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -19,6 +20,7 @@ import com.bumptech.glide.request.RequestOptions;
 import com.cukorders.helping.R;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 
@@ -33,7 +35,18 @@ import java.util.TreeMap;
 
 public class ClientChatListActivity extends AppCompatActivity {
 
+    private static final String TAG ="ClientChatListActivity" ;
+
     private RecyclerView recyclerView;
+
+    private String uid = "0WcHcri06BPtTb8dlmgBJf0aZNY2";
+    private String postUid/*= "%H!4dM0ReL@ATAPc89ls=+IjlJ0lQyYMy1XUiVdn9VKpe@Q@iT"*/;
+    private String postTitle;
+
+    private DatabaseReference mRef;
+    private DatabaseReference mData;
+    private DatabaseReference postRef;
+    private DatabaseReference titleRef;
 
     private SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy.MM.dd hh:mm");
 
@@ -46,16 +59,29 @@ public class ClientChatListActivity extends AppCompatActivity {
         recyclerView.setAdapter(new RecyclerViewAdapter());
         recyclerView.setLayoutManager(new LinearLayoutManager(getLayoutInflater().getContext()));
 
+        mData = FirebaseDatabase.getInstance().getReference().child("Posting");
+        titleRef = mData.child(postUid);
+        titleRef.addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                postTitle  = dataSnapshot.child("title").getValue().toString();
+                Log.d(TAG,"see postTitle is in comming in postRef : "+postTitle);
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError databaseError) {
+
+            }
+        });
 
     }
 
     class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder>{
 
         private List<ChatModel> chatModels = new ArrayList<>();
-        private String uid= "TIhMFvxLG9awVpVPN931vwXDUXz2";
-        private String postKey = "eUcg_lhlRaRnnO@vhRVw9hkI-TxG6jy0D67REvFIOn9_dcdztZ";
         private ArrayList<String> destinationUsers = new ArrayList<>(); // 대화 할 사람들의 데이터가 담기는 부분
         private List<String> keys = new ArrayList<>();
+
 
         public RecyclerViewAdapter() {
             /*uid = FirebaseAuth.getInstance().getCurrentUser().getUid();*/
@@ -104,22 +130,11 @@ public class ClientChatListActivity extends AppCompatActivity {
                 public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                     UserModel userModel = dataSnapshot.getValue(UserModel.class);
                     Glide.with(customViewHolder.itemView.getContext())
-                            .load(userModel.profileImageUrl)
+                            .load(dataSnapshot.child("Image").getValue().toString())
                             .apply(new RequestOptions().circleCrop())
                             .into(customViewHolder.imageView);
 
-                    FirebaseDatabase.getInstance().getReference().child("Posting").child(postKey).addListenerForSingleValueEvent(new ValueEventListener() {
-                        @Override
-                        public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                            customViewHolder.textView_title.setText(dataSnapshot.child("title").getValue().toString()); // 채팅리스트 제목
-                        }
-
-                        @Override
-                        public void onCancelled(@NonNull DatabaseError databaseError) {
-
-                        }
-                    });
-
+                    customViewHolder.textView_title.setText(postTitle); // 채팅리스트 제목
                 }
 
                 @Override

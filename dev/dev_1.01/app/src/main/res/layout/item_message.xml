@@ -29,15 +29,17 @@
         android:layout_height="wrap_content"
         android:orientation="vertical">
         <TextView
-            android:text="메세지"
             android:id="@+id/messageItem_textView_message"
             android:layout_width="wrap_content"
-            android:layout_height="wrap_content"/>
+            android:layout_height="wrap_content"
+            android:text="How are you doing? This is a long message that should probably wrap."
+            />
         <TextView
             android:text="2011.11.11 11:11"
             android:textSize="9dp"
             android:textColor="@android:color/darker_gray"
             android:id="@+id/messageItem_textView_timestamp"
+            android:layout_gravity="right"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"/>
 

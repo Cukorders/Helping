@@ -1,6 +1,7 @@
 package com.cukorders.helping.chatting;
 
 import android.os.Bundle;
+import android.util.Log;
 import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -29,41 +30,33 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ServerValue;
 import com.google.firebase.database.ValueEventListener;
-import com.google.gson.Gson;
 
-import org.jetbrains.annotations.NotNull;
-
-import java.io.IOException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
-import java.util.Random;
 import java.util.TimeZone;
 
-import okhttp3.Call;
-import okhttp3.Callback;
-import okhttp3.MediaType;
-import okhttp3.OkHttpClient;
-import okhttp3.Request;
-import okhttp3.RequestBody;
-import okhttp3.Response;
+import de.hdodenhof.circleimageview.CircleImageView;
 
 public class ChattingActivity extends AppCompatActivity {
 
-    private String destinationUid = "Dpe0OR0NT8XgXyfoWdObPjfblQh2";
+    private static final String TAG ="ChattingActivity" ;
+    private String destinationUid;
     private Button button;
     private EditText editText;
 
-    private String uid= "TIhMFvxLG9awVpVPN931vwXDUXz2";
+    private String uid= "0WcHcri06BPtTb8dlmgBJf0aZNY2";
     private String chatRoomUid;
-    private String postUid = "eUcg_lhlRaRnnO@vhRVw9hkI-TxG6jy0D67REvFIOn9_dcdztZ";
+    private String postUid;
 
     private RecyclerView recyclerView;
 
-    private TextView userProfileNick;
-    private ImageView userProfileImage;
+    private TextView post_title;
+    private String userProfileNick;
+    private CircleImageView post_image;
+    private String userProfileImage;
     private ImageView face;
     private ProgressBar pb;
     private Button accept;
@@ -73,8 +66,11 @@ public class ChattingActivity extends AppCompatActivity {
     private String postKey;
 
     private DatabaseReference mUserDatabase1, mUserDatabase2, mUserDatabase3;
-    private DatabaseReference mDatabase;
+    private DatabaseReference mRef;
+    private DatabaseReference postRef;
+    private DatabaseReference profileRef;
 
+    private boolean ifnewChat=false;
 
     private SimpleDateFormat simpleDateFormat = new SimpleDateFormat(" yyyy.MM.dd HH:mm");
     private UserModel destinationUserModel;
@@ -83,30 +79,36 @@ public class ChattingActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_chatting);
-
 /*
         uid = FirebaseAuth.getInstance().getCurrentUser().getUid(); // 채팅을 요구하는 아이디. 즉 단말기에 로그인된 UID
-/*
-        destinationUid = getIntent().getStringExtra("destinationUid"); // 채팅을 당하는 아이디
+
 */
+        getIncomingIntent();
+        Log.d(TAG,"see PostUid: "+postUid);
+        Log.d(TAG,"see chatRoomUid: "+chatRoomUid);
+
         button = (Button)findViewById(R.id.chattingActivity_button);
         editText = (EditText)findViewById(R.id.chattingActivity_editText);
 
-        userProfileNick = (TextView) findViewById(R.id.chattingActivity_userProfileNick);
-        userProfileImage = (ImageView)findViewById(R.id.chattingActivity_userProfileImage);
+        post_title = (TextView) findViewById(R.id.chattingActivity_post_title);
+        post_image = (CircleImageView)findViewById(R.id.chattingActivity_post_image);
         face = (ImageView)findViewById(R.id.chattingActivity_face);
         pb = (ProgressBar)findViewById(R.id.chattingActivity_pb);
         accept = (Button)findViewById(R.id.chattingActivity_accept);
         decline = (Button)findViewById(R.id.chattingActivity_decline);
-
         recyclerView = (RecyclerView)findViewById(R.id.chattingActivity_recyclerview);
 
-        mDatabase = FirebaseDatabase.getInstance().getReference();
+        mRef = FirebaseDatabase.getInstance().getReference();
+        postRef = mRef.child("Posting").child(postUid);
 
-        mDatabase.child("Users").child(uid).addListenerForSingleValueEvent(new ValueEventListener() {
+        postRef.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                userProfileNick.setText(dataSnapshot.child("Nickname").getValue().toString());
+                String title = dataSnapshot.child("title").getValue().toString();
+                String client = dataSnapshot.child("uid").getValue().toString();
+                post_title.setText(title);
+                destinationUid = client;
+                Log.d(TAG,"see destinationUid is in comming : "+destinationUid);
             }
 
             @Override
@@ -114,6 +116,20 @@ public class ChattingActivity extends AppCompatActivity {
 
             }
         });
+
+ /*       profileRef = mRef.child("Users").child(destinationUid);
+
+        profileRef.addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                userProfileImage = dataSnapshot.child("Image").getValue().toString();
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError databaseError) {
+
+            }
+        });*/
 
         button.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -125,20 +141,18 @@ public class ChattingActivity extends AppCompatActivity {
                 chatModel.users.put(destinationUid, true);
                 //데이터베이스에 삽입
 
-                /*postKey=getRandomString(25);*/
-
-                mUserDatabase1 = FirebaseDatabase.getInstance().getReference().child("Chat_list").child(destinationUid).child(postUid);
+                mUserDatabase1 = FirebaseDatabase.getInstance().getReference().child("Chat_list");
                 mUserDatabase2 = FirebaseDatabase.getInstance().getReference().child("Chat_list_client").child(destinationUid).child(postUid);
-                mUserDatabase3 = FirebaseDatabase.getInstance().getReference().child("Chat_list_helper").child(destinationUid).child(postUid);
+                mUserDatabase3 = FirebaseDatabase.getInstance().getReference().child("Chat_list_helper").child(uid);
 
-                HashMap<String, String> ChatsMap = new HashMap<>();
+                HashMap<String, Object> ChatsMap = new HashMap<>();
                 HashMap<String, String> ClientChatsMap = new HashMap<>();
                 HashMap<String, String> HelperChatsMap = new HashMap<>();
 
-                ChatsMap.put("Client Uid",destinationUid);
-                ChatsMap.put("Helper Uid",uid);
-                ChatsMap.put("recent time","");
-                ChatsMap.put("Post Uid",postUid);
+                ChatsMap.put("ClientUid",destinationUid);
+                ChatsMap.put("HelperUid",uid);
+                ChatsMap.put("recenttime",ServerValue.TIMESTAMP);
+                ChatsMap.put("PostUid",postUid);
 
                 // 데이터를 입력 받았다고 체크가 되는 순간에 db에 채팅방 올리는 방법
 
@@ -164,8 +178,8 @@ public class ChattingActivity extends AppCompatActivity {
 
                         @Override
                         public void onComplete(@NonNull Task<Void> task) {
-                            sendGcm();
-                            editText.setText(""); // 채팅치고 보낸 후에 채팅 치는 부분 초기화 시켜주는 부분
+                           /* sendGcm();
+                           */ editText.setText(""); // 채팅치고 보낸 후에 채팅 치는 부분 초기화 시켜주는 부분
                         }
                     });
 
@@ -173,7 +187,7 @@ public class ChattingActivity extends AppCompatActivity {
                     HelperChatsMap.put(postUid,chatRoomUid);
                 }
 
-                mUserDatabase1.setValue(ChatsMap);
+                mUserDatabase1.child(key).setValue(ChatsMap);
                 mUserDatabase2.setValue(ClientChatsMap);
                 mUserDatabase3.setValue(HelperChatsMap);
             }
@@ -181,7 +195,29 @@ public class ChattingActivity extends AppCompatActivity {
         checkChatRoom();
     }
 
-    void sendGcm(){
+    private void getIncomingIntent(){
+        Bundle bundleObject = getIntent().getExtras();
+        if(!bundleObject.getString("postUid").isEmpty()){
+            postUid=bundleObject.getString("postUid");
+            Log.d(TAG,"see PostUid in getIncoming: "+postUid);
+        }
+      /*  if(!bundleObject.getString("chatUid").isEmpty()){
+            if(bundleObject.getString("chatUid").toString().equals("0")){
+                //만들어진 채팅방이 없음
+                //chatRoomUid에 0만 들어감
+                chatRoomUid="";
+                ifnewChat = false;
+                Log.d(TAG,"see chatRoomUid in getIncoming: "+chatRoomUid);
+            }else{
+                //만들어진 채팅방이 있음
+                chatRoomUid=bundleObject.getString("chatUid");
+                Log.d(TAG,"see chatRoomUid in getIncoming: "+chatRoomUid);
+                ifnewChat=true;
+            }
+        }*/
+    }
+
+   /* void sendGcm(){
         Gson gson = new Gson();
 
         NotificationModel notificationModel = new NotificationModel();
@@ -211,7 +247,7 @@ public class ChattingActivity extends AppCompatActivity {
             }
         });
     }
-
+*/
     void checkChatRoom(){
         FirebaseDatabase.getInstance().getReference().child("chatrooms").orderByChild("users/"+uid).equalTo(true).addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
@@ -243,6 +279,8 @@ public class ChattingActivity extends AppCompatActivity {
                 @Override
                 public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                     comments.clear(); // 항상 list는 선언한 뒤에 본격적으로 쓰기 전에 clear.
+                    userProfileNick = dataSnapshot.child("Nickname").getValue().toString();
+                    userProfileImage = dataSnapshot.child("Image").getValue().toString();
                     destinationUserModel = dataSnapshot.getValue(UserModel.class);
                     getMessageList();
                 }
@@ -297,19 +335,19 @@ public class ChattingActivity extends AppCompatActivity {
                 messageViewHolder.textView_message.setText(comments.get(position).message);
                 messageViewHolder.textView_message.setBackgroundResource(R.drawable.my_message);
                 messageViewHolder.linearLayout_destination.setVisibility(View.INVISIBLE);
-                messageViewHolder.textView_message.setTextSize(20);
+                messageViewHolder.textView_message.setTextSize(18);
                 messageViewHolder.linearLayout_main.setGravity(Gravity.RIGHT);
                 // 상대방이 보낸 메세지
             }else {
                 Glide.with(holder.itemView.getContext())
-                        .load(destinationUserModel.profileImageUrl)
+                        .load(userProfileImage)
                         .apply(new RequestOptions().circleCrop())
                         .into(messageViewHolder.imageView_profile);
-                messageViewHolder.textview_name.setText(destinationUserModel.userName);
+                messageViewHolder.textview_name.setText(userProfileNick);
                 messageViewHolder.linearLayout_destination.setVisibility(View.VISIBLE);
                 messageViewHolder.textView_message.setBackgroundResource(R.drawable.their_message);
                 messageViewHolder.textView_message.setText(comments.get(position).message);
-                messageViewHolder.textView_message.setTextSize(20);
+                messageViewHolder.textView_message.setTextSize(18);
                 messageViewHolder.linearLayout_main.setGravity(Gravity.LEFT);
             }
             // database에 (현재시각 - 1970.01.01) 로 계산되는 시간값 제대로 나오게 설정
@@ -351,15 +389,5 @@ public class ChattingActivity extends AppCompatActivity {
         //super.onBackPressed();
         finish();
         overridePendingTransition(R.anim.fromleft,R.anim.toright);
-    }
-
-    private String getRandomString(int length) {
-        final String characters="abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ01234567890!@#$%";
-        StringBuilder stringBuilder=new StringBuilder();
-        while(length-- >0){
-            Random random=new Random();
-            stringBuilder.append(characters.charAt(random.nextInt(characters.length())));
-        }
-        return stringBuilder.toString();
     }
 }

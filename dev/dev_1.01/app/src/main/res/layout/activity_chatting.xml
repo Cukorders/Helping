@@ -43,7 +43,7 @@
             android:orientation="horizontal"
             android:layout_weight="9">
             <de.hdodenhof.circleimageview.CircleImageView
-                android:id="@+id/chattingActivity_userProfileImage"
+                android:id="@+id/chattingActivity_post_image"
                 android:layout_width="wrap_content"
                 android:layout_gravity="center_vertical"
                 android:layout_height="wrap_content"
@@ -56,11 +56,11 @@
                 android:orientation="vertical"
                 android:layout_marginLeft="10dp">
                 <TextView
-                    android:id="@+id/chattingActivity_userProfileNick"
+                    android:id="@+id/chattingActivity_post_title"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:paddingTop="5dp"
-                    android:text="사용자 닉네임"
+                    android:text="게시판 제목"
                     android:textSize="18sp"
                     android:textStyle="bold"
                     android:textColor="@color/colorBlack" />
