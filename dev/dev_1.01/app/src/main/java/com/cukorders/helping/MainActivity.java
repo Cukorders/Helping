@@ -22,15 +22,16 @@ import androidx.viewpager.widget.ViewPager;
 import com.cukorders.Adapter.PageAdapter;
 import com.cukorders.Fragment.MyCallingFragment;
 import com.cukorders.Fragment.RecentMissionFragment;
+import com.cukorders.helping.chatting.ChattingActivity;
+import com.cukorders.helping.chatting.ClientChatListActivity;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.android.material.tabs.TabItem;
 import com.google.android.material.tabs.TabLayout;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 
-
 public class MainActivity extends AppCompatActivity {
-    FloatingActionButton fab_plus,fab_write,fab_info,fab_chat;
+    FloatingActionButton fab_plus,fab_write,fab_info,fab_chat,fab_chatlist;
     Animation FabOpen,FabClose,FabClockwise,FabAntiClockwise;
     boolean isOpen=false;
     private final Context context=this;
@@ -55,6 +56,7 @@ public class MainActivity extends AppCompatActivity {
         fab_write=(FloatingActionButton) findViewById(R.id.fab_post);
         fab_info=(FloatingActionButton) findViewById(R.id.fab_info);
         fab_chat=(FloatingActionButton) findViewById(R.id.fab_chat);
+        fab_chatlist=(FloatingActionButton) findViewById(R.id.fab_chatlist);
         FabOpen= AnimationUtils.loadAnimation(getApplicationContext(),R.anim.fab_open);
         FabClose= AnimationUtils.loadAnimation(getApplicationContext(),R.anim.fab_close);
         FabClockwise= AnimationUtils.loadAnimation(getApplicationContext(),R.anim.rotate_clockwise);
@@ -67,6 +69,7 @@ public class MainActivity extends AppCompatActivity {
         findViewById(R.id.fab_post).setOnClickListener(onClickListener);
         findViewById(R.id.fab_info).setOnClickListener(onClickListener);
         findViewById(R.id.fab_chat).setOnClickListener(onClickListener);
+        findViewById(R.id.fab_chatlist).setOnClickListener(onClickListener);
         findViewById(R.id.go_to_mypage).setOnClickListener(onClickListener);
         //findViewById(R.id.filter).setOnClickListener(onClickListener);
 
@@ -140,6 +143,18 @@ public class MainActivity extends AppCompatActivity {
                     }else {
                         //TODO 채팅 연결하기
                     }
+                    Intent intent4 =new Intent(context, ChattingActivity.class);
+                    startActivity(intent4);
+                    break;
+
+                case R.id.fab_chatlist:
+                    if(firebaseUser==null){
+                        caution();
+                    }else {
+                        //TODO 채팅 연결하기
+                    }
+                    Intent intent5 =new Intent(context, ClientChatListActivity.class);
+                    startActivity(intent5);
                     break;
 
                 case R.id.go_to_mypage:
@@ -150,14 +165,12 @@ public class MainActivity extends AppCompatActivity {
                     startActivity(intent3);
                     }
                     break;
-/*
                 case R.id.filter:
                     Intent intent3=new Intent(context,FilterActivity.class);
                     Log.d("필터로 이동","필터로 이동");
                     startActivity(intent3);
                     break;
 
- */
             }
         }
     };
@@ -186,10 +199,12 @@ public class MainActivity extends AppCompatActivity {
         fab_write.startAnimation(FabOpen);
         fab_info.startAnimation(FabOpen);
         fab_chat.startAnimation(FabOpen);
+        fab_chatlist.startAnimation(FabOpen);
         fab_plus.startAnimation(FabClockwise);
         fab_info.setClickable(true);
         fab_write.setClickable(true);
         fab_chat.setClickable(true);
+        fab_chatlist.setClickable(true);
         isOpen=true;
         Log.d("open","open");
     }
@@ -198,6 +213,7 @@ public class MainActivity extends AppCompatActivity {
         fab_info.startAnimation(FabClose);
         fab_plus.startAnimation(FabAntiClockwise);
         fab_chat.startAnimation(FabClose);
+        fab_chatlist.startAnimation(FabClose);
         fab_info.setClickable(false);
         fab_write.setClickable(false);
         isOpen=false;
@@ -213,7 +229,7 @@ public class MainActivity extends AppCompatActivity {
     private void startUserInfo(){
         Intent intent=new Intent(this,UserInfoActivity.class);
         startActivity(intent);
-    }*/
+    }
 
    /* @Override
     public void onBackPressed() {

@@ -1,10 +1,7 @@
 package com.cukorders.helping;
 
 import android.content.Intent;
-import android.graphics.Color;
 import android.os.Bundle;
-import android.provider.ContactsContract;
-import android.renderscript.Sampler;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
@@ -15,12 +12,12 @@ import android.widget.ScrollView;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import androidx.annotation.ArrayRes;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.cukorders.helping.chatting.ChattingActivity;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.FirebaseAuth;
@@ -33,22 +30,16 @@ import com.google.firebase.database.Query;
 import com.google.firebase.database.ValueEventListener;
 import com.squareup.picasso.Picasso;
 
-import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import java.util.Calendar;
 import java.util.Date;
-import java.util.HashMap;
 import java.util.Locale;
-import java.util.Map;
 import java.util.Objects;
-import java.util.Queue;
 
 import de.hdodenhof.circleimageview.CircleImageView;
 
 import static android.view.View.VISIBLE;
-import static java.util.TimeZone.getDefault;
 
 public class PostContentsViewActivity extends AppCompatActivity {
     private static final String TAG = "PostContentViewActivity";
@@ -78,7 +69,7 @@ public class PostContentsViewActivity extends AppCompatActivity {
 
     private FirebaseAuth mAuth;
     private FirebaseUser mCurrentUser;
-    private String mUid="";
+    private String mUid="TIhMFvxLG9awVpVPN931vwXDUXz2";
 
     private String currentTime;
     private Date currentDate;
@@ -459,8 +450,7 @@ public class PostContentsViewActivity extends AppCompatActivity {
         //Todo chat버튼 누르면 화면으로 이동하기
         //만약 헬퍼라면
         //그냥 채팅방 화면으로 넘겨주되, 넘어가야 될 내용은 chatting방 uid
-        /*
-        Intent gohelperChat = new Intent(PostContentsViewActivity.this, );
+        Intent gohelperChat = new Intent(PostContentsViewActivity.this, ChattingActivity.class );
         Bundle bundle = new Bundle();
         bundle.putSerializable("postUid",postUid);
         bundle.putSerializable("chatUid",chatUid);
@@ -468,7 +458,6 @@ public class PostContentsViewActivity extends AppCompatActivity {
         Log.d(TAG, "send chatUid to chatting page : " + chatUid);
         gohelperChat.putExtras(bundle);
         startActivity(gohelperChat);
-         */
     }
 
     private void goToClientchat(String helperuid){

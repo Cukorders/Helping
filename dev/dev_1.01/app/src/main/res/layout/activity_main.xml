@@ -141,5 +141,19 @@
             app:backgroundTint="@color/colorAccent"
             app:pressedTranslationZ="12dp" />
 
+        <com.google.android.material.floatingactionbutton.FloatingActionButton
+            android:id="@+id/fab_chatlist"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="bottom|end"
+            android:layout_marginRight="16dp"
+            android:layout_marginBottom="320dp"
+            android:backgroundTint="@color/colorLogo"
+            android:elevation="6dp"
+            android:src="@drawable/chat_icon"
+            android:visibility="invisible"
+            app:backgroundTint="@color/colorAccent"
+            app:pressedTranslationZ="12dp" />
+
     </androidx.coordinatorlayout.widget.CoordinatorLayout>
 </LinearLayout>

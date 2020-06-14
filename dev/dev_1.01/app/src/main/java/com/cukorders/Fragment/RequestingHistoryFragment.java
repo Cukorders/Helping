@@ -46,7 +46,7 @@ public class RequestingHistoryFragment extends Fragment {
 
     private FirebaseAuth mAuth;
     private FirebaseUser mCurrentUser;
-    private String mUid="";
+    private String mUid="TIhMFvxLG9awVpVPN931vwXDUXz2";
 
     //todo 의뢰중인 미션
     public RequestingHistoryFragment(){

@@ -6,37 +6,30 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.Color;
-import android.graphics.pdf.PdfDocument;
 import android.os.Bundle;
+import android.util.Log;
+import android.view.View;
+import android.view.animation.Animation;
+import android.view.animation.AnimationUtils;
+import android.widget.Button;
+
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.viewpager.widget.ViewPager;
 
 import com.cukorders.Adapter.PageAdapter;
-import com.cukorders.Adapter.PageAdapter_Mycalling;
-import com.cukorders.Fragment.HelpingFragment;
 import com.cukorders.Fragment.MyCallingFragment;
 import com.cukorders.Fragment.RecentMissionFragment;
-import com.cukorders.Fragment.RequestingFragment;
+import com.cukorders.helping.chatting.ChattingActivity;
+import com.cukorders.helping.chatting.ClientChatListActivity;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
-import com.google.android.material.snackbar.Snackbar;
 import com.google.android.material.tabs.TabItem;
 import com.google.android.material.tabs.TabLayout;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 
-import androidx.viewpager.widget.ViewPager;
-import androidx.appcompat.app.AppCompatActivity;
-
-import android.util.Log;
-import android.view.Menu;
-import android.view.MenuItem;
-import android.view.View;
-import android.view.animation.Animation;
-import android.view.animation.AnimationUtils;
-import android.widget.Button;
-import android.widget.Toolbar;
-
 
 public class Main2Activity extends AppCompatActivity {
-    FloatingActionButton fab_plus,fab_write,fab_info,fab_chat;
+    FloatingActionButton fab_plus,fab_write,fab_info,fab_chat,fab_chatlist;
     Animation FabOpen,FabClose,FabClockwise,FabAntiClockwise;
     private Button myMission,currentMission;
     boolean isOpen=false;
@@ -97,6 +90,7 @@ public class Main2Activity extends AppCompatActivity {
         fab_write=(FloatingActionButton) findViewById(R.id.fab_post);
         fab_info=(FloatingActionButton) findViewById(R.id.fab_info);
         fab_chat=(FloatingActionButton) findViewById(R.id.fab_chat);
+        fab_chatlist = (FloatingActionButton) findViewById(R.id.fab_chatlist);
         FabOpen= AnimationUtils.loadAnimation(getApplicationContext(),R.anim.fab_open);
         FabClose= AnimationUtils.loadAnimation(getApplicationContext(),R.anim.fab_close);
         FabClockwise= AnimationUtils.loadAnimation(getApplicationContext(),R.anim.rotate_clockwise);
@@ -109,6 +103,7 @@ public class Main2Activity extends AppCompatActivity {
         findViewById(R.id.fab_post).setOnClickListener(onClickListener);
         findViewById(R.id.fab_info).setOnClickListener(onClickListener);
         findViewById(R.id.fab_chat).setOnClickListener(onClickListener);
+        findViewById(R.id.fab_chatlist).setOnClickListener(onClickListener);
         findViewById(R.id.go_to_mypage).setOnClickListener(onClickListener);
 
         fab_plus.setOnClickListener(new View.OnClickListener() {
@@ -162,13 +157,19 @@ public class Main2Activity extends AppCompatActivity {
                     startActivity(intent2);
                     break;
 
-                case R.id.fab_chat:
-                    //TODO 채팅 연결하기
-                    break;
-
                 case R.id.go_to_mypage:
                     Intent intent3=new Intent(context,MyPageActivity.class);
                     startActivity(intent3);
+                    break;
+
+                case R.id.fab_chat:
+                    Intent intent4 =new Intent(context, ChattingActivity.class);
+                    startActivity(intent4);
+                    break;
+
+                case R.id.fab_chatlist:
+                    Intent intent5 =new Intent(context, ClientChatListActivity.class);
+                    startActivity(intent5);
                     break;
 
             }
@@ -193,10 +194,12 @@ public class Main2Activity extends AppCompatActivity {
         fab_write.startAnimation(FabOpen);
         fab_info.startAnimation(FabOpen);
         fab_chat.startAnimation(FabOpen);
+        fab_chatlist.startAnimation(FabOpen);
         fab_plus.startAnimation(FabClockwise);
         fab_info.setClickable(true);
         fab_write.setClickable(true);
         fab_chat.setClickable(true);
+        fab_chatlist.setClickable(true);
         isOpen=true;
         // Log.d("open","open");
     }
@@ -205,9 +208,11 @@ public class Main2Activity extends AppCompatActivity {
         fab_info.startAnimation(FabClose);
         fab_plus.startAnimation(FabAntiClockwise);
         fab_chat.startAnimation(FabClose);
+        fab_chatlist.startAnimation(FabClose);
         fab_info.setClickable(false);
         fab_write.setClickable(false);
         isOpen=false;
         //  Log.d("close","close");
+
     }
 }
