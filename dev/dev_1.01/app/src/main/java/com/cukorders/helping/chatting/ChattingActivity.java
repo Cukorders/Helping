@@ -47,7 +47,7 @@ public class ChattingActivity extends AppCompatActivity {
     private Button button;
     private EditText editText;
 
-    private String uid= "0WcHcri06BPtTb8dlmgBJf0aZNY2";
+    private String uid= "SqsqzE9ru2RiBGaXhLCvz5WixCm1";
     private String chatRoomUid;
     private String postUid;
 
@@ -187,7 +187,7 @@ public class ChattingActivity extends AppCompatActivity {
                     HelperChatsMap.put(postUid,chatRoomUid);
                 }
 
-                mUserDatabase1.child(key).setValue(ChatsMap);
+                mUserDatabase1.child(chatRoomUid).setValue(ChatsMap);
                 mUserDatabase2.setValue(ClientChatsMap);
                 mUserDatabase3.setValue(HelperChatsMap);
             }

@@ -39,7 +39,7 @@ public class ClientChatListActivity extends AppCompatActivity {
 
     private RecyclerView recyclerView;
 
-    private String uid = "0WcHcri06BPtTb8dlmgBJf0aZNY2";
+    private String uid ="SqsqzE9ru2RiBGaXhLCvz5WixCm1";
     private String postUid/*= "%H!4dM0ReL@ATAPc89ls=+IjlJ0lQyYMy1XUiVdn9VKpe@Q@iT"*/;
     private String postTitle;
 
@@ -60,7 +60,7 @@ public class ClientChatListActivity extends AppCompatActivity {
         recyclerView.setLayoutManager(new LinearLayoutManager(getLayoutInflater().getContext()));
 
         mData = FirebaseDatabase.getInstance().getReference().child("Posting");
-        titleRef = mData.child(postUid);
+       /* titleRef = mData.child(postUid);
         titleRef.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
@@ -73,7 +73,7 @@ public class ClientChatListActivity extends AppCompatActivity {
 
             }
         });
-
+*/
     }
 
     class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder>{
@@ -134,7 +134,7 @@ public class ClientChatListActivity extends AppCompatActivity {
                             .apply(new RequestOptions().circleCrop())
                             .into(customViewHolder.imageView);
 
-                    customViewHolder.textView_title.setText(postTitle); // 채팅리스트 제목
+                    customViewHolder.textView_title.setText(dataSnapshot.child("Nickname").getValue().toString()); // 채팅리스트 제목
                 }
 
                 @Override
