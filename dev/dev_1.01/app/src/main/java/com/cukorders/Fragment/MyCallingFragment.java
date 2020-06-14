@@ -1,10 +1,13 @@
 package com.cukorders.Fragment;
 
+import android.content.DialogInterface;
+import android.content.Intent;
 import android.graphics.Color;
 import android.os.Bundle;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.appcompat.app.AlertDialog;
 import androidx.fragment.app.Fragment;
 import androidx.viewpager.widget.ViewPager;
 
@@ -13,9 +16,13 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import com.cukorders.Adapter.PageAdapter_Mycalling;
+import com.cukorders.helping.AuthActivity;
+import com.cukorders.helping.LoadingActivity;
 import com.cukorders.helping.R;
 import com.google.android.material.tabs.TabItem;
 import com.google.android.material.tabs.TabLayout;
+
+import static com.cukorders.Fragment.RecentMissionFragment.recentMissionFragment;
 
 public class MyCallingFragment extends Fragment {
 
@@ -47,6 +54,9 @@ public class MyCallingFragment extends Fragment {
         tabLayout.setupWithViewPager(viewPager);
         viewPager.setAdapter(pagerAdapter);
 */
+
+
+
         setUpViewPager(viewPager);
         tabLayout.setTabTextColors(Color.parseColor("#e1e1e1"),Color.parseColor("#FFFFFF"));
         tabLayout.setupWithViewPager(viewPager);
@@ -74,5 +84,18 @@ public class MyCallingFragment extends Fragment {
         adapter.addFragment(new RequestingFragment(),"의뢰중인 미션");
 
         viewPager.setAdapter(adapter);
+    }
+    private void caution(){
+        AlertDialog.Builder builder=new AlertDialog.Builder(MyCallingFragment.this.getActivity());
+        builder.setTitle("로그인이 필요한 작업입니다.");
+        builder.setMessage("이 작업을 수행하시려면 로그인이 필요합니다.");
+        builder.setPositiveButton("로그인/회원가입 하기",
+                new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        startActivity(new Intent(MyCallingFragment.this.getActivity(), AuthActivity.class));
+                    }
+                }).setNegativeButton("취소",null);
+        builder.show();
     }
 }

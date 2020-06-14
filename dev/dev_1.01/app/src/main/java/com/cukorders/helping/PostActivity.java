@@ -24,6 +24,7 @@ import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.loader.content.CursorLoader;
 
+import com.cukorders.Fragment.RecentMissionFragment;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
@@ -206,7 +207,7 @@ public class PostActivity extends AppCompatActivity {
         initPhotoCheck(photoCheck);
         storageReference= FirebaseStorage.getInstance().getReference();
         postKey=getRandomString(25);
-        nowLocation=((ChooseTheRegionActivity)ChooseTheRegionActivity.regional_certification1).userLocation;
+        nowLocation=RecentMissionFragment.location_now;
     }
 
     private String getRandomString(int length) {

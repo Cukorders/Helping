@@ -14,9 +14,18 @@ public class InitPost implements Serializable {
     private String postKey;
     private String uid;
     private String isSended;
+    private String isFinished;
+    private String isMatched;
+    private String location;
+    private String category;
+    private String gender;
+    private String age;
+    private String clientGender;
 
 
-    public InitPost(String title, String image1,String endTime, String place, String chat_number, String likes, String postKey, String uid, String isSended) {
+
+    public InitPost(String title, String image1, String endTime, String place, String chat_number, String likes, String postKey, String uid, String isSended, String isFinished, String isMatched, String location, String category, String age, String gender, String clientGender
+    ) {
         this.title = title;
         this.image1 = image1;
         this.place = place;
@@ -26,10 +35,72 @@ public class InitPost implements Serializable {
         this.postKey = postKey;
         this.uid = uid;
         this.isSended = isSended;
+        this.isFinished = isFinished;
+        this.isMatched = isMatched;
+        this.location = location;
+        this.category = category;
+        this.gender = gender;
+        this.age = age;
+        this.clientGender = clientGender;
     }
 
     public InitPost(){
 
+    }
+
+    public String getClientGender() {
+        return clientGender;
+    }
+
+    public void setClientGender(String clientGender) {
+        this.clientGender = clientGender;
+    }
+
+    public String getCategory() {
+        return category;
+    }
+
+    public void setCategory(String category) {
+        this.category = category;
+    }
+
+    public String getGender() {
+        return gender;
+    }
+
+    public void setGender(String gender) {
+        this.gender = gender;
+    }
+
+    public String getAge() {
+        return age;
+    }
+
+    public void setAge(String age) {
+        this.age = age;
+    }
+    public String getLocation() {
+        return location;
+    }
+
+    public void setLocation(String location) {
+        this.location = location;
+    }
+
+    public String getIsFinished() {
+        return isFinished;
+    }
+
+    public void setIsFinished(String isFinished) {
+        this.isFinished = isFinished;
+    }
+
+    public String getIsMatched() {
+        return isMatched;
+    }
+
+    public void setIsMatched(String isMatched) {
+        this.isMatched = isMatched;
     }
 
     public String getIsSended() {

@@ -9,18 +9,18 @@
     <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
 
     <application
+        android:usesCleartextTraffic="true"
         android:allowBackup="true"
         android:icon="@drawable/logo_charcter"
         android:label="너의 부름"
         android:roundIcon="@drawable/logo_charcter"
         android:supportsRtl="true"
-        android:theme="@style/AppTheme"
-        android:usesCleartextTraffic="true">
-        <activity android:name=".chatting.ClientChatListActivity"></activity>
+        android:theme="@style/AppTheme">
 
         <meta-data
             android:name="com.google.android.geo.API_KEY"
             android:value="AIzaSyA9CPuZCP0dwE7PvX9R3IECiL3AzEYW7D8" />
+
         <meta-data
             android:name="com.google.android.gms.version"
             android:value="@integer/google_play_services_version" />
@@ -35,7 +35,6 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-
         <activity android:name=".RegionActivity"></activity>
         <activity android:name=".ChooseTheRegionActivity"></activity>
         <activity android:name=".RegisterActivity"></activity>
@@ -61,10 +60,9 @@
         <activity android:name=".ProfileViewActivity" />
         <activity android:name=".PostContentsView_helpingActivity" />
         <activity android:name=".PostContentsView_requestActivity" />
-        <activity android:name=".chatting.ChattingActivity" />
-        <activity android:name=".chatting.PeopleFragment" />
-        <activity android:name=".chatting.ChatFragment" />
-
+        <activity android:name=".PostImgView" />
+        <activity android:name=".RegionalCertificationActivity" />
+        <activity android:name=".ChargingActivity" />
     </application>
 
 </manifest>

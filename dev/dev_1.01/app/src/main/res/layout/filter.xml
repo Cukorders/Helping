@@ -5,6 +5,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
+    android:id="@+id/filter_linear"
     >
 
     <RelativeLayout
@@ -16,6 +17,7 @@
             android:id="@+id/bt_back"
             android:layout_width="wrap_content"
             android:layout_height="50dp"
+            android:layout_centerVertical="true"
             android:backgroundTint="@color/colorLogo"
             app:srcCompat="@drawable/back_icon_white" />
 
@@ -23,11 +25,10 @@
             android:id="@+id/textView2"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginLeft="70dp"
-            android:layout_marginTop="10dp"
-            android:text="필터"
+            android:layout_centerInParent="true"
+            android:text= "관심 카테고리 설정"
             android:textColor="@color/colorWhite"
-            android:textSize="25sp"
+            android:textSize="24sp"
             android:textStyle="bold" />
 
     </RelativeLayout>
@@ -36,149 +37,89 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="vertical">
-
-        <LinearLayout
+        <TextView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginTop="15dp"
-            android:orientation="horizontal">
+            android:text="홈 화면에서 집중적으로 보고싶은\n 카테고리만 체크하세요. "
+            android:textSize="20sp"
+            android:textColor="@color/colorBlack"
+            android:gravity="center"
+            android:padding="20dp"/>
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="최소 1개 이상 선택되어 있어야 합니다."
+            android:gravity="center"
+            />
 
-            <TextView
-                android:id="@+id/textView7"
-                android:layout_width="10dp"
-                android:layout_height="wrap_content"
-                android:layout_marginLeft="10dp"
-                android:layout_weight="1"
-                android:text="의뢰 유형"
-                android:textSize="30sp"
-                android:textStyle="bold" />
-
-            <TextView
-                android:id="@+id/textView8"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:text="복수선택 가능"
-                android:textSize="16sp" />
-        </LinearLayout>
     </LinearLayout>
 
-    <RadioButton
-        android:id="@+id/rb_buy"
+
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical">
+
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+            <TextView
+                android:id="@+id/ask_type"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="의뢰 유형"
+                android:textSize="20sp"
+                android:textColor="@color/colorBlack"
+                android:layout_margin="10dp"/>
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_toRightOf="@id/ask_type"
+                android:layout_centerVertical="true"
+                android:text="복수 선택 가능"/>
+        </RelativeLayout>
+    </LinearLayout>
+
+    <CheckBox
+        android:id="@+id/cb_buy_food"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="구매대행 (음식)" />
+
+    <CheckBox
+        android:id="@+id/cb_buy_etc"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:text="구매대행" />
+    <CheckBox
+        android:id="@+id/cb_food_delivery"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="배달 (음식)" />
 
-    <RadioButton
-        android:id="@+id/rb_delivery"
+    <CheckBox
+        android:id="@+id/cb_delivery"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:text="배달" />
 
-    <RadioButton
-        android:id="@+id/rb_cleaning"
+    <CheckBox
+        android:id="@+id/cb_cleaning"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:text="청소" />
 
-    <RadioButton
-        android:id="@+id/rb_teach"
+    <CheckBox
+        android:id="@+id/cb_teach"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:text="과외" />
 
-    <RadioButton
-        android:id="@+id/rb_etc"
+    <CheckBox
+        android:id="@+id/cb_etc"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:text="기타" />
 
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="15dp"
-        android:orientation="horizontal">
-
-        <TextView
-            android:id="@+id/textView9"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginLeft="10dp"
-            android:text="성별"
-            android:textSize="30sp"
-            android:textStyle="bold" />
-
-    </LinearLayout>
-
-    <RadioGroup
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content" >
-
-        <RadioButton
-            android:id="@+id/rb_same"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:text="동성" />
-
-        <RadioButton
-            android:id="@+id/rb_different"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:text="무관" />
-    </RadioGroup>
-
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="15dp"
-        android:orientation="horizontal">
-
-        <TextView
-            android:id="@+id/textView12"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginLeft="10dp"
-            android:layout_weight="1"
-            android:text="연령"
-            android:textSize="30sp"
-            android:textStyle="bold" />
-
-        <TextView
-            android:id="@+id/textView13"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:text="복수선택 가능"
-            android:textSize="16sp" />
-    </LinearLayout>
-
-    <RadioButton
-        android:id="@+id/rb_10s"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:text="10대" />
-
-    <RadioButton
-        android:id="@+id/rb_20s"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:text="20대" />
-
-    <RadioButton
-        android:id="@+id/rb_30s"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:text="30대" />
-
-    <RadioButton
-        android:id="@+id/rb_40s"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:text="40대" />
-
-    <RadioButton
-        android:id="@+id/rb_50s"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:text="50대" />
 </LinearLayout>

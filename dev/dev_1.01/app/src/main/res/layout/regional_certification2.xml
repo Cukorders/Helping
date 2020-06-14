@@ -39,6 +39,21 @@
 
 
     </RelativeLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal">
+
+        <EditText
+            android:id="@+id/location_txt"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:ems="10"
+            android:inputType="textPersonName" />
+    </LinearLayout>
+
     <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content">
@@ -62,54 +77,67 @@
             android:layout_marginBottom="3dp"
             android:src="@drawable/gps_button" />
 
-        <TextView
-            android:id="@+id/result_gps"
-            android:layout_below="@id/googlemapview"
-            android:paddingLeft="10dp"
-            android:paddingTop="20dp"
-            android:paddingBottom="20dp"
+        <ScrollView
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:text="현 위치를 불러와 지역 인증을 완료하세요"
-            android:bufferType="spannable"
-            android:textSize="16sp"
-            android:textColor="@color/colorBlack">
-        </TextView>
-        <Button
-            android:id="@+id/whygps"
-            android:layout_below="@id/result_gps"
-            android:paddingLeft="10dp"
-            android:paddingBottom="20dp"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:text="왜 지역인증을 해야하나요?"
-            android:background="@android:color/transparent"
-            android:textSize="16sp"
-            android:gravity="left">
-        </Button>
-        <Button
-            android:id="@+id/finish_location"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_margin="20dp"
-            android:layout_below="@id/whygps"
-            android:text="동네 인증 완료하기"
-            android:textColor="@color/colorWhite"
-            android:textSize="20sp"
-            android:background="@drawable/gps_button_shape">
-        </Button>
+            android:layout_height="match_parent"
+            android:layout_marginTop="300dp">
 
-        <Button
-            android:id="@+id/bt_skip"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_margin="20dp"
-            android:layout_below="@id/finish_location"
-            android:text="S K I P"
-            android:textColor="@color/colorWhite"
-            android:textSize="20sp"
-            android:background="@drawable/gps_button_shape">
-        </Button>
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical" >
+
+                <TextView
+                    android:id="@+id/result_gps"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:bufferType="spannable"
+                    android:paddingLeft="10dp"
+                    android:paddingTop="20dp"
+                    android:paddingBottom="20dp"
+                    android:text="현 위치를 불러와 지역 인증을 완료하세요"
+                    android:textColor="@color/colorBlack"
+                    android:textSize="16sp"></TextView>
+
+                <Button
+                    android:id="@+id/whygps"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:background="@android:color/transparent"
+                    android:gravity="left"
+                    android:paddingLeft="10dp"
+                    android:paddingBottom="20dp"
+                    android:text="왜 지역인증을 해야하나요?"
+                    android:textSize="16sp"></Button>
+
+                <Button
+                    android:id="@+id/finish_location"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="20dp"
+                    android:layout_marginTop="20dp"
+                    android:layout_marginEnd="20dp"
+                    android:layout_marginBottom="20dp"
+                    android:background="@drawable/gps_button_shape"
+                    android:text="동네 인증 완료하기"
+                    android:textColor="@color/colorWhite"
+                    android:textSize="20sp"></Button>
+
+                <Button
+                    android:id="@+id/bt_skip"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="20dp"
+                    android:layout_marginTop="20dp"
+                    android:layout_marginEnd="20dp"
+                    android:layout_marginBottom="20dp"
+                    android:background="@drawable/gps_button_shape"
+                    android:text="S K I P"
+                    android:textColor="@color/colorWhite"
+                    android:textSize="20sp"></Button>
+            </LinearLayout>
+        </ScrollView>
+
     </RelativeLayout>
 
 

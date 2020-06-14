@@ -24,8 +24,8 @@ public class ProfileActivity extends AppCompatActivity {
         findViewById(R.id.bt_back).setOnClickListener(onClickListener);
         findViewById(R.id.cameraBtn).setOnClickListener(onClickListener);
 
-//        age=(TextView) findViewById(R.id.age);
-  //      phoneNumber=(TextView) findViewById(R.id.phone_number);
+        age=(TextView) findViewById(R.id.age);
+        phoneNumber=(TextView) findViewById(R.id.phone_number);
     }
 
     View.OnClickListener onClickListener= new View.OnClickListener() {

@@ -30,14 +30,14 @@
                 android:id="@+id/recent_mission"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text= "관심있는 목록"
+                android:text= "관심 목록"
                 android:gravity="center"
                 android:textSize="24sp"
                 android:textColor="@color/colorWhite">
             </TextView>
         </RelativeLayout>
         <androidx.recyclerview.widget.RecyclerView
-            android:id="@+id/main_recyclerview"
+            android:id="@+id/my_interest_recyclerview"
             android:layout_width="match_parent"
             android:layout_height="match_parent"/>
 

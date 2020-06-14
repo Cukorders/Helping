@@ -12,7 +12,6 @@ import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 
-import com.cukorders.helping.chatting.UserModel;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.FirebaseException;
@@ -58,6 +57,8 @@ public class AuthActivity extends AppCompatActivity {
     private DatabaseReference mUserUids;
     private DatabaseReference locationDB;
 
+    private final String TAG="AuthActivity";
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -73,8 +74,7 @@ public class AuthActivity extends AppCompatActivity {
         mLoginBtn = findViewById(R.id.LoginBtn);
         mErrorText = findViewById(R.id.login_form_feedback);
 
-        locationCertification=((RegionActivity)RegionActivity.regional_certification2).isCertified; //지역 인증 여부
-        location=((ChooseTheRegionActivity)ChooseTheRegionActivity.regional_certification1).userLocation; // 사용자가 선택한 지역
+        location=((ChooseTheRegionActivity)ChooseTheRegionActivity.regional_certification1).user_location;
 
         mAuth.setLanguageCode("kr");
         mMessageSentBtn.setOnClickListener(new View.OnClickListener() {
@@ -174,12 +174,9 @@ public class AuthActivity extends AppCompatActivity {
                                 userMap.put("Score", "default");
                                 userMap.put("Money", "default");
 
-                                // chatting usermodel (추가된 내용)
-                                UserModel userModel = new UserModel();
-                                userModel.uid = uid;
-
-                                
                                 HashMap<String,String> locationTable=new HashMap<>(); //location table
+                                ((LoadingActivity)LoadingActivity.loadingActivity).loc.add(location); // add a user location to a location arraylist
+                                Log.d(TAG,"arrayList에 "+((LoadingActivity)LoadingActivity.loadingActivity).loc.get(0)+"가 추가되었습니다.");
                                 locationTable.put("Region1",location);
                                 locationTable.put("Region2",DEFAULT);
                                 locationTable.put("Region3",DEFAULT);

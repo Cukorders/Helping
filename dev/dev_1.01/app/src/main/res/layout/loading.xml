@@ -54,7 +54,7 @@
         android:textStyle="bold" />
 
     <Button
-        android:id="@+id/loading_start"
+        android:id="@+id/StartButton"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_gravity="center"

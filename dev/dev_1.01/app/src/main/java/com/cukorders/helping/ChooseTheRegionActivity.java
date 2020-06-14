@@ -29,6 +29,8 @@ import com.google.android.gms.location.LocationServices;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -50,15 +52,18 @@ public class ChooseTheRegionActivity  extends AppCompatActivity {
     private LocationManager locationManager;
     private Geocoder geocoder;
     private TextView editTextQuery;
-    public static String userLocation;
     private Location nowLocation;
+    public String user_location;
     private Context context=this;
     private ListView search_result;
+    public String userLocation;
     private String errorMsg="위치 정보를 가져오는데 실패하였습니다.";
     private static String defaultURL="https://maps.googleapis.com/maps/api/geocode/json?address=";
     private String lats[],lngs[];
+    private static FirebaseUser firebaseUser;
     private int select=0;
     private boolean myPlace;
+    private int cnt;
     Handler handler=new Handler();
 
     // 주변 행정동들 검색할 때 주변 2km 내 행정동들을 불러오기
@@ -80,8 +85,10 @@ public class ChooseTheRegionActivity  extends AppCompatActivity {
         geocoder=new Geocoder(this);
         search_result=(ListView) findViewById(R.id.search_result);
         regional_certification1=this;
-        myPlace=((MyPlaceActivity)MyPlaceActivity.myPlaceActivity).fromMyPlaceActivity;
+//        myPlace=((MyPlaceActivity)MyPlaceActivity.myPlaceActivity).fromMyPlaceActivity;
+        firebaseUser= FirebaseAuth.getInstance().getCurrentUser();
         Log.d("myPlace value","myPlace value is "+myPlace);
+        Log.d("cnt value","cnt의 값은 "+String.valueOf(cnt));
 
         // 엔터키를 누를 시 줄바꿈이 아니라 검색 버튼이 눌렸을 때랑 같은 이벤트가 발생하기 위한 코드
         editTextQuery.setOnKeyListener(new View.OnKeyListener() {
@@ -127,13 +134,8 @@ public class ChooseTheRegionActivity  extends AppCompatActivity {
     }
 
     private void goBack(){
-        if(myPlace){
-            startActivity(new Intent(context,MyPlaceActivity.class));
-        }
-        else{
         Intent intent=new Intent(this,LoadingActivity.class);
         startActivity(intent);
-        }
     }
 
     private void fetchLocation() {
@@ -189,17 +191,15 @@ public class ChooseTheRegionActivity  extends AppCompatActivity {
                         }).setPositiveButton("선택", new DialogInterface.OnClickListener() {
                             @Override
                             public void onClick(DialogInterface dialog, int which) {
-                                userLocation=array[select];
+                                /*if(cnt<3){
+                                    ((LoadingActivity)LoadingActivity.loadingActivity).userLoc[cnt]=array[select];
+                                }*/
                                 Log.e("userLocation_search","the value of a parameter called userLocation in ChooseTheRegionActivity is "+userLocation);
-                                if(myPlace){
-                                    startActivity(new Intent(context,MyPlaceActivity.class));
-                                }else{
+                                user_location=array[select];
+                                ((LoadingActivity)LoadingActivity.loadingActivity).loc.add(user_location);
                                 startActivity(new Intent(context,RegionActivity.class));
-                                }
                             }
                         }).setNegativeButton("취소",null);
-
-
                         builder.show();
                     }else{
                         Toast.makeText(context,errorMsg,Toast.LENGTH_LONG).show();
@@ -309,7 +309,7 @@ public class ChooseTheRegionActivity  extends AppCompatActivity {
                         addresses[i]=address;
                         lats[i]=lat;
                         lngs[i]=lng;
-                }
+                    }
 
                     // ListView에 클릭 이벤트를 적용하는 것이 까다로워 검색 결과 창을 따로 띄운다.
                     AlertDialog.Builder builder=new AlertDialog.Builder(ChooseTheRegionActivity.this);
@@ -328,16 +328,11 @@ public class ChooseTheRegionActivity  extends AppCompatActivity {
                             } catch (IOException e) {
                                 e.printStackTrace();
                             }
-                            userLocation=addr.get(0).getThoroughfare();
-                            Log.e("userLocation_search","the value of a parameter called userLocation in ChooseTheRegionActivity is "+userLocation);
-                            if(myPlace){
-                                startActivity(new Intent(context,MyPlaceActivity.class));
-                            }else{
+                            user_location=addr.get(0).getThoroughfare();
+                            ((LoadingActivity)LoadingActivity.loadingActivity).loc.add(user_location);
                             startActivity(new Intent(context,RegionActivity.class));
-                            }
                         }
                     }).setNegativeButton("취소",null);
-
                     builder.show();
                 } else{
                     Toast.makeText(this,"검색 결과가 존재하지 않습니다.",Toast.LENGTH_LONG).show();

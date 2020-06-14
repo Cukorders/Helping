@@ -105,7 +105,16 @@
                     android:orientation="vertical"
                     android:paddingTop="20dp"
                     android:paddingBottom="20dp">
-
+                    <TextView
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:id="@+id/show_post_state_msg"
+                        android:text="해당 의뢰는 다른 사람과 매칭된 의뢰입니다!"
+                        android:textColor="@color/colorRed"
+                        android:orientation="vertical"
+                        android:gravity="center_horizontal"
+                        android:textSize="18sp"
+                        android:visibility="invisible" />
                     <TextView
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"

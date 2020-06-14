@@ -18,6 +18,8 @@ import android.widget.Toast;
 import androidx.annotation.ArrayRes;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
@@ -53,13 +55,13 @@ public class PostContentsViewActivity extends AppCompatActivity {
     private String postUid;
     private String postKey="";
     private ArrayList<InitPost> mPost;
-    private boolean flag=false;
+    private boolean flag;
 
     private ScrollView scrollView;
     private ImageButton backBtn,chatting;
     private ImageView viewImg;
     private CircleImageView postUserImg;
-    private TextView reward,deposit,price_post,end_time,cancel_av_time,place_post,post_title,post_content;
+    private TextView reward,deposit,price_post,end_time,cancel_av_time,place_post,post_title,post_content,content_msg;
     private TextView userUid;
     private LinearLayout postUser;
     private Button chatgobtn;
@@ -82,9 +84,16 @@ public class PostContentsViewActivity extends AppCompatActivity {
     private Date currentDate;
     private SimpleDateFormat sdf;
 
+    private String chkisMatched="";
     private boolean chkhelperchatMade=false;
     private boolean chkmyPosition=false;
+    private boolean chkimgloaded=false;
+
     //chkmyPosition이 true명 헬퍼임
+
+    //img
+    private ArrayList<String> mImageUrls = new ArrayList<>();
+
 
     protected void onCreate(Bundle savedInstanceState){
         super.onCreate(savedInstanceState);
@@ -116,20 +125,30 @@ public class PostContentsViewActivity extends AppCompatActivity {
 
         mAuth = FirebaseAuth.getInstance();
         mCurrentUser = mAuth.getCurrentUser();
-        mUid = mCurrentUser.getUid();
+        if(mCurrentUser != null) {
+            mUid = mCurrentUser.getUid(); //Do what you need to do with the id
+        } else{
+            mUid = "qAT39HFIVmg4RCq3Vmpk2GdM4ra2";
+        }
 
         mRef = FirebaseDatabase.getInstance().getReference();
-        mylike.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                goTolikes();
-            }
-        });
-
-        Log.d(TAG,"onCreate:started");
+        //post 내용 보여지는 부분
         getIncomingIntent();
         displayPost();
         displayuserPost();
+
+        //likes 보여지는 부분
+        //언데이트 되는 속도와 다른듯함....
+        displayLikes();
+        mylike.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                goTochklikes();
+            }
+        });
+        updatelikesCount();
+
+        Log.d(TAG,"onCreate:started");
 
         postUser.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -153,20 +172,52 @@ public class PostContentsViewActivity extends AppCompatActivity {
             }
         });
 
+        // imageView 보여지기
+        viewImg.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if(chkimgloaded){
+                    Log.d(TAG,"get Image1 from mImageUrls : "+mImageUrls.get(0));
+                    Log.d(TAG,"get Image2 from mImageUrls : "+mImageUrls.get(1));
+                    Log.d(TAG,"get Image3 from mImageUrls : "+mImageUrls.get(2));
+
+                    Intent showImgIntent = new Intent(PostContentsViewActivity.this,PostImgView.class);
+                    //bundle.putParcelableArrayList(mImageUrls);
+                    //bundle.putSerializable("ImgLists",mImageUrls);
+                    showImgIntent.putStringArrayListExtra("lists",mImageUrls);
+                    startActivity(showImgIntent);
+                }else{
+                    Toast.makeText(PostContentsViewActivity.this, "이미지를 로딩중입니다.", Toast.LENGTH_SHORT).show();
+                }
+            }
+        });
+
     }
     private void getIncomingIntent(){
         Log.d(TAG,"getIncomingIntent : check for incoming intents. now Starting");
         Bundle bundleObject = getIntent().getExtras();
         if(!bundleObject.getString("post").isEmpty()){
             postUid=bundleObject.getString("post");
-
             Log.d(TAG,"getIncomingIntent : check for incoming postUid."+postUid);
         }
         if(!bundleObject.getString("useruid").isEmpty()){
             clientUid=bundleObject.getString("useruid");
             Log.d(TAG,"getIncomingIntent : check for incoming uid."+clientUid);
         }
+        if(!bundleObject.getString("ismatched").isEmpty()){
+            chkisMatched=bundleObject.getString("ismatched");
+            Log.d(TAG,"getIncomingIntent : check for incoming ismatched."+chkisMatched);
+        }
         postRef = mRef.child("Posting").child(postUid);
+        content_msg = findViewById(R.id.show_post_state_msg);
+        if(chkmyPosition){
+            if(!chkisMatched.equals(mUid)) {
+                //다른 헬퍼와 이 포스팅이 연결된 상태임
+                content_msg.setVisibility(VISIBLE);
+            }
+            //만약에 sended가 1이고, 나한테 보낸거라면
+            //content_msg에 수락요청을 받으세요! 라고 보이기
+        }
     }
 
     private void displayPost() {
@@ -175,7 +226,9 @@ public class PostContentsViewActivity extends AppCompatActivity {
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                 //getdata
                 String title = dataSnapshot.child("title").getValue().toString();
-                String image = dataSnapshot.child("image1").getValue().toString();
+                String image1 = dataSnapshot.child("image1").getValue().toString();
+                String image2 = dataSnapshot.child("image2").getValue().toString();
+                String image3 = dataSnapshot.child("image3").getValue().toString();
                 //미션 완료 시간
                 String endtime = dataSnapshot.child("endTime").getValue().toString();
                 //취소 가능시간
@@ -195,7 +248,15 @@ public class PostContentsViewActivity extends AppCompatActivity {
 
                 //display
                 //글 관련 사진
-                Picasso.get().load(image).into(viewImg);
+                Picasso.get().load(image1).into(viewImg);
+                mImageUrls.add(image1);
+                mImageUrls.add(image2);
+                mImageUrls.add(image3);
+                //Toast.makeText(PostContentsViewActivity.this, "image1 is : this: "+image1, Toast.LENGTH_SHORT).show();
+                //Toast.makeText(PostContentsViewActivity.this, "image2 is : this: "+image2, Toast.LENGTH_SHORT).show();
+                //Toast.makeText(PostContentsViewActivity.this, "image3 is : this: "+image3, Toast.LENGTH_SHORT).show();
+                chkimgloaded=true;
+
                 //글 제목
                 post_title.setText(title);
                 //글 내용
@@ -215,6 +276,7 @@ public class PostContentsViewActivity extends AppCompatActivity {
 
                 // 사진 누르면 여러개 확인하기
 
+                //취소
                 //우선 매칭이 된 경우
                 if(!ismatched.equals("default")){
                     //헬퍼의 취소는 채팅방 안에서
@@ -264,6 +326,7 @@ public class PostContentsViewActivity extends AppCompatActivity {
     private void displayuserPost(){
         // 사용자 정보 노출되는 부분
         userforPostRef = mRef.child("Users").child(clientUid);
+        Log.d(TAG, "chk clientUid" + clientUid);
         userforPostRef.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
@@ -281,72 +344,80 @@ public class PostContentsViewActivity extends AppCompatActivity {
             }
         });
     }
-    private void goTolikes(){
-        Log.d(TAG, "get mUid :" + mUid);
-        Log.d(TAG, "get mPostUid :" + postUid);
+    private void displayLikes(){
         final DatabaseReference chkmyLikes = FirebaseDatabase.getInstance().getReference().child("Postlikes");
-        chkmyLikes.child(mUid).addListenerForSingleValueEvent(new ValueEventListener() {
+        Query query = chkmyLikes.child(mUid);
+        query.orderByChild(postUid).equalTo(postUid).addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                 Log.d(TAG, "check what is in dataSnapshot:" + dataSnapshot);
-
-                for(DataSnapshot ds: dataSnapshot.getChildren()){
-                    if(dataSnapshot.getValue().toString().equals(postUid)){
-                        flag=true;
-                    }
-                }
-                Log.d(TAG, "check what is in flag:" + flag);
-                if(flag){
-                    //존재한다면
-                    Log.d(TAG, "already it's in your likes:" + postUid);
-                    Log.d(TAG, "Now deleting" + postUid);
-                    chkmyLikes.child(mUid).child(postUid).removeValue();
-                    mylike.setImageResource(R.drawable.heart_icon2);
-                    Toast.makeText(PostContentsViewActivity.this, "관심목록에서 삭제되었습니다.", Toast.LENGTH_SHORT).show();
-                    flag=false;
-                }else{
+                if(dataSnapshot.exists()){
                     mylike.setImageResource(R.drawable.heart_icon);
-                    chkmyLikes.child(mUid).child(postUid).setValue(postUid).addOnCompleteListener(new OnCompleteListener<Void>() {
-                        @Override
-                        public void onComplete(@NonNull Task<Void> task) {
-                            if (task.isSuccessful()) {
-                                Log.d(TAG, "I put it in your likes :" + postUid);
-                            }
-                        }
-                    });
-                    Toast.makeText(PostContentsViewActivity.this, "관심목록에 추가되었습니다.", Toast.LENGTH_SHORT).show();
                     flag=true;
+                }else{
+                    mylike.setImageResource(R.drawable.heart_icon2);
+                    flag=false;
                 }
-                Log.d(TAG, "check what is in flag:" + flag);
-
-                //likes의 카운트를 증가시킨다
-                Query query = FirebaseDatabase.getInstance().getReference("Postlikes");
-                query.orderByChild(postUid)
-                        .equalTo(postUid);
-                Log.d(TAG, "check where query is pointing:" + query);
-                query.addListenerForSingleValueEvent(new ValueEventListener() {
-                    @Override
-                    public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                        if(dataSnapshot.exists()){
-                            long count = dataSnapshot.getChildrenCount();
-                            Log.d(TAG, "check what is count:" + dataSnapshot.getChildrenCount());
-                            countLikes = Long.toString(count);
-                        }
-                    }
-                    @Override
-                    public void onCancelled(@NonNull DatabaseError databaseError) {
-
-                    }
-                });
-                Log.d(TAG, "check what is in likes inside likes:" + countLikes);
-                postRef.child("likes").setValue(countLikes);
             }
             @Override
             public void onCancelled(@NonNull DatabaseError databaseError) {
 
             }
         });
+    }
+    private void goTochklikes() {
+        Log.d(TAG, "get mUid :" + mUid);
+        Log.d(TAG, "get mPostUid :" + postUid);
+        Log.d(TAG, "check what is in flag:" + flag);
+        DatabaseReference chkmyLikes = FirebaseDatabase.getInstance().getReference().child("Postlikes").child(mUid);
+        if (flag == true) {
+            //존재한다면
+            mylike.setImageResource(R.drawable.heart_icon2);
+            Log.d(TAG, "already it's in your likes:" + postUid);
+            Log.d(TAG, "Now deleting" + postUid);
+            chkmyLikes.child(postUid).removeValue();
+            Toast.makeText(PostContentsViewActivity.this, "관심목록에서 삭제되었습니다.", Toast.LENGTH_SHORT).show();
+            flag = false;
+        } else {
+            mylike.setImageResource(R.drawable.heart_icon);
+            chkmyLikes.child(postUid).setValue(postUid).addOnCompleteListener(new OnCompleteListener<Void>() {
+                @Override
+                public void onComplete(@NonNull Task<Void> task) {
+                    if (task.isSuccessful()) {
+                        Log.d(TAG, "I put it in your likes :" + postUid);
+                    }
+                }
+            });
+            Toast.makeText(PostContentsViewActivity.this, "관심목록에 추가되었습니다.", Toast.LENGTH_SHORT).show();
+            flag = true;
+        }
+        Log.d(TAG, "check what is in flag:" + flag);
+    }
 
+    private void updatelikesCount(){
+        //likes의 카운트를 증가시킨다
+        final long[] count = {0};
+        Query query = FirebaseDatabase.getInstance().getReference("Postlikes");
+        query.orderByChild(postUid).equalTo(postUid).addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                if(dataSnapshot.exists()){
+                    count[0] = dataSnapshot.getChildrenCount();
+                    Log.d(TAG, "check what is count:" + dataSnapshot.getChildrenCount());
+                    Log.d(TAG, "check what is long count:" + count[0]);
+                    postRef.child("likes").setValue(Long.toString(count[0]));
+                    //countLikes = Long.toString(count);
+                }else {
+                    Log.d(TAG, "check what is count:" + dataSnapshot.getChildrenCount());
+                    Log.d(TAG, "check what is long count:" + count[0]);
+                    postRef.child("likes").setValue("0");
+                }
+            }
+            @Override
+            public void onCancelled(@NonNull DatabaseError databaseError) {
+            }
+        });
+        Log.d(TAG, "check what is in likes inside likes:" + countLikes);
     }
 
     private void goToprofile(){
@@ -360,11 +431,6 @@ public class PostContentsViewActivity extends AppCompatActivity {
         startActivity(goToProfileintent);
     }
 
-    private void viewImg(){
-        //postUid
-        //Todo img누르면 여러개 이미지 한꺼번에 보이기
-
-    }
 
     private void chatCheck_helper(){
         final DatabaseReference getChat = FirebaseDatabase.getInstance().getReference().child("chat_list_helper").child(mUid);
@@ -394,11 +460,10 @@ public class PostContentsViewActivity extends AppCompatActivity {
         //만약 헬퍼라면
         //그냥 채팅방 화면으로 넘겨주되, 넘어가야 될 내용은 chatting방 uid
         /*
-        Intent gohelperChat = new Intent(PostContentsViewActivity.this,ChattingActivity.class);
+        Intent gohelperChat = new Intent(PostContentsViewActivity.this, );
         Bundle bundle = new Bundle();
         bundle.putSerializable("postUid",postUid);
         bundle.putSerializable("chatUid",chatUid);
-        bundle.putSerializable("helperuid","");
         Log.d(TAG, "send postUid to chatting page : " + postUid);
         Log.d(TAG, "send chatUid to chatting page : " + chatUid);
         gohelperChat.putExtras(bundle);
@@ -413,10 +478,9 @@ public class PostContentsViewActivity extends AppCompatActivity {
         //채팅방에는 상대방의 uid가 들어가 있어야 한다.
         //채팅방에는 현재 상대방의 정보가 들어가게 되고, orderbyChild(헬퍼 UID)를 통해서 채팅방 고유번호를 찾기
         /*
-        Intent goClientChat = new Intent(PostContentsViewActivity.this,ChattingActivity.class);
+        Intent goClientChat = new Intent(PostContentsViewActivity.this, );
         Bundle bundle = new Bundle();
         bundle.putSerializable("postUid",postUid);
-        bundle.putSerializable("chatUid","");
         bundle.putSerializable("helperuid",helperuid);
         Log.d(TAG, "send postUid to chatting page : " + postUid);
         Log.d(TAG, "send chatUid to chatting page : " + helperUid);

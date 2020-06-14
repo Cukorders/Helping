@@ -20,15 +20,15 @@
             android:background="@android:color/transparent"
             >
         </ImageButton>
+
         <TextView
             android:id="@+id/recent_mission"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text= "포인트 충전하기"
             android:gravity="center"
-            android:textSize="24sp"
-            android:textColor="@color/colorWhite">
-        </TextView>
+            android:text="포인트 충전하기"
+            android:textColor="@color/colorWhite"
+            android:textSize="24sp"></TextView>
     </RelativeLayout>
     <LinearLayout
         android:layout_width="match_parent"
@@ -44,26 +44,28 @@
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:orientation="horizontal">
+
             <de.hdodenhof.circleimageview.CircleImageView
                 android:id="@+id/userProfileImage"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:paddingTop="3dp"
+                android:layout_width="80dp"
+                android:layout_height="80dp"
                 android:paddingLeft="10dp"
-                android:src="@drawable/user_icon">
-            </de.hdodenhof.circleimageview.CircleImageView>
+                android:paddingTop="3dp"
+                android:src="@drawable/user_icon"></de.hdodenhof.circleimageview.CircleImageView>
             <LinearLayout
                 android:layout_width="200dp"
                 android:layout_height="match_parent"
                 android:orientation="vertical"
                 android:layout_marginLeft="10dp">
+
                 <TextView
+                    android:id="@+id/nickname"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="사용자 닉네임"
+                    android:textColor="@color/colorBlack"
                     android:textSize="18sp"
-                    android:textStyle="bold"
-                    android:textColor="@color/colorBlack"/>
+                    android:textStyle="bold" />
                 <RelativeLayout
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
@@ -112,11 +114,13 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:src="@drawable/ic_money"/>
+
                     <TextView
+                        android:id="@+id/current_point"
                         android:layout_width="wrap_content"
                         android:layout_height="match_parent"
                         android:gravity="center_vertical"
-                        android:text="10,000points"/>
+                        android:textSize="10sp" />
                 </LinearLayout>
 
             </LinearLayout>
@@ -167,23 +171,27 @@
             android:padding="15dp"
             android:background="@drawable/strokebox"
             android:weightSum="10">
+
             <EditText
+                android:id="@+id/points"
                 android:layout_width="wrap_content"
                 android:layout_height="match_parent"
                 android:layout_weight="9"
-                android:hint="충전 금액 입력"
                 android:background="@android:color/transparent"
-                android:textSize="18sp"
-                android:textColor="@color/colorBlack"/>
+                android:hint="충전 금액 입력"
+                android:textColor="@color/colorBlack"
+                android:textSize="18sp" />
+
             <Button
+                android:id="@+id/bt_charge"
                 android:layout_width="wrap_content"
                 android:layout_height="match_parent"
-                android:layout_weight="1"
                 android:layout_gravity="center"
+                android:layout_weight="1"
+                android:background="@drawable/select_button2"
                 android:text="충전하기"
-                android:textSize="14sp"
                 android:textColor="@color/colorBlack"
-                android:background="@drawable/select_button2"/>
+                android:textSize="14sp" />
         </LinearLayout>
         <TextView
             android:layout_width="match_parent"
@@ -192,9 +200,6 @@
             android:background="@drawable/strokebox"
             android:hint="@string/caution_for_charging_point"
             android:textColor="@color/colorBlack"/>
-
-
-
 
     </LinearLayout>
 </LinearLayout>

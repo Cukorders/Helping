@@ -14,6 +14,7 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.cukorders.Adapter.PostAdapter_helping;
+import com.cukorders.Adapter.PostAdapter_history_helping;
 import com.cukorders.helping.InitPost;
 import com.cukorders.helping.R;
 import com.google.firebase.auth.FirebaseAuth;
@@ -35,7 +36,7 @@ public class HelpingHistoryFragment extends Fragment {
     private static final String TAG = "RequestingFragment";
 
     private RecyclerView recentPostListsView;
-    private PostAdapter_helping mAdapter;
+    private PostAdapter_history_helping mAdapter;
     private RecyclerView.LayoutManager mLayoutManager;
     private ArrayList<InitPost> mPost=new ArrayList<InitPost>();
 
@@ -52,24 +53,28 @@ public class HelpingHistoryFragment extends Fragment {
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-        View view = inflater.inflate(R.layout.requesting_missions,container,false);
+        View view = inflater.inflate(R.layout.history_mission,container,false);
         //recyclerview
-        recentPostListsView = (RecyclerView) view.findViewById(R.id.requesting_recyclerview);
+        recentPostListsView = (RecyclerView) view.findViewById(R.id.history_recyclerview);
         recentPostListsView.setHasFixedSize(true);
         mLayoutManager = new LinearLayoutManager(getActivity());
         recentPostListsView.setLayoutManager(mLayoutManager);
         //맨 밑으로 내려갔을때, 파란색 그라데이션 안뜨도록
         recentPostListsView.scrollToPosition(0);
 
-        mAdapter = new PostAdapter_helping(getActivity(),mPost);
+        mAdapter = new PostAdapter_history_helping(getActivity(),mPost);
         recentPostListsView.setAdapter(mAdapter);
         recentPostListsView.setItemAnimator(new DefaultItemAnimator());
 
         //set mUid
         mAuth= FirebaseAuth.getInstance();
         mCurrentUser = mAuth.getCurrentUser();
-        mUid = mCurrentUser.getUid();
 
+        if(mCurrentUser != null) {
+            mUid = mCurrentUser.getUid(); //Do what you need to do with the id
+        }else{
+            //TODO mUid 가져오기
+        }
         //client postref
         mHelperPostRef = FirebaseDatabase.getInstance().getReference().child("Posting");
 
@@ -80,7 +85,7 @@ public class HelpingHistoryFragment extends Fragment {
     @Override
     public void onStart() {
         super.onStart();
-        Query query = mHelperPostRef.orderByChild("isMatched").equalTo(mUid);
+        Query query = mHelperPostRef.orderByChild("isMatched").equalTo(mUid).limitToFirst(100);
         Log.d(TAG,"Check my uid "+mUid);
         query.addValueEventListener(new ValueEventListener() {
             @Override
@@ -105,7 +110,7 @@ public class HelpingHistoryFragment extends Fragment {
                 Log.e(TAG, String.valueOf(databaseError.toException()));
             }
         });
-        mAdapter= new PostAdapter_helping(getActivity(),mPost);
+        mAdapter= new PostAdapter_history_helping(getActivity(),mPost);
         recentPostListsView.setAdapter(mAdapter);
     }
 }

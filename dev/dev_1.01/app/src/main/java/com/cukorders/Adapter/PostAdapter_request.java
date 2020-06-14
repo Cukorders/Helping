@@ -2,6 +2,7 @@ package com.cukorders.Adapter;
 
 import android.content.Context;
 import android.content.Intent;
+import android.graphics.Color;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -23,10 +24,13 @@ import com.squareup.picasso.Picasso;
 
 import java.util.ArrayList;
 
+import static android.view.View.INVISIBLE;
+import static android.view.View.VISIBLE;
+
 public class PostAdapter_request extends RecyclerView.Adapter<PostAdapter_request.PostViewHolder> {
     //Put post info in ArrayList
     private ArrayList<InitPost> initPosts = new ArrayList<>();
-    private static final String TAG = "Post Adapter";
+    private static final String TAG = "Post Adapter_request";
     private Context context;
     private DatabaseReference postRef;
 
@@ -50,11 +54,31 @@ public class PostAdapter_request extends RecyclerView.Adapter<PostAdapter_reques
         //각 아이템 매칭
         Picasso.get().load(initPosts.get(position).getImage1()).into(holder.postPic);
         holder.title.setText(initPosts.get(position).getTitle());
-        holder.place.setText(initPosts.get(position).getPlace());
+        holder.region.setText(initPosts.get(position).getLocation());
         holder.time.setText(initPosts.get(position).getEndTime());
         holder.likes.setText(initPosts.get(position).getLikes());
         holder.chat_number.setText(initPosts.get(position).getChat_number());
         //holder.postUid.setText(initPosts.get(position).getPostKey());
+        if(!initPosts.get(position).getIsMatched().equals("0")){
+            //default 가 0임
+            //0이 아니면 매칭이 된 것임
+            holder.state_show.setText("매칭된 미션");
+            holder.state_show.setVisibility(VISIBLE);
+            holder.state_show.setTextColor(Color.parseColor("#03DAC5"));
+        }else{
+            holder.state_show.setTextColor(Color.parseColor("#F44336"));
+            if(initPosts.get(position).getIsSended().equals("1")){
+                //헬퍼의 대답 대기중
+                holder.state_show.setText("헬퍼 수락 대기중");
+                holder.state_show.setVisibility(VISIBLE);
+                holder.state_show.setTextColor(Color.parseColor("#F44336"));
+            }else if(initPosts.get(position).getIsSended().equals("3")){
+                holder.state_show.setText("수락요청 거절됨");
+                holder.state_show.setVisibility(VISIBLE);
+            }else{
+                holder.state_show.setVisibility(INVISIBLE);
+            }
+        }
 
         holder.post_single.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -80,19 +104,21 @@ public class PostAdapter_request extends RecyclerView.Adapter<PostAdapter_reques
     //InitPost에서 생성된 객체들을 불러옴
     public class PostViewHolder extends RecyclerView.ViewHolder{
         ImageView postPic;
-        TextView title,place,time,chat_number,likes;
+        TextView title,time,chat_number,likes,state_show,region;
         LinearLayout post_single;
 
         //생성자
         public PostViewHolder(@NonNull View itemView) {
             super(itemView);
             title = (TextView) itemView.findViewById(R.id.main_title_view);
-            place = (TextView) itemView.findViewById(R.id.main_post_place);
+            region = (TextView) itemView.findViewById(R.id.main_post_place);
+            //place = (TextView) itemView.findViewById(R.id.main_post_place);
             time = (TextView) itemView.findViewById(R.id.main_uploaded_time);
             likes = (TextView) itemView.findViewById(R.id.explain_for_small_heart);
             chat_number = (TextView) itemView.findViewById(R.id.explain_for_small_chat);
             postPic = (ImageView) itemView.findViewById(R.id.main_image_view);
             post_single = (LinearLayout) itemView.findViewById(R.id.single_card);
+            state_show = (TextView) itemView.findViewById(R.id.show_mission_state_view);
         }
     }
 }

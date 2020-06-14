@@ -9,6 +9,7 @@ import androidx.appcompat.app.AppCompatActivity;
 
 public class MissionActivity extends AppCompatActivity {
     private final Context context=this;
+    //관심목록
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
