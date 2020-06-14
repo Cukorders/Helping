@@ -10,16 +10,18 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
-import androidx.appcompat.app.AppCompatActivity;
+import androidx.annotation.Nullable;
+import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.request.RequestOptions;
+
 import com.cukorders.helping.R;
+import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
-import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 
@@ -32,60 +34,35 @@ import java.util.Map;
 import java.util.TimeZone;
 import java.util.TreeMap;
 
-public class ClientChatListActivity extends AppCompatActivity {
-
-    private static final String TAG ="ClientChatListActivity" ;
-
-    private RecyclerView recyclerView;
-
-    private String uid ="SqsqzE9ru2RiBGaXhLCvz5WixCm1";
-    private String postUid/*= "%H!4dM0ReL@ATAPc89ls=+IjlJ0lQyYMy1XUiVdn9VKpe@Q@iT"*/;
-    private String postTitle;
-
-    private DatabaseReference mRef;
-    private DatabaseReference mData;
-    private DatabaseReference postRef;
-    private DatabaseReference titleRef;
+// 채팅방
+// database - chatrooms
+public class ChatFragment extends Fragment {
 
     private SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy.MM.dd hh:mm");
-
+    @Nullable
     @Override
-    protected void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_client_chat_list);
+    public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
+        View view = inflater.inflate(R.layout.fragment_chat,container,false);
 
-        recyclerView = findViewById(R.id.activity_client_chat_list_recyclerview);
-        recyclerView.setAdapter(new RecyclerViewAdapter());
-        recyclerView.setLayoutManager(new LinearLayoutManager(getLayoutInflater().getContext()));
+        RecyclerView recyclerView = view.findViewById(R.id.chatfragment_recyclerview);
+        recyclerView.setAdapter(new ChatRecyclerViewAdapter());
+        recyclerView.setLayoutManager(new LinearLayoutManager(inflater.getContext()));
 
-        mData = FirebaseDatabase.getInstance().getReference().child("Posting");
-       /* titleRef = mData.child(postUid);
-        titleRef.addListenerForSingleValueEvent(new ValueEventListener() {
-            @Override
-            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                postTitle  = dataSnapshot.child("title").getValue().toString();
-                Log.d(TAG,"see postTitle is in comming in postRef : "+postTitle);
-            }
-
-            @Override
-            public void onCancelled(@NonNull DatabaseError databaseError) {
-
-            }
-        });
-*/
+        return view;
     }
 
-    class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder>{
+    class ChatRecyclerViewAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder>{
 
         private List<ChatModel> chatModels = new ArrayList<>();
-        private ArrayList<String> destinationUsers = new ArrayList<>(); // 대화 할 사람들의 데이터가 담기는 부분
+        private String uid;
+        private ArrayList<String> destinationUsers = new ArrayList<>();
         private List<String> keys = new ArrayList<>();
 
+        public ChatRecyclerViewAdapter(){
+            uid = FirebaseAuth.getInstance().getCurrentUser().getUid();
 
-        public RecyclerViewAdapter() {
-            /*uid = FirebaseAuth.getInstance().getCurrentUser().getUid();*/
-
-            FirebaseDatabase.getInstance().getReference().child("chatrooms").orderByChild("users/"+uid).equalTo(true).addListenerForSingleValueEvent(new ValueEventListener() {
+            //equalTO(true) -> 내가 소속된 방만 뜨도록
+            FirebaseDatabase.getInstance().getReference().child("chatrooms").orderByChild("Users/"+uid).equalTo(true).addListenerForSingleValueEvent(new ValueEventListener() {
                 @Override
                 public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                     chatModels.clear();
@@ -101,6 +78,7 @@ public class ClientChatListActivity extends AppCompatActivity {
 
                 }
             });
+
         }
 
         @NonNull
@@ -113,34 +91,37 @@ public class ClientChatListActivity extends AppCompatActivity {
 
         @Override
         public void onBindViewHolder(@NonNull RecyclerView.ViewHolder holder, final int position) {
+            final CustomViewHolder customViewHolder = (CustomViewHolder) holder;
+            String destinationUid = null; // 채팅 상대 받아도기
 
-            final CustomViewHolder customViewHolder = (CustomViewHolder)holder;
-            String destinationUid = null;
-
-            // 일일히 챗방에 있는 유저를 체크
-            for(String user: chatModels.get(position).users.keySet()){
-                if(!user.equals(uid)) {
+            //챗방에 있는 유저를 체크 (일일히)
+            for (String user : chatModels.get(position).users.keySet()) {
+                if (!user.equals(uid)) {
                     destinationUid = user;
                     destinationUsers.add(destinationUid);
                 }
             }
-            FirebaseDatabase.getInstance().getReference().child("Users").child(destinationUid).addListenerForSingleValueEvent(new ValueEventListener() {
-                @Override
-                public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                    UserModel userModel = dataSnapshot.getValue(UserModel.class);
-                    Glide.with(customViewHolder.itemView.getContext())
-                            .load(dataSnapshot.child("Image").getValue().toString())
-                            .apply(new RequestOptions().circleCrop())
-                            .into(customViewHolder.imageView);
 
-                    customViewHolder.textView_title.setText(dataSnapshot.child("Nickname").getValue().toString()); // 채팅리스트 제목
-                }
+            if (destinationUid != null) {
 
-                @Override
-                public void onCancelled(@NonNull DatabaseError databaseError) {
+                FirebaseDatabase.getInstance().getReference().child("Users").child(destinationUid).addListenerForSingleValueEvent(new ValueEventListener() {
+                    @Override
+                    public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                        UserModel userModel = dataSnapshot.getValue(UserModel.class);
+                        Glide.with(customViewHolder.itemView.getContext())
+                                .load(userModel.profileImageUrl)
+                                .apply(new RequestOptions().circleCrop())
+                                .into(customViewHolder.imageView);
 
-                }
-            });
+                        customViewHolder.textView_title.setText(userModel.userName);
+                    }
+
+                    @Override
+                    public void onCancelled(@NonNull DatabaseError databaseError) {
+
+                    }
+                });
+            }
 
             // 채팅방이 여러 개 존재할 때 선택한 채팅방의 채팅을 내림차순으로 정렬 한 후 가장 최근 채팅의 값 불러오기.
             Map<String,ChatModel.Comment> commentMap = new TreeMap<>(Collections.reverseOrder());
@@ -150,24 +131,24 @@ public class ClientChatListActivity extends AppCompatActivity {
                 String lastMessageKey = (String)commentMap.keySet().toArray()[0];
                 customViewHolder.textView_last_message.setText(chatModels.get(position).comments.get(lastMessageKey).message);
 
-                customViewHolder.itemView.setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View view) {
-                        Intent intent = new Intent(view.getContext(), ChattingActivity.class);
-                        intent.putExtra("destinationUid",destinationUsers.get(position));
-
-                        ActivityOptions activityOptions = ActivityOptions.makeCustomAnimation(view.getContext(),R.anim.fromright,R.anim.toleft);
-
-                        startActivity(intent,activityOptions.toBundle());
-                    }
-                });
-
                 //시간 처리
                 simpleDateFormat.setTimeZone(TimeZone.getTimeZone("Asia/Seoul"));
                 long unixTime = (long) chatModels.get(position).comments.get(lastMessageKey).timestamp;
                 Date date = new Date(unixTime);
                 customViewHolder.textView_timestamp.setText(simpleDateFormat.format(date));
             }
+
+            customViewHolder.itemView.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    Intent intent = new Intent(view.getContext(), ChattingActivity.class);
+                    intent.putExtra("destinationUid",destinationUsers.get(position));
+
+                    ActivityOptions activityOptions = ActivityOptions.makeCustomAnimation(view.getContext(),R.anim.fromright,R.anim.toleft);
+
+                    startActivity(intent, activityOptions.toBundle());
+                }
+            });
         }
 
         @Override
@@ -193,3 +174,4 @@ public class ClientChatListActivity extends AppCompatActivity {
         }
     }
 }
+

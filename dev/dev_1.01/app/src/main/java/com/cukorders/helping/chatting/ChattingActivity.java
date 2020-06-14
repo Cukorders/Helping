@@ -178,8 +178,8 @@ public class ChattingActivity extends AppCompatActivity {
 
                         @Override
                         public void onComplete(@NonNull Task<Void> task) {
-                           /* sendGcm();
-                           */ editText.setText(""); // 채팅치고 보낸 후에 채팅 치는 부분 초기화 시켜주는 부분
+                            /* sendGcm();
+                             */ editText.setText(""); // 채팅치고 보낸 후에 채팅 치는 부분 초기화 시켜주는 부분
                         }
                     });
 
@@ -217,50 +217,50 @@ public class ChattingActivity extends AppCompatActivity {
         }*/
     }
 
-   /* void sendGcm(){
-        Gson gson = new Gson();
+    /* void sendGcm(){
+         Gson gson = new Gson();
 
-        NotificationModel notificationModel = new NotificationModel();
-        notificationModel.to = destinationUserModel.pushToken;
-        notificationModel.notifacation.title = "보낸이 아이디";
-        notificationModel.notifacation.text = editText.getText().toString();
+         NotificationModel notificationModel = new NotificationModel();
+         notificationModel.to = destinationUserModel.pushToken;
+         notificationModel.notifacation.title = "보낸이 아이디";
+         notificationModel.notifacation.text = editText.getText().toString();
 
-        RequestBody requestBody = RequestBody.create(MediaType.parse("application/json; charset=utf8"),gson.toJson(notificationModel));
+         RequestBody requestBody = RequestBody.create(MediaType.parse("application/json; charset=utf8"),gson.toJson(notificationModel));
 
-        Request request = new Request.Builder()
-                .header("Content-Type","application/json")
-                .addHeader("Authorization","key=AAAArs07U3c:APA91bEUDG39kMs2yJyKzyluHIHruRA2XvfecbptE_0HHR_sJr04PBvblXRx9gCa4Wag39zGJT5hPvvN_twdMok-wBBosJyDFsTt4K7CFJ755AWgxQ8MzHGsYMdgNflmjteHWGUkDrii")
-                .url("https://fcm.googleapis.com/fcm/send")
-                .post(requestBody)
-                .build();
+         Request request = new Request.Builder()
+                 .header("Content-Type","application/json")
+                 .addHeader("Authorization","key=AAAArs07U3c:APA91bEUDG39kMs2yJyKzyluHIHruRA2XvfecbptE_0HHR_sJr04PBvblXRx9gCa4Wag39zGJT5hPvvN_twdMok-wBBosJyDFsTt4K7CFJ755AWgxQ8MzHGsYMdgNflmjteHWGUkDrii")
+                 .url("https://fcm.googleapis.com/fcm/send")
+                 .post(requestBody)
+                 .build();
 
-        OkHttpClient okHttpClient = new OkHttpClient();
-        okHttpClient.newCall(request).enqueue(new Callback() {
-            @Override
-            public void onFailure(@NotNull Call call, @NotNull IOException e) {
+         OkHttpClient okHttpClient = new OkHttpClient();
+         okHttpClient.newCall(request).enqueue(new Callback() {
+             @Override
+             public void onFailure(@NotNull Call call, @NotNull IOException e) {
 
-            }
+             }
 
-            @Override
-            public void onResponse(@NotNull Call call, @NotNull Response response) throws IOException {
+             @Override
+             public void onResponse(@NotNull Call call, @NotNull Response response) throws IOException {
 
-            }
-        });
-    }
-*/
+             }
+         });
+     }
+ */
     void checkChatRoom(){
         FirebaseDatabase.getInstance().getReference().child("chatrooms").orderByChild("users/"+uid).equalTo(true).addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                 for(DataSnapshot item : dataSnapshot.getChildren()){
-                     ChatModel chatModel = item.getValue(ChatModel.class); // 아이디가 존재하는지
-                     if(chatModel.users.containsKey(destinationUid)){ //내가 요구하는 아이디가 존재하는지 확인
-                         chatRoomUid = item.getKey(); // 채팅방 Uid, 내가 원하는 코멘트를 해당하는 방에 넣어놓기 위함
-                         button.setEnabled(true);
-                         recyclerView.setLayoutManager(new LinearLayoutManager(ChattingActivity.this));
-                         recyclerView.setAdapter(new RecyclerViewAdapter());
-                     }
-                 }
+                for(DataSnapshot item : dataSnapshot.getChildren()){
+                    ChatModel chatModel = item.getValue(ChatModel.class); // 아이디가 존재하는지
+                    if(chatModel.users.containsKey(destinationUid)){ //내가 요구하는 아이디가 존재하는지 확인
+                        chatRoomUid = item.getKey(); // 채팅방 Uid, 내가 원하는 코멘트를 해당하는 방에 넣어놓기 위함
+                        button.setEnabled(true);
+                        recyclerView.setLayoutManager(new LinearLayoutManager(ChattingActivity.this));
+                        recyclerView.setAdapter(new RecyclerViewAdapter());
+                    }
+                }
             }
 
             @Override
