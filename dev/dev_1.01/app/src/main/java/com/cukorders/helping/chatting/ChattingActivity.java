@@ -1,5 +1,6 @@
 package com.cukorders.helping.chatting;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.Gravity;
@@ -21,9 +22,20 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.request.RequestOptions;
 import com.cukorders.helping.R;
+import com.cukorders.helping.chatting_popup.PopupActivity;
+import com.cukorders.helping.chatting_popup.PopupActivity10;
+import com.cukorders.helping.chatting_popup.PopupActivity20;
+import com.cukorders.helping.chatting_popup.PopupActivity3;
+import com.cukorders.helping.chatting_popup.PopupActivity30;
+import com.cukorders.helping.chatting_popup.PopupActivity4;
+import com.cukorders.helping.chatting_popup.PopupActivity40;
+import com.cukorders.helping.chatting_popup.PopupActivity5;
+import com.cukorders.helping.chatting_popup.PopupActivity6;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
@@ -33,12 +45,15 @@ import com.google.firebase.database.ValueEventListener;
 
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.TimeZone;
 
 import de.hdodenhof.circleimageview.CircleImageView;
+
+import static android.view.View.VISIBLE;
 
 public class ChattingActivity extends AppCompatActivity {
 
@@ -47,7 +62,7 @@ public class ChattingActivity extends AppCompatActivity {
     private Button button;
     private EditText editText;
 
-    private String uid= "0WcHcri06BPtTb8dlmgBJf0aZNY2";
+    private String uid= "TIhMFvxLG9awVpVPN931vwXDUXz2";
     private String chatRoomUid;
     private String postUid;
 
@@ -75,6 +90,20 @@ public class ChattingActivity extends AppCompatActivity {
     private SimpleDateFormat simpleDateFormat = new SimpleDateFormat(" yyyy.MM.dd HH:mm");
     private UserModel destinationUserModel;
 
+    // 거래 관련 버튼 변수 선언
+
+    private FirebaseAuth mAuth;
+    private FirebaseUser mCurrentUser;
+
+    private DatabaseReference mPost;
+    private DatabaseReference mChats;
+    private DatabaseReference mUsers;
+    private int money;
+    private DatabaseReference Center;
+
+    private DatabaseReference MoneyRef;
+    private String Money;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -83,7 +112,7 @@ public class ChattingActivity extends AppCompatActivity {
         uid = FirebaseAuth.getInstance().getCurrentUser().getUid(); // 채팅을 요구하는 아이디. 즉 단말기에 로그인된 UID
 
 */
-        getIncomingIntent();
+       /* getIncomingIntent();*/
         Log.d(TAG,"see PostUid: "+postUid);
         Log.d(TAG,"see chatRoomUid: "+chatRoomUid);
 
@@ -99,9 +128,9 @@ public class ChattingActivity extends AppCompatActivity {
         recyclerView = (RecyclerView)findViewById(R.id.chattingActivity_recyclerview);
 
         mRef = FirebaseDatabase.getInstance().getReference();
-        postRef = mRef.child("Posting").child(postUid);
+        postRef = mRef.child("Posting");
 
-        postRef.addListenerForSingleValueEvent(new ValueEventListener() {
+        postRef.child(postUid).addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                 String title = dataSnapshot.child("title").getValue().toString();
@@ -193,15 +222,306 @@ public class ChattingActivity extends AppCompatActivity {
             }
         });
         checkChatRoom();
-    }
+/*
+        accept.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {*/
+                // 수락 거절 관련 onclickListener
 
-    private void getIncomingIntent(){
+                Calendar calendar= Calendar.getInstance();
+                SimpleDateFormat dateFormat= new SimpleDateFormat("yyyyMddHHmmss");
+
+                final String time= dateFormat.format(calendar.getTime());
+
+                //db 테이블 불러오기
+                mPost = FirebaseDatabase.getInstance().getReference().child("Posting");
+
+                //mUsers=FirebaseDatabase.getInstance().getReference().child("Users");
+
+                Center= FirebaseDatabase.getInstance().getReference().child("Center");
+
+                mChats = FirebaseDatabase.getInstance().getReference().child("Chat_list");
+
+                MoneyRef=FirebaseDatabase.getInstance().getReference().child("Users").child(uid);
+                MoneyRef.addListenerForSingleValueEvent(new ValueEventListener() {
+                    @Override
+                    public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                        if(dataSnapshot.exists()){
+                            String Money_value = dataSnapshot.child("Money").getValue().toString();
+                            if(Money_value.equals("default")){
+                                money=10000;
+                            }else{
+                                money=Integer.parseInt(Money_value);
+                            }
+                            Log.d("Money","Money_value 값: "+Money_value);
+                            Log.d("Money","money 값: "+money);
+                        }
+                    }
+
+                    @Override
+                    public void onCancelled(@NonNull DatabaseError databaseError) {
+
+                    }
+                });
+        /*
+
+        Context context=this;
+        Center center=new Center(mPost.toString(),mUid,"123",money,0); // 센터 DB 변수들을 class에 넣음
+        DatabaseReference dbRef=FirebaseDatabase.getInstance().getReference().child("Center").child(String.valueOf(mPost));
+        HashMap<String,Object> update=(HashMap<String, Object>) center.toMap();
+        Log.d("dbRef","dbRef의 값: "+dbRef);
+
+        dbRef.setValue(update).addOnCompleteListener(new OnCompleteListener<Void>() {
+            @Override
+            public void onComplete(@NonNull Task<Void> task) {
+                if (task.isSuccessful()) {
+                  //  Toast.makeText(this,"센터 db가 성공적으로 업로드 되었습니다.",Toast.LENGTH_LONG).show();
+                    Log.e("a post is uploaded", "a post is successfully uploaded");
+                } else{
+                 //   Toast.makeText(this,"오류가 발생하여 센터 db 업로드에 실패하였습니다. 잠시 후에 다시 시도해주십시오.",Toast.LENGTH_LONG).show();
+                }
+            }
+        });
+        */
+        /*
+        Log.d("money","Money의 값: "+Money);
+        if(Money.equals("default")){
+            money=10000;
+        }else{
+           // money=Integer.parseInt(Money);
+        }
+        Log.d("money","money의 값: "+money);
+
+         */
+        Log.e(TAG,"mChat의 값: "+mChats);
+        Log.e(TAG,"mChat/chatRoomid의 값: "+mChats.child(chatRoomUid));
+                mChats.child(chatRoomUid).addValueEventListener(new ValueEventListener() {
+
+                    @Override
+                    public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                        //if(dataSnapshot.exists()){
+                        final String Clientuid = dataSnapshot.child("ClientUid").getValue().toString();
+                        final String Helperuid = dataSnapshot.child("HelperUid").getValue().toString();
+                        String postuid = dataSnapshot.child("PostUid").getValue().toString();
+
+
+                        mPost.child(postuid).addValueEventListener(new ValueEventListener() {
+                            @Override
+                            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+
+                                String isMatched=dataSnapshot.child("isMatched").getValue().toString();
+                                String isSended=dataSnapshot.child("isSended").getValue().toString();
+                                final String price=dataSnapshot.child("price").getValue().toString();
+                                final String pay=dataSnapshot.child("pay").getValue().toString();
+                                final String cancelTime=dataSnapshot.child("cancelTime").getValue().toString();
+                                String isCancled=dataSnapshot.child("isCanceled").getValue().toString();
+
+
+
+                                String due=dataSnapshot.child("due").getValue().toString();
+                                String isFinished=dataSnapshot.child("isFinished").getValue().toString();
+
+
+
+
+                                if (Clientuid.equals(uid)) {
+                                    //내가 의뢰인이 맞을 경우 수락 버튼을 누를 수 있게 된다.
+
+                                    if (!isMatched.equals(Helperuid)) {
+
+                                        accept.setVisibility(VISIBLE);
+                                        decline.setVisibility(VISIBLE);
+                                        Button accept_button;
+
+                                        Button.OnClickListener btnListener = new View.OnClickListener() {
+
+                                            public void onClick(View v) {
+                                                switch (v.getId()) {
+
+                                                    case R.id.chattingActivity_accept:
+
+                                                        if (money >= (Integer.parseInt(price) + Integer.parseInt(pay))) {
+
+                                                            Intent intent = new Intent(ChattingActivity.this, PopupActivity.class);
+                                                            startActivityForResult(intent, 1);
+
+                                                        } else if (money < (Integer.parseInt(price) + Integer.parseInt(pay))) {
+
+                                                            Intent intent = new Intent(ChattingActivity.this, PopupActivity3.class);
+                                                            startActivityForResult(intent, 1);
+                                                        }
+
+                                                        break;
+
+                                                }
+                                            }
+                                        };
+
+                                        accept_button = (Button) findViewById(R.id.chattingActivity_accept);
+                                        accept_button.setOnClickListener(btnListener);
+
+
+                                    } else if (isMatched.equals(Helperuid)) {
+
+
+                                        if (isSended.equals("2")) {
+
+                                            accept.setText("거래완료");
+                                            decline.setText("미션취소");
+
+                                            if(isCancled.equals("1")){
+
+                                                Intent intent = new Intent(ChattingActivity.this, PopupActivity40.class);
+                                                startActivityForResult(intent, 1);
+
+                                            }
+
+                                            Button.OnClickListener btnListener = new View.OnClickListener() {
+
+                                                public void onClick(View v) {
+                                                    switch (v.getId()) {
+
+                                                        case R.id.chattingActivity_accept:
+
+                                                            Intent intent = new Intent(ChattingActivity.this, PopupActivity10.class);
+                                                            startActivityForResult(intent, 1);
+
+                                                            break;
+
+                                                    }
+                                                }
+                                            };
+
+                                            accept = (Button) findViewById(R.id.chattingActivity_accept);
+                                            accept.setOnClickListener(btnListener);
+
+                                            Button.OnClickListener btnListener2 = new View.OnClickListener() {
+
+                                                public void onClick(View v) {
+                                                    switch (v.getId()) {
+
+                                                        case R.id.chattingActivity_decline:
+
+                                                            SimpleDateFormat simpleDateFormat=new SimpleDateFormat("yyyyMMdd");
+                                                            Long cancel_time = Long.parseLong(simpleDateFormat.format(cancelTime));
+                                                            Long cur_time = Long.parseLong(simpleDateFormat.format(time));
+
+                                                            if (cancel_time > cur_time) {
+
+
+                                                                Intent intent = new Intent(ChattingActivity.this, PopupActivity20.class);
+                                                                startActivityForResult(intent, 1);
+
+                                                            } else if (cancel_time < cur_time) {
+
+                                                                Intent intent = new Intent(ChattingActivity.this, PopupActivity30.class);
+                                                                startActivityForResult(intent, 1);
+
+                                                            }
+                                                            break;
+                                                    }
+                                                }
+                                            };
+                                            decline = (Button) findViewById(R.id.chattingActivity_decline);
+                                            decline.setOnClickListener(btnListener2);
+                                        }
+                                    }
+                                } else if (Helperuid.equals(uid)) {
+
+                                    if(isFinished.equals("0")){
+
+                                        accept.setVisibility(View.INVISIBLE);
+                                        decline.setVisibility(View.INVISIBLE);
+
+                                        if (isSended.equals("1")) {
+                                            Intent intent = new Intent(ChattingActivity.this, PopupActivity.class);
+                                            startActivityForResult(intent, 1);
+                                        }
+                                        if (isSended.equals("2")) {
+
+                                            accept.setText("거래완료");
+                                            decline.setText("미션취소");
+
+                                            accept.setVisibility(View.INVISIBLE);
+                                            decline.setVisibility(VISIBLE);
+
+                                            if(isCancled.equals("1")){
+                                                Intent intent = new Intent(ChattingActivity.this, PopupActivity40.class);
+                                                startActivityForResult(intent, 1);
+                                            }
+                                        }
+
+                                        Button.OnClickListener btnListener2 = new View.OnClickListener() {
+
+                                            public void onClick(View v) {
+                                                switch (v.getId()) {
+
+                                                    case R.id.chattingActivity_decline:
+
+
+                                                        Long cancel_time = Long.parseLong(cancelTime);
+                                                        Long cur_time = Long.parseLong(time);
+
+                                                        if (cancel_time > cur_time) {
+
+                                                            Intent intent = new Intent(ChattingActivity.this, PopupActivity6.class);
+                                                            startActivityForResult(intent, 1);
+
+                                                        } else if (cancel_time < cur_time) {
+
+                                                            Intent intent = new Intent(ChattingActivity.this, PopupActivity5.class);
+                                                            startActivityForResult(intent, 1);
+
+                                                        }
+                                                        break;
+                                                }
+                                            }
+                                        };
+
+
+                                        decline = (Button) findViewById(R.id.chattingActivity_decline);
+                                        decline.setOnClickListener(btnListener2);
+
+
+                                    }else if(isFinished.equals("1")){
+                                        Intent intent = new Intent(ChattingActivity.this, PopupActivity4.class);
+                                        startActivityForResult(intent, 1);
+                                    }
+
+                                }else if(isFinished.equals("1")){
+
+                                    Intent intent = new Intent(ChattingActivity.this, PopupActivity4.class);
+                                    startActivityForResult(intent, 1);
+
+                                }
+                            }
+                            @Override
+                            public void onCancelled(@NonNull DatabaseError databaseError) {
+                            }
+                        });
+                    }
+
+
+                    @Override
+                    public void onCancelled(@NonNull DatabaseError databaseError) {
+
+                    }
+                });
+
+
+
+
+            }/*
+        });
+    }
+*/
+   /* private void getIncomingIntent(){
         Bundle bundleObject = getIntent().getExtras();
         if(!bundleObject.getString("postUid").isEmpty()){
             postUid=bundleObject.getString("postUid");
             Log.d(TAG,"see PostUid in getIncoming: "+postUid);
         }
-      /*  if(!bundleObject.getString("chatUid").isEmpty()){
+      *//*  if(!bundleObject.getString("chatUid").isEmpty()){
             if(bundleObject.getString("chatUid").toString().equals("0")){
                 //만들어진 채팅방이 없음
                 //chatRoomUid에 0만 들어감
@@ -214,9 +534,9 @@ public class ChattingActivity extends AppCompatActivity {
                 Log.d(TAG,"see chatRoomUid in getIncoming: "+chatRoomUid);
                 ifnewChat=true;
             }
-        }*/
+        }*//*
     }
-
+*/
    /* void sendGcm(){
         Gson gson = new Gson();
 

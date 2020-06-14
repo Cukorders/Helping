@@ -40,7 +40,7 @@ public class ClientChatListActivity extends AppCompatActivity {
     private RecyclerView recyclerView;
 
     private String uid = "0WcHcri06BPtTb8dlmgBJf0aZNY2";
-    private String postUid/*= "%H!4dM0ReL@ATAPc89ls=+IjlJ0lQyYMy1XUiVdn9VKpe@Q@iT"*/;
+    private String postUid= "%H!4dM0ReL@ATAPc89ls=+IjlJ0lQyYMy1XUiVdn9VKpe@Q@iT";
     private String postTitle;
 
     private DatabaseReference mRef;
