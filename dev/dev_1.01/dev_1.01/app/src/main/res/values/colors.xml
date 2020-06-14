@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <color name="colorPrimary">#6200EE</color>
+    <color name="colorPrimaryDark">#3700B3</color>
+    <color name="colorAccent">#03DAC5</color>
+    <color name="colorLogo">#70D398</color>
+    <color name="colorLogoClick">#91c9ae</color>
+    <color name="colorGradientStart">#dcb0ed</color>
+    <color name="colorGradientMid">#B9BCC3</color>
+    <color name="colorGradientEnd">#99c99c</color>
+    <color name="colorBlack">#000000</color>
+    <color name="colorWhite">#FFFFFF</color>
+    <color name="colorGrayButton">#e1e1e1</color>
+    <color name="colorError">#F44336</color>
+    <color name="colorGrayButtonPush">#d5d5d5</color>
+    <color name="disabledBtnBg">#999999</color>
+    <color name="colorGray">#9B9B9B</color>
+    <color name="colorDarkBlue">#00008B</color>
+    <color name="colorGreen">#008000</color>
+    <color name="colorYellow">#FFFF00</color>
+    <color name="colorRed">#FF0000</color>
+    <color name="tab_base_color">#B9BCC3</color>
+    <color name="tabactive">#70D398</color>
+</resources>

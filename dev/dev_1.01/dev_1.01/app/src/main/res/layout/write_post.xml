@@ -1,0 +1,385 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical"
+        >
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="50dp"
+            android:orientation="horizontal"
+            android:weightSum="10"
+            android:background="@color/colorLogo"
+            >
+            <Button
+                android:id="@+id/back_button_write_post"
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:layout_weight="2"
+                android:gravity="left|center"
+                android:paddingLeft="10dp"
+                android:textSize="20sp"
+                android:text="닫기"
+                android:textColor="@color/colorWhite"
+                android:background="@android:color/transparent"/>
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:gravity="center"
+                android:layout_weight="6"
+                android:text="미션 만들기"
+                android:textSize="24sp"
+                android:textColor="@color/colorWhite"/>
+
+            <Button
+                android:id="@+id/bt_finish"
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:layout_weight="2"
+                android:paddingRight="10dp"
+                android:text="완료"
+                android:textColor="@color/colorWhite"
+                android:textSize="20sp" />
+        </LinearLayout>
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="90dp"
+            android:background="@drawable/stroke_below_bold"
+            android:layout_marginLeft="10dp"
+            android:layout_marginRight="10dp">
+            <RelativeLayout
+            android:layout_width="70dp"
+            android:layout_height="70dp"
+            android:layout_marginTop="10dp"
+            android:background="@drawable/strokebox">
+
+            <ImageButton
+                android:id="@+id/camera_album_add1"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:background="@android:color/transparent"
+                android:src="@drawable/camera_button"
+                android:layout_centerInParent="true"/>
+
+            <TextView
+                android:id="@+id/camera_picture_addnumber1"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_below="@id/camera_album_add1"
+                android:layout_marginBottom="5dp"
+                android:gravity="center"
+                android:text="0/3" />
+        </RelativeLayout>
+
+            <RelativeLayout
+                android:id="@+id/photo2"
+                android:layout_width="70dp"
+                android:layout_height="70dp"
+                android:layout_marginLeft="10dp"
+                android:layout_marginTop="10dp"
+                android:background="@drawable/strokebox"
+                android:visibility="invisible">
+
+                <ImageButton
+                    android:id="@+id/camera_album_add2"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_centerInParent="true"
+                    android:background="@android:color/transparent"
+                    android:src="@drawable/camera_button" />
+
+                <TextView
+                    android:id="@+id/camera_picture_addnumber2"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:layout_below="@id/camera_album_add2"
+                    android:layout_marginBottom="5dp"
+                    android:gravity="center"
+                    android:text="1/3" />
+            </RelativeLayout>
+
+            <RelativeLayout
+                android:id="@+id/photo3"
+                android:layout_width="70dp"
+                android:layout_height="70dp"
+                android:layout_marginLeft="10dp"
+                android:layout_marginTop="10dp"
+                android:background="@drawable/strokebox"
+                android:visibility="invisible">
+
+                <ImageButton
+                    android:id="@+id/camera_album_add3"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_centerInParent="true"
+                    android:background="@android:color/transparent"
+                    android:src="@drawable/camera_button" />
+
+                <TextView
+                    android:id="@+id/camera_picture_addnumber3"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:layout_below="@id/camera_album_add3"
+                    android:layout_marginBottom="5dp"
+                    android:gravity="center"
+                    android:text="2/3" />
+            </RelativeLayout>
+
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="10dp"
+            android:paddingTop="20dp"
+            android:paddingBottom="20dp"
+            android:layout_marginLeft="10dp"
+            android:layout_marginRight="10dp"
+            android:background="@drawable/stroke_below">
+
+            <EditText
+                android:id="@+id/title"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:background="@android:color/transparent"
+                android:hint="글 제목"
+                android:textSize="18sp" />
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="10dp"
+            android:weightSum="10"
+            android:paddingTop="20dp"
+            android:paddingBottom="20dp"
+            android:layout_marginLeft="10dp"
+            android:layout_marginRight="10dp"
+            android:background="@drawable/stroke_below">
+
+            <Spinner
+                android:id="@+id/category"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_weight="7" />
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="300dp"
+            android:layout_marginBottom="10dp"
+            android:paddingTop="20dp"
+            android:paddingBottom="20dp"
+            android:layout_marginLeft="10dp"
+            android:layout_marginRight="10dp"
+            android:background="@drawable/stroke_below">
+
+            <EditText
+                android:id="@+id/description"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:background="@android:color/transparent"
+                android:hint="내용을 입력해주세요."
+                android:textSize="18sp" />
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:layout_marginBottom="10dp"
+            android:paddingTop="20dp"
+            android:paddingBottom="20dp"
+            android:layout_marginLeft="10dp"
+            android:layout_marginRight="10dp"
+            android:background="@drawable/stroke_up_and_down_bold">
+
+            <EditText
+                android:id="@+id/pay"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:hint="보상금 :"
+                android:textSize="18sp" />
+
+            <EditText
+                android:id="@+id/due"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:hint="보증금 :"
+                android:textSize="18sp" />
+            //물품가격 edittext => 카테고리에서 물품 관련된 경우 입력할 수 있고,물품 관련된 경우가 아닌 경우 입력할 수 없도록
+
+            <EditText
+                android:id="@+id/price"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:hint="물품 가격 :"
+                android:textSize="18sp" />
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:layout_marginBottom="10dp"
+            android:paddingTop="10dp"
+            android:paddingBottom="20dp"
+            android:layout_marginLeft="10dp"
+            android:layout_marginRight="10dp"
+            android:background="@drawable/stroke_below_bold">
+
+            <EditText
+                android:id="@+id/endTime"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:hint="미션 완료 시간 :"
+                android:textSize="18sp" />
+
+            <EditText
+                android:id="@+id/cancelTime"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:hint="미션 취소 가능 시간 :"
+                android:textSize="18sp" />
+
+            <EditText
+                android:id="@+id/place"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:hint="만날 장소(선택) :"
+                android:textSize="18sp" />
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:layout_marginBottom="10dp"
+            android:paddingTop="10dp"
+            android:paddingBottom="20dp"
+            android:layout_marginLeft="10dp"
+            android:layout_marginRight="10dp"
+            android:background="@drawable/stroke_below_bold">
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:text="성별"
+                android:textSize="18sp"
+                android:paddingLeft="5dp"/>
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_marginTop="3dp"
+                android:orientation="horizontal">
+
+                <Button
+                    android:id="@+id/bt_same"
+                    android:layout_width="wrap_content"
+                    android:layout_height="match_parent"
+                    android:layout_marginRight="3dp"
+                    android:background="@drawable/primary_btn_bg"
+                    android:text="동성"
+                    android:textColor="@color/colorBlack"
+                    android:textSize="16sp" />
+
+                <Button
+                    android:id="@+id/bt_dontMind"
+                    android:layout_width="wrap_content"
+                    android:layout_height="match_parent"
+                    android:layout_marginLeft="3dp"
+                    android:background="@drawable/select_button"
+                    android:text="무관"
+                    android:textColor="@color/colorBlack"
+                    android:textSize="16sp" />
+            </LinearLayout>
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:layout_marginTop="3dp"
+                android:text= "희망 연령대"
+                android:textSize="18sp"
+                android:paddingLeft="5dp"/>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_marginTop="3dp"
+                android:orientation="horizontal">
+                <Button
+                    android:id="@+id/button10s"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginRight="2dp"
+                    android:text="10대"
+                    android:layout_weight="2"
+                    android:background="@drawable/primary_btn_bg"
+                    android:textColor="@color/colorBlack">
+                </Button>
+                <Button
+                    android:id="@+id/button20s"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="2dp"
+                    android:layout_marginRight="2dp"
+                    android:text="20대"
+                    android:layout_weight="2"
+                    android:background="@drawable/select_button"
+                    android:textColor="@color/colorBlack">
+                </Button>
+                <Button
+                    android:id="@+id/button30s"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="2dp"
+                    android:layout_marginRight="2dp"
+                    android:text="30대"
+                    android:layout_weight="2"
+                    android:background="@drawable/select_button"
+                    android:textColor="@color/colorBlack">
+                </Button>
+                <Button
+                    android:id="@+id/button40s"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="2dp"
+                    android:layout_marginRight="2dp"
+                    android:text="40대"
+                    android:layout_weight="2"
+                    android:background="@drawable/select_button"
+                    android:textColor="@color/colorBlack">
+                </Button>
+                <Button
+                    android:id="@+id/button50s"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="2dp"
+                    android:text="50대이상"
+                    android:layout_weight="2"
+                    android:background="@drawable/select_button"
+                    android:textColor="@color/colorBlack">
+                </Button>
+            </LinearLayout>
+
+        </LinearLayout>
+
+        <Button
+            android:id="@+id/bt_post"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="10dp"
+            android:layout_marginTop="10dp"
+            android:layout_marginRight="10dp"
+            android:layout_marginBottom="20dp"
+            android:background="@drawable/gps_button_shape"
+            android:text="작성 완료"
+            android:textColor="@color/colorWhite"
+            android:textSize="20sp" />
+
+
+
+    </LinearLayout>
+</ScrollView>

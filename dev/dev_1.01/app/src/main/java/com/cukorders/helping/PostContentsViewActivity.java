@@ -394,10 +394,11 @@ public class PostContentsViewActivity extends AppCompatActivity {
         //만약 헬퍼라면
         //그냥 채팅방 화면으로 넘겨주되, 넘어가야 될 내용은 chatting방 uid
         /*
-        Intent gohelperChat = new Intent(PostContentsViewActivity.this, );
+        Intent gohelperChat = new Intent(PostContentsViewActivity.this,ChattingActivity.class);
         Bundle bundle = new Bundle();
         bundle.putSerializable("postUid",postUid);
         bundle.putSerializable("chatUid",chatUid);
+        bundle.putSerializable("helperuid","");
         Log.d(TAG, "send postUid to chatting page : " + postUid);
         Log.d(TAG, "send chatUid to chatting page : " + chatUid);
         gohelperChat.putExtras(bundle);
@@ -412,9 +413,10 @@ public class PostContentsViewActivity extends AppCompatActivity {
         //채팅방에는 상대방의 uid가 들어가 있어야 한다.
         //채팅방에는 현재 상대방의 정보가 들어가게 되고, orderbyChild(헬퍼 UID)를 통해서 채팅방 고유번호를 찾기
         /*
-        Intent goClientChat = new Intent(PostContentsViewActivity.this, );
+        Intent goClientChat = new Intent(PostContentsViewActivity.this,ChattingActivity.class);
         Bundle bundle = new Bundle();
         bundle.putSerializable("postUid",postUid);
+        bundle.putSerializable("chatUid","");
         bundle.putSerializable("helperuid",helperuid);
         Log.d(TAG, "send postUid to chatting page : " + postUid);
         Log.d(TAG, "send chatUid to chatting page : " + helperUid);
