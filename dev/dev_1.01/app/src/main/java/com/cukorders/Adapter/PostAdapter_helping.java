@@ -2,7 +2,6 @@ package com.cukorders.Adapter;
 
 import android.content.Context;
 import android.content.Intent;
-import android.graphics.Color;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -16,15 +15,12 @@ import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.cukorders.helping.InitPost;
-import com.cukorders.helping.PostContentsViewActivity;
 import com.cukorders.helping.PostContentsView_helpingActivity;
 import com.cukorders.helping.R;
 import com.google.firebase.database.DatabaseReference;
 import com.squareup.picasso.Picasso;
 
 import java.util.ArrayList;
-
-import static android.view.View.VISIBLE;
 
 public class PostAdapter_helping extends RecyclerView.Adapter<PostAdapter_helping.PostViewHolder> {
     //Put post info in ArrayList

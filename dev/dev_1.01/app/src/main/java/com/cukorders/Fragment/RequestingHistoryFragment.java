@@ -1,5 +1,7 @@
 package com.cukorders.Fragment;
 
+import android.content.DialogInterface;
+import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -8,14 +10,14 @@ import android.view.ViewGroup;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.appcompat.app.AlertDialog;
 import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.DefaultItemAnimator;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
-import com.cukorders.Adapter.PostAdapter_helping;
 import com.cukorders.Adapter.PostAdapter_history_request;
-import com.cukorders.Adapter.PostAdapter_request;
+import com.cukorders.helping.AuthActivity;
 import com.cukorders.helping.InitPost;
 import com.cukorders.helping.R;
 import com.google.firebase.auth.FirebaseAuth;
@@ -27,7 +29,6 @@ import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.Query;
 import com.google.firebase.database.ValueEventListener;
 
-import java.lang.reflect.Array;
 import java.util.ArrayList;
 
 /**
@@ -46,7 +47,7 @@ public class RequestingHistoryFragment extends Fragment {
 
     private FirebaseAuth mAuth;
     private FirebaseUser mCurrentUser;
-    private String mUid="TIhMFvxLG9awVpVPN931vwXDUXz2";
+    private String mUid="";
 
     //todo 의뢰중인 미션
     public RequestingHistoryFragment(){
@@ -69,14 +70,12 @@ public class RequestingHistoryFragment extends Fragment {
         recentPostListsView.setItemAnimator(new DefaultItemAnimator());
 
         //set mUid
-        mAuth= FirebaseAuth.getInstance();
+        mAuth = FirebaseAuth.getInstance();
         mCurrentUser = mAuth.getCurrentUser();
-
         if(mCurrentUser != null) {
             mUid = mCurrentUser.getUid(); //Do what you need to do with the id
-        }else{
-            //TODO mUid 가져오기
-            //mUid = "TIhMFvxLG9awVpVPN931vwXDUXz2";
+        } else{
+            caution();
         }
 
         //client postref
@@ -150,5 +149,18 @@ public class RequestingHistoryFragment extends Fragment {
                 Log.e(TAG, String.valueOf(databaseError.toException()));
             }
         });
+    }
+    private void caution(){
+        AlertDialog.Builder builder=new AlertDialog.Builder(RequestingHistoryFragment.this.getActivity());
+        builder.setTitle("로그인이 필요한 작업입니다.");
+        builder.setMessage("이 작업을 수행하시려면 로그인이 필요합니다.");
+        builder.setPositiveButton("로그인/회원가입 하기",
+                new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        startActivity(new Intent(RequestingHistoryFragment.this.getActivity(), AuthActivity.class));
+                    }
+                }).setNegativeButton("취소",null);
+        builder.show();
     }
 }

@@ -41,8 +41,6 @@
         <activity android:name=".RegisterFinishActivity"></activity>
         <activity android:name=".AuthActivity"></activity>
         <activity android:name=".MainActivity"></activity>
-        <activity android:name=".ChargingActivity"></activity>
-        <activity android:name=".Main2Activity" />
         <activity android:name=".LogInActivity"/>
         <activity android:name=".PostActivity"/>
         <activity android:name=".MyPageActivity"/>
@@ -57,16 +55,12 @@
         <activity android:name=".HistoryActivity"/>
         <activity android:name="com.theartofdev.edmodo.cropper.CropImageActivity"
             android:theme="@style/Base.Theme.AppCompat"/>
-        <activity android:name=".PostContentsViewActivity" />
         <activity android:name=".ProfileViewActivity" />
         <activity android:name=".PostContentsView_helpingActivity" />
         <activity android:name=".PostContentsView_requestActivity" />
-        <activity android:name=".PostImgView" />
+        <activity android:name=".PostContentsViewActivity" />
         <activity android:name=".RegionalCertificationActivity" />
         <activity android:name=".ChargingActivity" />
-        <activity android:name=".chatting.ChattingActivity" />
-        <activity android:name=".chatting.PeopleFragment" />
-
     </application>
 
 </manifest>

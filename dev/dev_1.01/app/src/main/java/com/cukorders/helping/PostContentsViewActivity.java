@@ -1,6 +1,9 @@
 package com.cukorders.helping;
 
+import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
+import android.graphics.Color;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
@@ -8,14 +11,14 @@ import android.widget.Button;
 import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.ProgressBar;
 import android.widget.ScrollView;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
+import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.recyclerview.widget.LinearLayoutManager;
-import androidx.recyclerview.widget.RecyclerView;
 
 import com.cukorders.helping.chatting.ChattingActivity;
 import com.google.android.gms.tasks.OnCompleteListener;
@@ -47,6 +50,7 @@ public class PostContentsViewActivity extends AppCompatActivity {
     private String postKey="";
     private ArrayList<InitPost> mPost;
     private boolean flag;
+    private Context context;
 
     private ScrollView scrollView;
     private ImageButton backBtn,chatting;
@@ -54,9 +58,12 @@ public class PostContentsViewActivity extends AppCompatActivity {
     private CircleImageView postUserImg;
     private TextView reward,deposit,price_post,end_time,cancel_av_time,place_post,post_title,post_content,content_msg;
     private TextView userUid;
+    private TextView topexplain;
     private LinearLayout postUser;
     private Button chatgobtn;
 
+    private TextView textView;
+    private ImageView imageView;
     private Button missionCancelbtn;
     private ImageButton mylike;
     private String countLikes;
@@ -69,7 +76,7 @@ public class PostContentsViewActivity extends AppCompatActivity {
 
     private FirebaseAuth mAuth;
     private FirebaseUser mCurrentUser;
-    private String mUid="TIhMFvxLG9awVpVPN931vwXDUXz2";
+    private String mUid="";
 
     private String currentTime;
     private Date currentDate;
@@ -85,6 +92,12 @@ public class PostContentsViewActivity extends AppCompatActivity {
     //img
     private ArrayList<String> mImageUrls = new ArrayList<>();
 
+    //progressbar
+    public float nowScore;
+    private ProgressBar scoreBar;
+    private TextView scoreText;
+    private ImageView scoreImg;
+
 
     protected void onCreate(Bundle savedInstanceState){
         super.onCreate(savedInstanceState);
@@ -94,6 +107,15 @@ public class PostContentsViewActivity extends AppCompatActivity {
         sdf = new SimpleDateFormat("yyyyMMddHHmm", Locale.getDefault());
         currentTime = sdf.format(new Date());
         //currentDate = sdf.format(new Date());
+
+        //progressbar
+        scoreBar=findViewById(R.id.pb);
+        scoreText=findViewById(R.id.score);
+        scoreImg=findViewById(R.id.face);
+
+        context=this;
+        topexplain = findViewById(R.id.State_of_Post);
+        topexplain.setText("최근미션");
 
         backBtn = findViewById(R.id.bt_back);
         viewImg = findViewById(R.id.postImages);
@@ -114,12 +136,15 @@ public class PostContentsViewActivity extends AppCompatActivity {
         missionCancelbtn = findViewById(R.id.cancel_missison_btn);
         mylike = findViewById(R.id.mylikes);
 
+        textView=(TextView) findViewById(R.id.score);
+        imageView=(ImageView) findViewById(R.id.face);
+
         mAuth = FirebaseAuth.getInstance();
         mCurrentUser = mAuth.getCurrentUser();
         if(mCurrentUser != null) {
             mUid = mCurrentUser.getUid(); //Do what you need to do with the id
         } else{
-            mUid = "qAT39HFIVmg4RCq3Vmpk2GdM4ra2";
+            caution();
         }
 
         mRef = FirebaseDatabase.getInstance().getReference();
@@ -141,10 +166,21 @@ public class PostContentsViewActivity extends AppCompatActivity {
 
         Log.d(TAG,"onCreate:started");
 
+
+
+        //헬퍼인지 확인하는 코드
+        if(!clientUid.equals(mUid)){
+            chkmyPosition=true;
+        }
+
         postUser.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                goToprofile();
+                if(chkmyPosition){
+                    goToprofile();
+                }else{
+                    goToeditprofile();
+                }
             }
         });
 
@@ -243,10 +279,12 @@ public class PostContentsViewActivity extends AppCompatActivity {
                 mImageUrls.add(image1);
                 mImageUrls.add(image2);
                 mImageUrls.add(image3);
-                //Toast.makeText(PostContentsViewActivity.this, "image1 is : this: "+image1, Toast.LENGTH_SHORT).show();
-                //Toast.makeText(PostContentsViewActivity.this, "image2 is : this: "+image2, Toast.LENGTH_SHORT).show();
-                //Toast.makeText(PostContentsViewActivity.this, "image3 is : this: "+image3, Toast.LENGTH_SHORT).show();
-                chkimgloaded=true;
+                Toast.makeText(PostContentsViewActivity.this, "image1 is : this: "+image1, Toast.LENGTH_SHORT).show();
+                Toast.makeText(PostContentsViewActivity.this, "image2 is : this: "+image2, Toast.LENGTH_SHORT).show();
+                Toast.makeText(PostContentsViewActivity.this, "image3 is : this: "+image3, Toast.LENGTH_SHORT).show();
+                if(mImageUrls.size()!=0){
+                    chkimgloaded=true;
+                }
 
                 //글 제목
                 post_title.setText(title);
@@ -264,8 +302,6 @@ public class PostContentsViewActivity extends AppCompatActivity {
                 cancel_av_time.setText("취소 가능 시간: " + canceltime);
                 //장소
                 place_post.setText("장소: " + place);
-
-                // 사진 누르면 여러개 확인하기
 
                 //취소
                 //우선 매칭이 된 경우
@@ -324,6 +360,12 @@ public class PostContentsViewActivity extends AppCompatActivity {
                 String nick = dataSnapshot.child("Nickname").getValue().toString();
                 String score = dataSnapshot.child("Score").getValue().toString();
                 String postuserimg = dataSnapshot.child("Image").getValue().toString();
+
+                Log.d(TAG, "check what is Score" + score);
+                nowScore = Float.valueOf(score);
+                Log.d(TAG, "check what is Score" + nowScore);
+                scoreBar.setMax(100);
+                progressAnimation(nowScore);
 
                 userUid.setText(nick);
                 Picasso.get().load(postuserimg).into(postUserImg);
@@ -422,6 +464,16 @@ public class PostContentsViewActivity extends AppCompatActivity {
         startActivity(goToProfileintent);
     }
 
+    private void goToeditprofile(){
+        //Todo 사용자 프로필 누르면 해당 사용자 정보 보는 페이지로 이동 , 수정이 아닌 그저 보는 느낌
+        Intent goToProfileintent = new Intent(PostContentsViewActivity.this, ProfileActivity.class);
+        Bundle bundle = new Bundle();
+        bundle.putSerializable("clientUid",clientUid);
+        Log.d(TAG, "check what is Clientuid_string" + clientUid);
+        goToProfileintent.putExtras(bundle);
+        goToProfileintent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+        startActivity(goToProfileintent);
+    }
 
     private void chatCheck_helper(){
         final DatabaseReference getChat = FirebaseDatabase.getInstance().getReference().child("chat_list_helper").child(mUid);
@@ -432,7 +484,7 @@ public class PostContentsViewActivity extends AppCompatActivity {
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                 if(!dataSnapshot.child(postUid).exists()){
                     Log.d(TAG, "user has never sent message to client");
-                    goTohelperchat("");
+                    goTohelperchat("0");
                 }else{
                     Log.d(TAG, "user has sent message to client before");
                     String chat_number = dataSnapshot.child(postUid).getValue().toString();
@@ -450,7 +502,8 @@ public class PostContentsViewActivity extends AppCompatActivity {
         //Todo chat버튼 누르면 화면으로 이동하기
         //만약 헬퍼라면
         //그냥 채팅방 화면으로 넘겨주되, 넘어가야 될 내용은 chatting방 uid
-        Intent gohelperChat = new Intent(PostContentsViewActivity.this, ChattingActivity.class );
+
+        Intent gohelperChat = new Intent(PostContentsViewActivity.this, ChattingActivity.class);
         Bundle bundle = new Bundle();
         bundle.putSerializable("postUid",postUid);
         bundle.putSerializable("chatUid",chatUid);
@@ -458,6 +511,7 @@ public class PostContentsViewActivity extends AppCompatActivity {
         Log.d(TAG, "send chatUid to chatting page : " + chatUid);
         gohelperChat.putExtras(bundle);
         startActivity(gohelperChat);
+
     }
 
     private void goToClientchat(String helperuid){
@@ -492,4 +546,44 @@ public class PostContentsViewActivity extends AppCompatActivity {
          */
     }
 
+    private void progressAnimation(float nowScore){
+        Log.d(TAG, "now move to progresAnimation");
+        Log.d(TAG, "now chk nowScore"+nowScore);
+        //MannerBarAnimation anim = new MannerBarAnimation(this, scoreBar, scoreText, scoreImg, 0, nowScore);
+        //anim.setDuration(8000);
+        //scoreBar.setAnimation(anim);
+        int value=(int)nowScore;
+        scoreBar.setProgress(value);
+        if (value >= 80 && value <= 100){
+            textView.setTextColor(Color.parseColor("#00008B"));
+            imageView.setImageResource(R.drawable.face_manner_darkblue);
+        }
+        else if (value >= 60 && value < 80){
+            textView.setTextColor(Color.parseColor("#008000"));
+            imageView.setImageResource(R.drawable.face_manner_green);
+        }
+        else if (value >= 30 && value < 60){
+            textView.setTextColor(Color.parseColor("#FFA500"));
+            imageView.setImageResource(R.drawable.face_manner_orange);
+        }
+        else {
+            textView.setTextColor(Color.parseColor("#FF0000"));
+            imageView.setImageResource(R.drawable.face_manner_red);
+        }
+        textView.setText(value+" 점");
+    }
+
+    private void caution(){
+        AlertDialog.Builder builder=new AlertDialog.Builder(this);
+        builder.setTitle("로그인이 필요한 작업입니다.");
+        builder.setMessage("이 작업을 수행하시려면 로그인이 필요합니다.");
+        builder.setPositiveButton("로그인/회원가입 하기",
+                new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        startActivity(new Intent(context,PostContentsViewActivity.class));
+                    }
+                }).setNegativeButton("취소",null);
+        builder.show();
+    }
 }

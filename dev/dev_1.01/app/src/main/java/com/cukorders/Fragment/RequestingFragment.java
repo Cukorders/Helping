@@ -16,16 +16,6 @@ import androidx.recyclerview.widget.DefaultItemAnimator;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
-import android.renderscript.Script;
-import android.util.Log;
-import android.view.LayoutInflater;
-import android.view.View;
-import android.view.ViewGroup;
-import android.widget.TextView;
-
-import com.cukorders.Adapter.PostAdapter;
-import com.cukorders.Adapter.PostAdapter_helping;
-import com.cukorders.Adapter.PostAdapter_history_request;
 import com.cukorders.Adapter.PostAdapter_request;
 import com.cukorders.helping.AuthActivity;
 import com.cukorders.helping.InitPost;
@@ -61,7 +51,7 @@ public class RequestingFragment extends Fragment {
 
     private FirebaseAuth mAuth;
     private FirebaseUser mCurrentUser;
-    private String mUid="TIhMFvxLG9awVpVPN931vwXDUXz2";
+    private String mUid="";
 
     private boolean flag=false;
     //todo 의뢰중인 미션
@@ -84,11 +74,17 @@ public class RequestingFragment extends Fragment {
         recentPostListsView.setAdapter(mAdapter);
         recentPostListsView.setItemAnimator(new DefaultItemAnimator());
 
-        mAuth=FirebaseAuth.getInstance();
+        mAuth = FirebaseAuth.getInstance();
         mCurrentUser = mAuth.getCurrentUser();
-        //set mUid
-        mAuth= FirebaseAuth.getInstance();
+        if(mCurrentUser != null) {
+            mUid = mCurrentUser.getUid(); //Do what you need to do with the id
+        } else{
+            caution();
+        }
+
+        /*
         if(mCurrentUser.getUid()==null){
+            mUid="TIhMFvxLG9awVpVPN931vwXDUXz2";
             caution();
         }else{
             mUid = mCurrentUser.getUid(); //Do what you need to do with the id
@@ -96,7 +92,7 @@ public class RequestingFragment extends Fragment {
         if(mUid!=""){
             flag=true;
         }
-
+         */
         //client postref
         mClientPostRef = FirebaseDatabase.getInstance().getReference().child("Posting");
 

@@ -16,7 +16,6 @@ import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.cukorders.helping.InitPost;
-import com.cukorders.helping.PostContentsViewActivity;
 import com.cukorders.helping.PostContentsView_requestActivity;
 import com.cukorders.helping.R;
 import com.google.firebase.database.DatabaseReference;

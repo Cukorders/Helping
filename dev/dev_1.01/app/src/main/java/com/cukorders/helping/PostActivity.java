@@ -1,11 +1,13 @@
 package com.cukorders.helping;
 
 import android.annotation.SuppressLint;
+import android.app.DatePickerDialog;
 import android.content.Context;
 import android.content.Intent;
 import android.database.Cursor;
 import android.graphics.Color;
 import android.net.Uri;
+import android.os.Build;
 import android.os.Bundle;
 import android.provider.MediaStore;
 import android.util.Log;
@@ -13,6 +15,7 @@ import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
+import android.widget.DatePicker;
 import android.widget.ImageButton;
 import android.widget.RelativeLayout;
 import android.widget.Spinner;
@@ -21,6 +24,7 @@ import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.annotation.RequiresApi;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.loader.content.CursorLoader;
 
@@ -35,20 +39,18 @@ import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
 import com.google.firebase.storage.UploadTask;
-import com.theartofdev.edmodo.cropper.CropImage;
 
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.HashMap;
+import java.util.Locale;
 import java.util.Map;
 import java.util.Random;
 
 public class PostActivity extends AppCompatActivity {
 
-    //userlikes
-    private DatabaseReference Userlikes;
-
-
-    public final Context regional_certification2=this;
+    public Context postActivity;
     private final Context context=this;
     private boolean sameGender;
     private boolean ageChecked[]=new boolean[5]; // 연령이 체크 됐는지 안 됐는지를 확인 여부
@@ -65,16 +67,42 @@ public class PostActivity extends AppCompatActivity {
     private Post post;
     private String uid=user.getUid();
     private Spinner category;
+    private DatabaseReference dbRef;
     private ArrayList<String> arrayList;
     private ArrayAdapter<String> arrayAdapter;
     private ImageButton photo[]=new ImageButton[3];
-    private static RelativeLayout[] pic =new RelativeLayout[2];
+    private static RelativeLayout[] pic =new RelativeLayout[3];
     private boolean photoCheck[]=new boolean[2];
     private static final int GALLERY_CODE = 10;
     private StorageReference storageReference;
+    private static StorageReference firebaseStorage;
+    private static int count=0;
+    private static Calendar calendar;
+    private static DatePickerDialog.OnDateSetListener datePicker=new DatePickerDialog.OnDateSetListener() {
+        @Override
+        public void onDateSet(DatePicker view, int year, int month, int dayOfMonth) {
+            calendar.set(Calendar.YEAR,year);
+            calendar.set(Calendar.MONTH,month);
+            calendar.set(Calendar.DAY_OF_MONTH,dayOfMonth);
+        }
+    };
+
     private String imagePath;
+    private String images[]=new String[3];
     private String postKey;
+    private static final String TAG="PostActivity";
     private String nowLocation;
+    private static final int PICK_IMAGE=1;
+    private ArrayList<Uri> ImageList=new ArrayList<Uri>();
+    private Uri ImageUri;
+    private int index;
+    private final int GALLERY_REQUEST=1;
+    private final int GALLERY_REQUEST2=2;
+    private final int GALLERY_REQUEST3=3;
+    private final int GET_GALLERY_IMAGE=200;
+    private Uri mImageUri[]=new Uri[3];
+    private static StorageReference mStorage;
+    private static String img[]=new String[3];
 
     @SuppressLint("LongLogTag")
     private static void init_ageChecked(boolean ageChecked[]){
@@ -83,22 +111,15 @@ public class PostActivity extends AppCompatActivity {
             ageChecked[i]=false;
     }
 
-    private static void ageValue(boolean[] ageChecked){
-        boolean flag=false;
-        for(int i=0;i<5;++i){
-
-        }
-    }
-
     private static void initPhotoCheck(boolean[] photoCheck){
         for(int i=0;i<2;++i)
             photoCheck[i]=false;
     }
 
-    private static void setPhotoButton(boolean[] photoCheck){
-        for(int i=0;i<2;++i)
+    /*private static void setPhotoButton(boolean[] photoCheck){
+        for(int i=1;i<3;++i)
             pic[i].setVisibility(photoCheck[i]?View.VISIBLE:View.INVISIBLE);
-    }
+    }*/
 
     private static int checkedAge(boolean[] ageChecked){
         int ret=0;
@@ -133,7 +154,11 @@ public class PostActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.write_post);
 
+        postActivity=this;
+        firebaseStorage=FirebaseStorage.getInstance().getReference();
         uid=user.getUid();
+        calendar=Calendar.getInstance();
+
         title=(TextView) findViewById(R.id.title);
         due=(TextView) findViewById(R.id.due);
         pay=(TextView) findViewById(R.id.pay);
@@ -142,12 +167,19 @@ public class PostActivity extends AppCompatActivity {
         price=(TextView) findViewById(R.id.price);
         description=(TextView) findViewById(R.id.description);
         place=(TextView) findViewById(R.id.place);
+
+        for(int i=0;i<3;++i){
+            mImageUri[i]=null;
+        }
+        mStorage=FirebaseStorage.getInstance().getReference();
+
         //카테고리 선택 스피너
         category=(Spinner) findViewById(R.id.category);
         arrayList=new ArrayList<>();
         arrayList.add("구매 대행(음식)");
-        arrayList.add("구매 대행(음식 외 상품)");
-        arrayList.add("배달");
+        arrayList.add("구매 대행(음식 외 물품)");
+        arrayList.add("배달(음식)");
+        arrayList.add("배달(음식 외 물품)");
         arrayList.add("청소");
         arrayList.add("과외");
         arrayList.add("기타");
@@ -159,6 +191,11 @@ public class PostActivity extends AppCompatActivity {
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
                 Category=arrayList.get(position);
                 Log.d("카테고리","선택된 카테고리 : "+Category);
+                if(Category.equals("구매 대행(음식)")||Category.equals("배달(음식)")){
+                    cancelTime.setEnabled(false);
+                }else{
+                    cancelTime.setEnabled(true);
+                }
             }
 
             @Override
@@ -166,30 +203,43 @@ public class PostActivity extends AppCompatActivity {
                 Toast.makeText(context,"하나 이상의 카테고리를 설정하세요.",Toast.LENGTH_LONG).show();
             }
         });
+
         // 사진 추가 버튼
         photo[0]=(ImageButton) findViewById(R.id.camera_album_add1);
         photo[1]=(ImageButton) findViewById(R.id.camera_album_add2);
         photo[2]=(ImageButton) findViewById(R.id.camera_album_add3);
-        pic[0]=(RelativeLayout) findViewById(R.id.photo2);
-        pic[1]=(RelativeLayout) findViewById(R.id.photo3);
+        /*pic[0]=(RelativeLayout) findViewById(R.id.photo1);
+       */ pic[1]=(RelativeLayout) findViewById(R.id.photo2);
+        pic[2]=(RelativeLayout) findViewById(R.id.photo3);
+
+        for(int i=1;i<=2;++i) photo[i].setEnabled(false);
+
+        // imageRef=FirebaseStorage.getInstance().getReference().child("PostImage");
 
         //기본 기능 버튼
         findViewById(R.id.back_button_write_post).setOnClickListener(onClickListener);
-        findViewById(R.id.bt_finish).setOnClickListener(onClickListener);
-        findViewById(R.id.bt_post).setOnClickListener(onClickListener);
+        /*findViewById(R.id.bt_filter).setOnClickListener(onClickListener);
+        */findViewById(R.id.bt_post).setOnClickListener(onClickListener);
+
         // 동성 or 무관
         findViewById(R.id.bt_same).setOnClickListener(checkGender);
         findViewById(R.id.bt_dontMind).setOnClickListener(checkGender);
+
         // 연령대 버튼
         findViewById(R.id.button10s).setOnClickListener(checkAge);
         findViewById(R.id.button20s).setOnClickListener(checkAge);
         findViewById(R.id.button30s).setOnClickListener(checkAge);
         findViewById(R.id.button40s).setOnClickListener(checkAge);
         findViewById(R.id.button50s).setOnClickListener(checkAge);
+
         //이미지 삽입
         findViewById(R.id.camera_album_add1).setOnClickListener(addPhoto);
         findViewById(R.id.camera_album_add2).setOnClickListener(addPhoto);
         findViewById(R.id.camera_album_add3).setOnClickListener(addPhoto);
+
+        // 날짜 선택
+        findViewById(R.id.endTime).setOnClickListener(setTime);
+        findViewById(R.id.cancelTime).setOnClickListener(setTime);
 
         bt_same=(Button) findViewById(R.id.bt_same);
         bt_dontMind=(Button) findViewById(R.id.bt_dontMind);
@@ -206,12 +256,22 @@ public class PostActivity extends AppCompatActivity {
         postValue=new HashMap<>();
         initPhotoCheck(photoCheck);
         storageReference= FirebaseStorage.getInstance().getReference();
-        postKey=getRandomString(25);
-        nowLocation=RecentMissionFragment.location_now;
+        postKey=getRandomString(50);
+        nowLocation= RecentMissionFragment.location_now;
+        for(int i=0;i<3;++i){
+            images[i]="default";
+            img[i]="default";
+        }
+    }
+
+    private void updateLabel(TextView txt){
+        String format="yyyy/MM/dd";
+        SimpleDateFormat simpleDateFormat=new SimpleDateFormat(format, Locale.KOREA);
+        txt.setText(simpleDateFormat.format(calendar.getTime()));
     }
 
     private String getRandomString(int length) {
-        final String characters="abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ01234567890!@#$%";
+        final String characters="abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ01234567890!@%_&*^+-=";
         StringBuilder stringBuilder=new StringBuilder();
         while(length-- >0){
             Random random=new Random();
@@ -241,8 +301,8 @@ public class PostActivity extends AppCompatActivity {
                     Log.d("title", "title is " + Title);
                     Log.d("Description", "description of the post is " + Description);
 
-                    post = new Post(Title, Description, EndTime, CancelTime, Place, Pay, Due, Price, uid, sameGender, Age,Category,postKey,nowLocation);
-                    databaseReference= FirebaseDatabase.getInstance().getReference().child("Posting").child(Title);
+                    post = new Post(Title, Description, EndTime, CancelTime, Place, Pay, Due, Price, uid, sameGender, Age,Category,postKey,nowLocation,false,false);
+                    databaseReference= FirebaseDatabase.getInstance().getReference().child("Posting").child(postKey);
                     childUpdate= (HashMap<String, Object>) post.toMap();
                     databaseReference.setValue(childUpdate).addOnCompleteListener(new OnCompleteListener<Void>() {
                         @Override
@@ -255,11 +315,51 @@ public class PostActivity extends AppCompatActivity {
                             }
                         }
                     });
+                    //Center Table
+                    dbRef=FirebaseDatabase.getInstance().getReference().child("Center").child(postKey);
+                    Center center=new Center(postKey,"default",uid,"0",due.toString(),pay.toString(),price.toString());
+                    HashMap<String,Object> Update= (HashMap<String, Object>) center.toMap();
+                    dbRef.setValue(Update).addOnCompleteListener(new OnCompleteListener<Void>() {
+                        @Override
+                        public void onComplete(@NonNull Task<Void> task) {
+
+                        }
+                    });
                     startActivity(new Intent(context, MainActivity.class));
                     break;
             }
         }
     };
+
+    View.OnClickListener setTime=new View.OnClickListener() {
+        @RequiresApi(api = Build.VERSION_CODES.O)
+        @Override
+        public void onClick(View v) {
+
+            switch (v.getId()){
+                case R.id.endTime:
+                    select_times();
+                    Log.e("selectedTime의 값","selectedTime= "+CustomPicker.selectedTime);
+                    endTime.setText(CustomPicker.selectedTime);
+                    Log.e("endTime","endTime의 값 = "+endTime.getText());
+                    break;
+
+                case R.id.cancelTime:
+                    select_times();
+                    Log.e("selectedTime의 값","selectedTime= "+CustomPicker.selectedTime);
+                    cancelTime.setText(CustomPicker.selectedTime);
+                    Log.e("cancelTime","cancelTime의 값: "+cancelTime.getText());
+                    break;
+            }
+
+        }
+    };
+
+    @RequiresApi(api = Build.VERSION_CODES.O)
+    private void select_times(){
+        CustomPicker customPicker=new CustomPicker(context);
+        customPicker.show();
+    }
 
     View.OnClickListener addPhoto=new View.OnClickListener() {
         @Override
@@ -267,20 +367,31 @@ public class PostActivity extends AppCompatActivity {
             switch (v.getId()){
                 case R.id.camera_album_add1:
                     photoCheck[0]=true;
-                    setPhotoButton(photoCheck);
-
+                    //  setPhotoButton(photoCheck);
+                    photo[1].setEnabled(true);
+                    Log.d(TAG,"사진 추가 버튼이 클릭되었습니다.");
+                    Intent intent=new Intent(Intent.ACTION_GET_CONTENT);
+                    intent.setType("image/*");
+                    intent.putExtra(Intent.EXTRA_ALLOW_MULTIPLE,true);
+                    startActivityForResult(intent,GALLERY_REQUEST);
                     break;
 
                 case R.id.camera_album_add2:
-                    photoCheck[1]=true;
-                    setPhotoButton(photoCheck);
-
+                    Log.d(TAG,"사진 추가 버튼이 클릭되었습니다.");
+                    Intent intent2=new Intent(Intent.ACTION_GET_CONTENT);
+                    photo[2].setEnabled(true);
+                    intent2.setType("image/*");
+                    intent2.putExtra(Intent.EXTRA_ALLOW_MULTIPLE,true);
+                    startActivityForResult(intent2,GALLERY_REQUEST2);
                     break;
 
                 case R.id.camera_album_add3:
-
+                    Log.d(TAG,"사진 추가 버튼이 클릭되었습니다.");
+                    Intent intent3=new Intent(Intent.ACTION_GET_CONTENT);
+                    intent3.setType("image/*");
+                    intent3.putExtra(Intent.EXTRA_ALLOW_MULTIPLE,true);
+                    startActivityForResult(intent3,GALLERY_REQUEST3);
                     break;
-
             }
         }
     };
@@ -290,13 +401,13 @@ public class PostActivity extends AppCompatActivity {
         @Override
         public void onClick(View v) {
             switch(v.getId()){
-            case R.id.bt_same:
-                Log.d("a same gender button is clicked","a same gender button is clicked");
-                sameGender=true;
-                Log.e("a value of sameGender","a value of sameGender is "+sameGender);
-                bt_same.setBackgroundColor(Color.parseColor("#70D398"));
-                bt_dontMind.setBackgroundColor(Color.parseColor("#e1e1e1"));
-                break;
+                case R.id.bt_same:
+                    Log.d("a same gender button is clicked","a same gender button is clicked");
+                    sameGender=true;
+                    Log.e("a value of sameGender","a value of sameGender is "+sameGender);
+                    bt_same.setBackgroundColor(Color.parseColor("#70D398"));
+                    bt_dontMind.setBackgroundColor(Color.parseColor("#e1e1e1"));
+                    break;
 
                 case R.id.bt_dontMind:
                     Log.d("a don't mind button is clicked","a don't mind button is clicked");
@@ -305,7 +416,7 @@ public class PostActivity extends AppCompatActivity {
                     bt_dontMind.setBackgroundColor(Color.parseColor("#70D398"));
                     bt_same.setBackgroundColor(Color.parseColor("#e1e1e1"));
                     break;
-        }
+            }
         }
     };
 
@@ -345,65 +456,13 @@ public class PostActivity extends AppCompatActivity {
         }
     };
 
-    public String getPath(Uri uri){
-        String [] proj = {MediaStore.Images.Media.DATA};
-        CursorLoader cursorLoader = new CursorLoader(this,uri,proj,null,null,null);
-        Cursor cursor = cursorLoader.loadInBackground();
-        int index = cursor.getColumnIndexOrThrow(MediaStore.Images.Media.DATA);
-        cursor.moveToFirst();
-        return cursor.getString(index);
-    }
-
-    @Override
-    protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
-        super.onActivityResult(requestCode, resultCode, data);
-        if (requestCode == GALLERY_CODE&& resultCode==RESULT_OK) {
-            imagePath = getPath(data.getData());
-            Uri imageUri = data.getData();
-            CropImage.activity(imageUri)
-                    .setAspectRatio(1,1)
-                    .start(this);
-        }
-        //crop에 성공하면 result에 담고, resultUri에 저장
-        if(requestCode== CropImage.CROP_IMAGE_ACTIVITY_REQUEST_CODE){
-            CropImage.ActivityResult result = CropImage.getActivityResult(data);
-            if(resultCode ==RESULT_OK){
-                Uri resultUri = result.getUri();
-                String currentUser_Uid = uid;
-                //set image Name to random
-                //TODO currentUser UID가 아닌 게시판 고유키값을 테이블 프라이머리 키로 지정
-                final StorageReference filepath = storageReference.child("post_images").child(currentUser_Uid+".jpg");
-                filepath.putFile(resultUri).addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
-                    @Override
-                    public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
-                        final Task<Uri> firebaseUri = taskSnapshot.getStorage().getDownloadUrl();
-                        firebaseUri.addOnSuccessListener(new OnSuccessListener<Uri>() {
-                            @Override
-                            public void onSuccess(Uri uri) {
-                                final String downloadUrl = uri.toString();
-                                databaseReference.child("Image").setValue(downloadUrl).addOnCompleteListener(new OnCompleteListener<Void>() {
-                                    @Override
-                                    public void onComplete(@NonNull Task<Void> task) {
-                                        if(task.isSuccessful()){
-                                            Toast.makeText(context,"이미지 파일을 성공적으로 업로드하였습니다.",Toast.LENGTH_LONG).show();
-                                        }
-                                    }
-                                });
-                            }
-                        });
-                    }
-                });
-            } else if (resultCode ==CropImage.CROP_IMAGE_ACTIVITY_RESULT_ERROR_CODE){
-                Exception error = result.getError();
-            }
-        }
-    }
-
-    class Post{
+    public class Post{
         String title,description,endTime,cancelTime,place,uid,category,postKey,location;
         int pay,due,price,age;
         boolean sameGender,isMatched,isFinished;
-        public Post(String title,String description,String endTime,String cancelTime,String place,int pay,int due,int price,String uid,boolean sameGender,int age,String category,String postKey,String location){
+        String image[]=new String[3];
+
+        public Post(String title,String description,String endTime,String cancelTime,String place,int pay,int due,int price,String uid,boolean sameGender,int age,String category,String postKey,String location,boolean isMatched,boolean isFinished){
             this.title=title;
             this.description=description;
             this.endTime=endTime;
@@ -418,8 +477,8 @@ public class PostActivity extends AppCompatActivity {
             this.sameGender=sameGender;
             this.age=age;
             this.postKey=postKey;
-            this.isMatched=false;
-            this.isFinished=false;
+            this.isMatched=isMatched;
+            this.isFinished=isFinished;
         }
 
         public String getTitle(){return title;}
@@ -428,13 +487,18 @@ public class PostActivity extends AppCompatActivity {
         public String getCancelTime(){return cancelTime;}
         public String getPlace(){return place;}
         public String getUid(){return uid;}
+        public String getPostKey(){return postKey;}
+        public String getCategory(){return category;}
+        public String getLocation(){return location;}
         public int getPay(){return pay;}
         public int getDue(){return due;}
         public int getPrice(){return price;}
+        public boolean isMatched(){return isMatched;}
+        public boolean isFinished(){return isFinished;}
         public boolean isSameGender(){return sameGender;}
 
         public Map<String,Object> toMap(){
-            HashMap<String,Object> ret=new HashMap<>();
+            final HashMap<String,Object> ret=new HashMap<>();
             ret.put("title",title);
             ret.put("description",description);
             ret.put("endTime",endTime);
@@ -444,22 +508,142 @@ public class PostActivity extends AppCompatActivity {
             ret.put("due",due);
             ret.put("price",price);
             ret.put("uid",uid);
-            ret.put("image1","default");
-            ret.put("image2","default");
-            ret.put("image3","default");
             String tmp="";
             for(int i=0;i<5;++i)
                 if(ageChecked[i])
-                   tmp+=Integer.toString(i+1); // 선택한 연령대를 모두 age column에 삽입한다.
+                    tmp+=Integer.toString(i+1); // 선택한 연령대를 모두 age column에 삽입한다.
             ret.put("age",tmp);
             ret.put("gender",sameGender?"동성":"무관");
             ret.put("category",category);
-            ret.put("post key",postKey);
+            ret.put("postKey",postKey);
             ret.put("location",location);
-            ret.put("매칭 여부",isMatched);
-            ret.put("미션 완료 여부",isFinished);
+            ret.put("isMatched",isMatched?"1":"0");
+            ret.put("isFinished",isFinished?"1":"0");
+            ret.put("isSended","0");
+            for(int i=0;i<3;++i)
+                ret.put("image"+(i+1),img[i]);
             return ret;
         }
     }
 
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+
+        if(resultCode==RESULT_OK&&data!=null&&data.getData()!=null){
+            switch (requestCode){
+                case GALLERY_REQUEST:
+                    mImageUri[0]=data.getData();
+                    photo[0].setImageURI(mImageUri[0]);
+                    break;
+
+                case GALLERY_REQUEST2:
+                    mImageUri[1]=data.getData();
+                    photo[1].setImageURI(mImageUri[1]);
+                    break;
+
+                case GALLERY_REQUEST3:
+                    mImageUri[2]=data.getData();
+                    photo[2].setImageURI(mImageUri[2]);
+                    break;
+            }
+        }
+        StorageReference filepath=mStorage.child("post_images").child(postKey+"1.jpg");
+        StorageReference filepath2=mStorage.child("post_images").child(postKey+"2.jpg");
+        StorageReference filepath3=mStorage.child("post_images").child(postKey+"3.jpg");
+        if(mImageUri[0]!=null){
+            filepath.putFile(mImageUri[0]).addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
+                @Override
+                public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
+                    final Task<Uri> firebaseUri = taskSnapshot.getStorage().getDownloadUrl();
+                    firebaseUri.addOnSuccessListener(new OnSuccessListener<Uri>() {
+                        @Override
+                        public void onSuccess(Uri uri) {
+                            final String downloadUrl = uri.toString();
+                            Log.d(TAG,"downloadUrl의 값: "+downloadUrl);
+                            img[0]=downloadUrl;
+                            Log.d(TAG,"img[1]의 값: "+img[0]);
+                        }
+                    });
+                }
+            });
+        }
+        if(mImageUri[1]!=null){
+            filepath2.putFile(mImageUri[1]).addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
+                @Override
+                public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
+                    final Task<Uri> firebaseUri = taskSnapshot.getStorage().getDownloadUrl();
+                    firebaseUri.addOnSuccessListener(new OnSuccessListener<Uri>() {
+                        @Override
+                        public void onSuccess(Uri uri) {
+                            final String downloadUrl = uri.toString();
+                            Log.d(TAG,"downloadUrl의 값: "+downloadUrl);
+                            img[1]=downloadUrl;
+                            Log.d(TAG,"img[1]의 값: "+img[1]);
+                        }
+                    });
+                }
+            });
+        }
+        if(mImageUri[2]!=null){
+            filepath3.putFile(mImageUri[2]).addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
+                @Override
+                public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
+                    final Task<Uri> firebaseUri = taskSnapshot.getStorage().getDownloadUrl();
+                    firebaseUri.addOnSuccessListener(new OnSuccessListener<Uri>() {
+                        @Override
+                        public void onSuccess(Uri uri) {
+                            final String downloadUrl = uri.toString();
+                            Log.d(TAG,"downloadUrl의 값: "+downloadUrl);
+                            img[2]=downloadUrl;
+                            Log.d(TAG,"img[1]의 값: "+img[2]);
+                        }
+                    });
+                }
+            });
+        }
+    }
+
+    //사진 경로 가져오는 코드
+    public String getPath(Uri uri){
+        String [] proj = {MediaStore.Images.Media.DATA};
+        CursorLoader cursorLoader = new CursorLoader(this,uri,proj,null,null,null);
+        Cursor cursor = cursorLoader.loadInBackground();
+        int index = cursor.getColumnIndexOrThrow(MediaStore.Images.Media.DATA);
+        cursor.moveToFirst();
+        return cursor.getString(index);
+    }
+
+    public class Center{
+        String postKey,helperUid,requestUid,pay,due,price,isFinished;
+
+        public Center(String postKey,String helperUid,String requestUid,String isFinished,String due,String pay,String price){ // 데이터 삽입 함수
+            this.postKey=postKey;
+            this.helperUid=helperUid;
+            this.isFinished=isFinished;
+            this.due=due;
+            this.pay=pay;
+            this.price=price;
+            this.requestUid=requestUid;
+        }
+
+        public String getPostKey(){return postKey;}
+        public String getHelperUid(){return helperUid;}
+        public String getRequestUid(){return requestUid;}
+        //  public int getMoney(){return money;}
+        //  public int getIsFinished(){return isFinished;}
+
+        public Map<String,Object> toMap(){
+            final HashMap<String,Object> ret=new HashMap<>();
+            ret.put("PostKey",postKey);
+            ret.put("pay",pay);
+            ret.put("due",due);
+            ret.put("price",price);
+            ret.put("HelperUid",helperUid);
+            ret.put("RequestUid",requestUid);
+            //  ret.put("Money",money);
+            ret.put("isFinished",isFinished);
+            return ret;
+        }
+    }
 }

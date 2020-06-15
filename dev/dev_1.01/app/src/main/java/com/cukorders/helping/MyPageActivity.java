@@ -3,9 +3,12 @@ package com.cukorders.helping;
 import android.annotation.SuppressLint;
 import android.content.Context;
 import android.content.Intent;
+import android.graphics.Color;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
+import android.widget.ImageView;
+import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -29,6 +32,9 @@ public class MyPageActivity extends AppCompatActivity {
 
     private static Context context;
     private TextView user_nickname;
+    private TextView textView;
+    private ImageView imageView;
+    private ProgressBar pb;
     private static FirebaseUser firebaseUser;
     private static DatabaseReference databaseReference;
     private static String uid;
@@ -43,6 +49,9 @@ public class MyPageActivity extends AppCompatActivity {
         context=this;
         profilePic=(CircleImageView) findViewById(R.id.userProfileImage);
 
+        pb=(ProgressBar) findViewById(R.id.pb);
+        textView=(TextView) findViewById(R.id.score);
+        imageView=(ImageView) findViewById(R.id.face);
         findViewById(R.id.bt_fav).setOnClickListener(onClickListener);
         findViewById(R.id.bt_history).setOnClickListener(onClickListener);
         findViewById(R.id.bt_chat).setOnClickListener(onClickListener);
@@ -87,6 +96,41 @@ public class MyPageActivity extends AppCompatActivity {
                 }
             });
         }
+    }
+
+    private void displayMannerBar(){
+        DatabaseReference dbRef=FirebaseDatabase.getInstance().getReference().child("Users").child(uid);
+        dbRef.addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                if(dataSnapshot.exists()){
+                    String score=dataSnapshot.child("Score").getValue().toString();
+                    int value;
+                    value= (score.equals("default") ? 100 : Integer.parseInt(score));
+                    pb.setProgress(value);
+                    textView.setText(value+"점");
+                    if (value >= 80 && value <= 100){
+                        textView.setTextColor(Color.parseColor("#00008B"));
+                        imageView.setImageResource(R.drawable.face_manner_darkblue);
+                    }
+                    else if (value >= 60 && value < 80){
+                        textView.setTextColor(Color.parseColor("#008000"));
+                        imageView.setImageResource(R.drawable.face_manner_green);
+                    }
+                    else if (value >= 30 && value < 60){
+                        textView.setTextColor(Color.parseColor("#FFA500"));
+                        imageView.setImageResource(R.drawable.face_manner_orange);
+                    }
+                    else {
+                        textView.setTextColor(Color.parseColor("#FF0000"));
+                        imageView.setImageResource(R.drawable.face_manner_red);
+                    }
+                }
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError databaseError) {}
+        });
     }
 
     View.OnClickListener onClickListener=new View.OnClickListener() {

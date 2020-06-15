@@ -139,21 +139,77 @@
             android:textSize="18sp"
             android:textStyle="bold"/>
 
-        <EditText
-            android:id="@+id/gender"
+        <LinearLayout
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:enabled="false"
-            android:hint="성별"
-            android:textSize="18sp" />
+            android:layout_height="match_parent"
+            android:orientation="horizontal">
 
-        <EditText
-            android:id="@+id/age"
+            <Button
+                android:id="@+id/button_male"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:text="남자" />
+
+            <Button
+                android:id="@+id/button_female"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:text="여자" />
+        </LinearLayout>
+
+        <ScrollView
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:enabled="false"
-            android:hint="연령"
-            android:textSize="18sp" />
+            android:layout_height="match_parent">
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical" >
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:orientation="horizontal">
+
+                    <Button
+                        android:id="@+id/bt_10s"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:text="10대" />
+
+                    <Button
+                        android:id="@+id/bt_20s"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:text="20대" />
+
+                    <Button
+                        android:id="@+id/bt_30s"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:text="30대" />
+
+                    <Button
+                        android:id="@+id/bt_40s"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:text="40대" />
+
+                    <Button
+                        android:id="@+id/bt_50s"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:text="50 이상" />
+                </LinearLayout>
+            </LinearLayout>
+        </ScrollView>
 
         <EditText
             android:id="@+id/phone_number"
@@ -173,16 +229,16 @@
         android:layout_marginLeft="10dp"
         android:layout_marginRight="10dp">
         <Button
-        android:id="@+id/profileRegisterBt"
-        android:layout_width="match_parent"
-        android:layout_height="50dp"
-        android:layout_marginTop="10dp"
-        android:layout_marginBottom="10dp"
-        android:background="@drawable/gps_button_shape"
-        android:text= "수정 완료"
-        android:textColor="@color/colorWhite"
-        android:textSize="20sp">
-    </Button>
+            android:id="@+id/profileRegisterBt"
+            android:layout_width="match_parent"
+            android:layout_height="50dp"
+            android:layout_marginTop="10dp"
+            android:layout_marginBottom="10dp"
+            android:background="@drawable/gps_button_shape"
+            android:text= "수정 완료"
+            android:textColor="@color/colorWhite"
+            android:textSize="20sp">
+        </Button>
     </LinearLayout>
 
 </LinearLayout>

@@ -79,19 +79,23 @@ public class HelpingFragment extends Fragment {
         recentPostListsView.setAdapter(mAdapter);
         recentPostListsView.setItemAnimator(new DefaultItemAnimator());
 
-        //set mUid
-        mAuth= FirebaseAuth.getInstance();
-        mCurrentUser = mAuth.getCurrentUser();
-
-        if(mCurrentUser==null){
+        /*
+        if(mCurrentUser.getUid()==null){
+            mUid="TIhMFvxLG9awVpVPN931vwXDUXz2";
             caution();
         }else{
             mUid = mCurrentUser.getUid(); //Do what you need to do with the id
-        }
-        if(mUid!="") {
-            flag = true;
+            mUid="TIhMFvxLG9awVpVPN931vwXDUXz2";
         }
 
+         */
+        mAuth = FirebaseAuth.getInstance();
+        mCurrentUser = mAuth.getCurrentUser();
+        if(mCurrentUser != null) {
+            mUid = mCurrentUser.getUid(); //Do what you need to do with the id
+        } else{
+            caution();
+        }
         //client postref
         mHelperPostRef = FirebaseDatabase.getInstance().getReference().child("Posting");
 

@@ -4,6 +4,9 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.Color;
 import android.os.Bundle;
+import android.view.LayoutInflater;
+import android.view.View;
+import android.view.ViewGroup;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -11,18 +14,11 @@ import androidx.appcompat.app.AlertDialog;
 import androidx.fragment.app.Fragment;
 import androidx.viewpager.widget.ViewPager;
 
-import android.view.LayoutInflater;
-import android.view.View;
-import android.view.ViewGroup;
-
 import com.cukorders.Adapter.PageAdapter_Mycalling;
 import com.cukorders.helping.AuthActivity;
-import com.cukorders.helping.LoadingActivity;
 import com.cukorders.helping.R;
 import com.google.android.material.tabs.TabItem;
 import com.google.android.material.tabs.TabLayout;
-
-import static com.cukorders.Fragment.RecentMissionFragment.recentMissionFragment;
 
 public class MyCallingFragment extends Fragment {
 

@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <DatePicker
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/date_picker"
+        android:datePickerMode="spinner"
+        android:calendarViewShown="false"/>
+
+    <TimePicker
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/time_picker"
+        android:timePickerMode="spinner"
+        android:layout_below="@id/date_picker"
+        />
+
+    <Button
+        android:id="@+id/bt_cancel"
+        android:layout_width="wrap_content"
+        android:layout_height="50dp"
+        android:layout_below="@+id/time_picker"
+        android:backgroundTint="@color/colorLogo"
+        android:text="취소" />
+
+    <View
+        android:id="@+id/view3"
+        android:layout_width="165dp"
+        android:layout_height="50dp" />
+
+    <Button
+        android:id="@+id/bt_ok"
+        android:layout_width="wrap_content"
+        android:layout_height="50dp"
+        android:layout_below="@+id/time_picker"
+        android:layout_toRightOf="@id/view3"
+        android:backgroundTint="@color/colorLogo"
+        android:text="확인" />
+</RelativeLayout>

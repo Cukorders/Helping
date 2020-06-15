@@ -1,14 +1,14 @@
 package com.cukorders.helping;
 
-import android.annotation.SuppressLint;
 import android.content.Context;
-import android.content.Intent;
+import android.graphics.Color;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
+import android.widget.ImageView;
+import android.widget.ProgressBar;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
@@ -22,8 +22,6 @@ import com.squareup.picasso.Picasso;
 
 import de.hdodenhof.circleimageview.CircleImageView;
 
-import static android.view.View.VISIBLE;
-
 public class ProfileViewActivity extends AppCompatActivity {
     private static final String TAG = "ProfileViewActivity";
     private static Context context;
@@ -33,6 +31,10 @@ public class ProfileViewActivity extends AppCompatActivity {
     private Button yourscorebtn,back_btn;
     private String userUid;
 
+    private ProgressBar pb;
+    private TextView textView;
+    private ImageView imageView;
+
     private DatabaseReference yourRef;
 
     //Todo 매너점수 노출
@@ -41,6 +43,11 @@ public class ProfileViewActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.look_others_profile);
+
+        pb=(ProgressBar) findViewById(R.id.pb);
+        textView=(TextView) findViewById(R.id.score);
+        imageView=(ImageView) findViewById(R.id.face);
+
 
         yournick= findViewById(R.id.others_nickname);
         profileImg = findViewById(R.id.others_proview_view);
@@ -62,6 +69,26 @@ public class ProfileViewActivity extends AppCompatActivity {
                 String score = dataSnapshot.child("Score").getValue().toString();
                 String postuserimg = dataSnapshot.child("Image").getValue().toString();
 
+                int value;
+                value= (score.equals("default") ? 100 : Integer.parseInt(score));
+                pb.setProgress(value);
+                textView.setText(value+"점");
+                if (value >= 80 && value <= 100){
+                    textView.setTextColor(Color.parseColor("#00008B"));
+                    imageView.setImageResource(R.drawable.face_manner_darkblue);
+                }
+                else if (value >= 60 && value < 80){
+                    textView.setTextColor(Color.parseColor("#008000"));
+                    imageView.setImageResource(R.drawable.face_manner_green);
+                }
+                else if (value >= 30 && value < 60){
+                    textView.setTextColor(Color.parseColor("#FFA500"));
+                    imageView.setImageResource(R.drawable.face_manner_orange);
+                }
+                else {
+                    textView.setTextColor(Color.parseColor("#FF0000"));
+                    imageView.setImageResource(R.drawable.face_manner_red);
+                }
                 yournick.setText(nick);
                 Picasso.get().load(postuserimg).into(profileImg);
                 //Todo ProgressBar
@@ -85,4 +112,5 @@ public class ProfileViewActivity extends AppCompatActivity {
             }
         }
     };
+
 }
