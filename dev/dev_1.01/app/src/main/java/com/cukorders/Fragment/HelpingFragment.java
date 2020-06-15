@@ -1,6 +1,5 @@
 package com.cukorders.Fragment;
 
-import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
@@ -18,7 +17,6 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.cukorders.Adapter.PostAdapter_helping;
-import com.cukorders.Adapter.PostAdapter_request;
 import com.cukorders.helping.AuthActivity;
 import com.cukorders.helping.InitPost;
 import com.cukorders.helping.R;
@@ -85,7 +83,7 @@ public class HelpingFragment extends Fragment {
         mAuth= FirebaseAuth.getInstance();
         mCurrentUser = mAuth.getCurrentUser();
 
-        if(mCurrentUser.getUid()==null){
+        if(mCurrentUser==null){
             caution();
         }else{
             mUid = mCurrentUser.getUid(); //Do what you need to do with the id

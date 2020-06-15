@@ -2,7 +2,6 @@ package com.cukorders.helping;
 
 import android.content.Intent;
 import android.os.Bundle;
-import android.os.Parcelable;
 import android.util.Log;
 import android.widget.TextView;
 
@@ -12,10 +11,7 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.cukorders.Adapter.PicAdapter;
 
-import java.lang.reflect.Array;
 import java.util.ArrayList;
-
-import static android.view.View.VISIBLE;
 
 public class PostImgView extends AppCompatActivity {
     private static final String TAG = "PostingView";
@@ -62,6 +58,8 @@ public class PostImgView extends AppCompatActivity {
         RecyclerView recyclerView = findViewById(R.id.postView_recyclerview);
         recyclerView.setLayoutManager(layoutManager);
         PicAdapter adapter = new PicAdapter(this, mImageUrls);
+/*
         recyclerView.setAdapter(adapter);
+*/
     }
 }
