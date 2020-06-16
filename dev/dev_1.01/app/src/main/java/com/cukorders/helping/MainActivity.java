@@ -56,20 +56,20 @@ public class MainActivity extends AppCompatActivity {
         fab_write=(FloatingActionButton) findViewById(R.id.fab_post);
         fab_info=(FloatingActionButton) findViewById(R.id.fab_info);
         fab_chat=(FloatingActionButton) findViewById(R.id.fab_chat);
-        fab_chatlist=(FloatingActionButton) findViewById(R.id.fab_chatlist);
+        //fab_chatlist=(FloatingActionButton) findViewById(R.id.fab_chatlist);
         FabOpen= AnimationUtils.loadAnimation(getApplicationContext(),R.anim.fab_open);
         FabClose= AnimationUtils.loadAnimation(getApplicationContext(),R.anim.fab_close);
         FabClockwise= AnimationUtils.loadAnimation(getApplicationContext(),R.anim.rotate_clockwise);
         FabAntiClockwise= AnimationUtils.loadAnimation(getApplicationContext(),R.anim.rotate_anticlockwise);
         linearLayout=(LinearLayout) findViewById(R.id.notCertified);
 
-        nowLocation = (TextView) findViewById(R.id.nowLocation);
+        //nowLocation = (TextView) findViewById(R.id.nowLocation);
         //filter=(ImageButton) findViewById(R.id.filter);
         //MainActivity=this;
         findViewById(R.id.fab_post).setOnClickListener(onClickListener);
         findViewById(R.id.fab_info).setOnClickListener(onClickListener);
         findViewById(R.id.fab_chat).setOnClickListener(onClickListener);
-        findViewById(R.id.fab_chatlist).setOnClickListener(onClickListener);
+        //findViewById(R.id.fab_chatlist).setOnClickListener(onClickListener);
         findViewById(R.id.go_to_mypage).setOnClickListener(onClickListener);
         //findViewById(R.id.filter).setOnClickListener(onClickListener);
 
@@ -147,6 +147,7 @@ public class MainActivity extends AppCompatActivity {
                     startActivity(intent4);
                     break;
 
+                    /*
                 case R.id.fab_chatlist:
                     if(firebaseUser==null){
                         caution();
@@ -156,6 +157,7 @@ public class MainActivity extends AppCompatActivity {
                     Intent intent5 =new Intent(context, ClientChatListActivity.class);
                     startActivity(intent5);
                     break;
+                     */
 
                 case R.id.go_to_mypage:
                     if(firebaseUser==null){
@@ -164,11 +166,6 @@ public class MainActivity extends AppCompatActivity {
                     Intent intent3=new Intent(context,MyPageActivity.class);
                     startActivity(intent3);
                     }
-                    break;
-                case R.id.filter:
-                    Intent intent3=new Intent(context,FilterActivity.class);
-                    Log.d("필터로 이동","필터로 이동");
-                    startActivity(intent3);
                     break;
 
             }
@@ -199,12 +196,12 @@ public class MainActivity extends AppCompatActivity {
         fab_write.startAnimation(FabOpen);
         fab_info.startAnimation(FabOpen);
         fab_chat.startAnimation(FabOpen);
-        fab_chatlist.startAnimation(FabOpen);
+        //fab_chatlist.startAnimation(FabOpen);
         fab_plus.startAnimation(FabClockwise);
         fab_info.setClickable(true);
         fab_write.setClickable(true);
         fab_chat.setClickable(true);
-        fab_chatlist.setClickable(true);
+        //fab_chatlist.setClickable(true);
         isOpen=true;
         Log.d("open","open");
     }
@@ -213,7 +210,7 @@ public class MainActivity extends AppCompatActivity {
         fab_info.startAnimation(FabClose);
         fab_plus.startAnimation(FabAntiClockwise);
         fab_chat.startAnimation(FabClose);
-        fab_chatlist.startAnimation(FabClose);
+        //fab_chatlist.startAnimation(FabClose);
         fab_info.setClickable(false);
         fab_write.setClickable(false);
         isOpen=false;

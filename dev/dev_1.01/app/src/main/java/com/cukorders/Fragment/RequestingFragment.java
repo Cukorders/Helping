@@ -78,6 +78,7 @@ public class RequestingFragment extends Fragment {
         mCurrentUser = mAuth.getCurrentUser();
         if(mCurrentUser != null) {
             mUid = mCurrentUser.getUid(); //Do what you need to do with the id
+            flag=true;
         } else{
             caution();
         }
@@ -108,9 +109,7 @@ public class RequestingFragment extends Fragment {
         // 하단부는 매칭이 안된 부분
         //TODO 현재 내 uid와 같지 않은것도 mPOst에 들어간거 같음 확인해보기
         Log.d(TAG, "Check my muid " + mUid);
-        if(flag){
-            if(!RecentMissionFragment.ifUsernotLogin) {
-                Query notMatched = mClientPostRef.orderByChild("uid").equalTo(mUid).limitToFirst(100);
+            Query notMatched = mClientPostRef.orderByChild("uid").equalTo(mUid).limitToFirst(100);
                 notMatched.addValueEventListener(new ValueEventListener() {
                     @Override
                     public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
@@ -135,18 +134,15 @@ public class RequestingFragment extends Fragment {
                             for (InitPost object : mPost) {
                                 Log.d(TAG, "Check my mPost " + mPost);
                                 Log.d(TAG, "Check mUid " + mUid);
-                                Log.d(TAG, "Check my check we contain mUid " + object.getIsSended().contains(mUid));
                                 Log.d(TAG, "Check uid " + object.getUid().equals(mUid));
-                                if (!object.getIsMatched().equals("0")) {
                                     //담은 데이터들을 배열 리스트에 넣고 리사이클러 뷰로 보낼 준비하기
                                     //매칭이 완료된 것들
-                                    if (!object.getIsFinished().equals("0")) {
-                                        //이미 종료된 미션들
-                                        bottomPost.add(object);
-                                    } else {
-                                        //매칭은 되었지만, 끝나진 않은 것들
-                                        smallPost.add(object);
-                                    }
+                                if (!object.getIsFinished().equals("0")) {
+                                    //이미 종료된 미션들
+                                    bottomPost.add(object);
+                                } else {
+                                    //매칭은 되었지만, 끝나진 않은 것들
+                                    smallPost.add(object);
                                 }
                             }
                             smallPost.addAll(bottomPost);
@@ -162,8 +158,6 @@ public class RequestingFragment extends Fragment {
                         Log.e(TAG, String.valueOf(databaseError.toException()));
                     }
                 });
-            }
-        }
     }
     private void caution(){
         AlertDialog.Builder builder=new AlertDialog.Builder(RequestingFragment.this.getActivity());

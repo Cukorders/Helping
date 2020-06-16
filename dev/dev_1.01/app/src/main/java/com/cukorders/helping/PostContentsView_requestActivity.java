@@ -20,6 +20,7 @@ import androidx.annotation.NonNull;
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 
+import com.cukorders.helping.chatting.ChattingActivity;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.FirebaseAuth;
@@ -504,7 +505,7 @@ public class PostContentsView_requestActivity extends AppCompatActivity {
         //만약 헬퍼라면
         //그냥 채팅방 화면으로 넘겨주되, 넘어가야 될 내용은 chatting방 uid
 
-        Intent gohelperChat = new Intent(PostContentsView_helpingActivity.this, );
+        Intent gohelperChat = new Intent(PostContentsView_requestActivity.this, ChattingActivity.class);
         Bundle bundle = new Bundle();
         bundle.putSerializable("postUid",postUid);
         bundle.putSerializable("chatUid",chatUid);

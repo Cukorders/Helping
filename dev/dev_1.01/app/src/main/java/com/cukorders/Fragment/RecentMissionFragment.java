@@ -4,6 +4,7 @@ import android.annotation.SuppressLint;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
+import android.os.Handler;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -130,11 +131,21 @@ public class RecentMissionFragment extends Fragment {
                         //둘러보기를 선택한 경우
                         ifUsernotLogin = true;
                     } else {
-                        mUid = mUser.getUid();
-                        userRef = FirebaseDatabase.getInstance().getReference().child("Users").child(mUid);
+                        final Handler newhandler = new Handler();
+                        newhandler.postDelayed(new Runnable() {
+                            @Override
+                            public void run() {
+                                //Do something after 100ms
+                                mUid = mUser.getUid();
+                                userRef = FirebaseDatabase.getInstance().getReference().child("Users").child(mUid);
+                            }
+                        }, 100);
                     }
                 }
             });
+        }else{
+            mUid = mUser.getUid();
+            userRef = FirebaseDatabase.getInstance().getReference().child("Users").child(mUid);
         }
 
         //postref
@@ -173,7 +184,7 @@ public class RecentMissionFragment extends Fragment {
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
                 myloc = ((LoadingActivity) LoadingActivity.loadingActivity).loc.get(position);
                 locCertification = ((LoadingActivity) LoadingActivity.loadingActivity).isCertified[position];
-                Log.d(TAG, "사용자의 현위치 : " + location_now);
+                Log.d(TAG, "사용자의 현위치 : " + myloc);
                 Log.d(TAG, "사용자의 현위치 위치 인증여부" + locCertification);
                 if (firebaseUser != null) {
                     if (!locCertification) {
@@ -260,199 +271,376 @@ public class RecentMissionFragment extends Fragment {
         //get mUser's age and
         //if i get info getUserinfo change to true
 
-        if(ifUsernotLogin){
-            Query findUser = userRef;
-            findUser.addListenerForSingleValueEvent(new ValueEventListener() {
+        if(mUser==null){
+            final Handler handler = new Handler();
+            handler.postDelayed(new Runnable() {
                 @Override
-                public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                    String Age = dataSnapshot.child("Age").getValue().toString();
-                    String gender = dataSnapshot.child("Gender").getValue().toString();
+                public void run() {
+                    //Do something after 5000ms
+                    if (ifUsernotLogin == false) {
+                        //로그인을 했다면
+                        mUid = mUser.getUid();
+                        userRef = FirebaseDatabase.getInstance().getReference().child("Users").child(mUid);
+                        Query findUser = userRef;
+                        findUser.addListenerForSingleValueEvent(new ValueEventListener() {
+                            @Override
+                            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                                String Age = dataSnapshot.child("Age").getValue().toString();
+                                String gender = dataSnapshot.child("Gender").getValue().toString();
 
-                    mGender = gender;
-                    String temp = "";
-                    mAge = temp + Age.charAt(0);
-                    Log.d(TAG, "mUid is :" + mUid);
-                    Log.d(TAG, "mGender is :" + mGender);
-                    Log.d(TAG, "mAge is :" + mAge);
+                                mGender = gender;
+                                String temp = "";
+                                mAge = temp + Age.charAt(0);
+                                Log.d(TAG, "mUid is :" + mUid);
+                                Log.d(TAG, "mGender is :" + mGender);
+                                Log.d(TAG, "mAge is :" + mAge);
 
-                    if ((!mAge.equals("")) && (!mGender.equals(""))) {
-                        getUserinfo = true;
+                                if ((!mAge.equals("")) && (!mGender.equals(""))) {
+                                    getUserinfo = true;
+                                }
+                                Log.d(TAG, "check getUserinfo :" + getUserinfo);
+
+
+                                Log.d(TAG, "not Searching and displaying recyclerview");
+                                final ArrayList<InitPost> smallPost = new ArrayList<InitPost>();
+                                final ArrayList<InitPost> bottomPost = new ArrayList<InitPost>();
+                                final ArrayList<InitPost> finalPost = new ArrayList<InitPost>();
+                                Query gotMatched = postRef.orderByChild("location").equalTo(myloc).limitToFirst(100);
+                                //Query gotMatched = postRef.orderByChild("isFinished").equalTo("0").limitToFirst(100);
+                                gotMatched.addValueEventListener(new ValueEventListener() {
+                                    @Override
+                                    public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                                        mPost.clear();
+                                        smallPost.clear();
+                                        bottomPost.clear();
+                                        finalPost.clear();
+                                        Log.d(TAG, "Check my dataSnapshot " + dataSnapshot);
+                                        if (dataSnapshot.exists()) {
+                                            for (DataSnapshot snapshot : dataSnapshot.getChildren()) {
+                                                InitPost post = snapshot.getValue(InitPost.class);//InitPost 객체에 담기
+                                                mPost.add(post); //담은 데이터들을 배열 리스트에 넣고 리사이클러 뷰로 보낼 준비하기
+                                            }
+                                        }
+                                        Log.d(TAG, "Check mPost " + mPost);
+                                        mAdapter.notifyDataSetChanged();
+                                        //종료 된 것들을 먼저 거름, smallPost에 담기
+                                        int cnt = 0;
+                                        for (InitPost object : mPost) {
+                                            Log.d(TAG, "Check how many times i count " + cnt++);
+                                            if (object.getIsFinished().equals("0") && object.getAge().contains(mAge)) {
+                                                smallPost.add(object);
+                                                Log.d(TAG, "Check what is put in smallPost " + object.getPostKey());
+                                            }
+                                            //담은 데이터들을 배열 리스트에 넣고 리사이클러 뷰로 보낼 준비하기
+                                            //매칭이 완료된 것들
+                                            //smallPost.add(object);
+                                        }
+                                        Log.d(TAG, "Check smallPost " + smallPost);
+                                        //smallpost에 종료 아직 안된 것들, 내 나이가 포함되어있는 것들이 현재 포함되어있음
+                                        //이제 Gender 거를 차례
+                                        for (InitPost object : smallPost) {
+                                            if (object.getGender().equals("동성")) {
+                                                //동성으로 설정해 놓은 경우
+                                                if (object.getClientGender().equals(mGender)) {
+                                                    Log.d(TAG, "Check what is put in bottomPost " + object.getPostKey());
+                                                    bottomPost.add(object);
+                                                }
+                                            } else {
+                                                //무관으로 설정해놓은 경우
+                                                Log.d(TAG, "Check what is put in bottomPost " + object.getPostKey());
+                                                bottomPost.add(object);
+                                            }
+                                        }
+                                        Log.d(TAG, "Check bottomPost " + bottomPost);
+                                        //카테고리에서 거를것들을 넣기
+                                        boolean flag = false;
+                                        for (InitPost object : bottomPost) {
+                                            //만약 아무것도 선택이 안된 것이라면 이 부분에서 filter를 하지 말고 그냥 바로 노출
+                                            if (checked[0]) {
+                                                //구매 대행(음식)
+                                                flag = true;
+                                                if (object.getCategory().equals("구매 대행(음식)")) {
+                                                    finalPost.add(object);
+                                                    Log.d(TAG, "Check what is put in finalPost from 구매대행(음식) " + object.getPostKey());
+                                                }
+                                            }
+                                            if (checked[1]) {
+                                                //구매 대행(음식 외 물품)
+                                                flag = true;
+                                                if (object.getCategory().equals("구매 대행(음식 외 물품)")) {
+                                                    finalPost.add(object);
+                                                    Log.d(TAG, "Check what is put in finalPost from 구매대행(음식 외)" + object.getPostKey());
+                                                }
+                                            }
+                                            if (checked[2]) {
+                                                //배달
+                                                flag = true;
+                                                if (object.getCategory().equals("배달(음식)")) {
+                                                    finalPost.add(object);
+                                                    Log.d(TAG, "Check what is put in finalPost from 배달(음식) " + object.getPostKey());
+                                                }
+                                            }
+                                            if (checked[3]) {
+                                                //배달(음식 외 물품)
+                                                flag = true;
+                                                if (object.getCategory().equals("배달(음식 외 물품)")) {
+                                                    finalPost.add(object);
+                                                    Log.d(TAG, "Check what is put in finalPost from 배달(음식 외) " + object.getPostKey());
+                                                }
+                                            }
+                                            if (checked[4]) {
+                                                //청소
+                                                flag = true;
+                                                if (object.getCategory().equals("청소")) {
+                                                    finalPost.add(object);
+                                                    Log.d(TAG, "Check what is put in finalPost from 청소 " + object.getPostKey());
+                                                }
+                                            }
+                                            if (checked[5]) {
+                                                //과외
+                                                flag = true;
+                                                if (object.getCategory().equals("과외")) {
+                                                    finalPost.add(object);
+                                                    Log.d(TAG, "Check what is put in finalPost from 과외 " + object.getPostKey());
+                                                }
+                                            }
+                                            if (checked[6]) {
+                                                //기타
+                                                flag = true;
+                                                if (object.getCategory().equals("기타")) {
+                                                    finalPost.add(object);
+                                                    Log.d(TAG, "Check what is put in finalPost from 기타 " + object.getPostKey());
+                                                }
+                                            }
+                                        }
+                                        if (flag) {
+                                            if (finalPost.size() == 0) {
+                                                Log.d(TAG, "Check what is showing" + finalPost);
+                                                Toast.makeText(getContext(), "해당 조건에 해당하는 게시글이 존재하지 않습니다.", Toast.LENGTH_SHORT).show();
+                                            }
+                                            mAdapter = new PostAdapter(getActivity(), finalPost);
+                                            recentPostListsView.setAdapter(mAdapter);
+                                            mAdapter.notifyDataSetChanged();
+                                        } else {
+                                            if (bottomPost.size() == 0) {
+                                                Log.d(TAG, "Check what is showing" + bottomPost);
+                                                Toast.makeText(getContext(), "게시글이 없습니다.", Toast.LENGTH_SHORT).show();
+                                            }
+                                            mAdapter = new PostAdapter(getActivity(), bottomPost);
+                                            recentPostListsView.setAdapter(mAdapter);
+                                            mAdapter.notifyDataSetChanged();
+                                        }
+                                    }
+
+                                    @Override
+                                    public void onCancelled(@NonNull DatabaseError databaseError) {
+                                        //디비 가져오는 중 에러 발생시
+                                        Log.e(TAG, String.valueOf(databaseError.toException()));
+                                    }
+                                });
+
+                            }
+
+                            @Override
+                            public void onCancelled(@NonNull DatabaseError databaseError) {
+                            }
+                        });
+                    } else {
+                        //user want to look around
+                        Query gotMatched = postRef.orderByChild("location").equalTo(myloc).limitToFirst(100);
+                        gotMatched.addValueEventListener(new ValueEventListener() {
+                            @Override
+                            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                                tempPost.clear();
+                                Log.d(TAG, "Check my dataSnapshot " + dataSnapshot);
+                                if (dataSnapshot.exists()) {
+                                    for (DataSnapshot snapshot : dataSnapshot.getChildren()) {
+                                        InitPost post = snapshot.getValue(InitPost.class);//InitPost 객체에 담기
+                                        tempPost.add(post); //담은 데이터들을 배열 리스트에 넣고 리사이클러 뷰로 보낼 준비하기
+                                    }
+                                }
+                                Log.d(TAG, "Check mPost " + mPost);
+                                mAdapter.notifyDataSetChanged();
+                            }
+
+                            @Override
+                            public void onCancelled(@NonNull DatabaseError databaseError) {
+
+                            }
+
+                        });
+                        mAdapter = new PostAdapter(getActivity(), tempPost);
+                        recentPostListsView.setAdapter(mAdapter);
+                        mAdapter.notifyDataSetChanged();
                     }
-                    Log.d(TAG, "check getUserinfo :" + getUserinfo);
+                }
+            }, 25000);
+        }else{
+                //로그인을 했다면
+                Query findUser = userRef;
+                findUser.addListenerForSingleValueEvent(new ValueEventListener() {
+                    @Override
+                    public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                        String Age = dataSnapshot.child("Age").getValue().toString();
+                        String gender = dataSnapshot.child("Gender").getValue().toString();
+                        mGender = gender;
+                        String temp = "";
+                        mAge = temp + Age.charAt(0);
+                        Log.d(TAG, "mUid is :" + mUid);
+                        Log.d(TAG, "mGender is :" + mGender);
+                        Log.d(TAG, "mAge is :" + mAge);
+
+                        if ((!mAge.equals("")) && (!mGender.equals(""))) {
+                            getUserinfo = true;
+                        }
+                        Log.d(TAG, "check getUserinfo :" + getUserinfo);
 
 
-                    Log.d(TAG, "not Searching and displaying recyclerview");
-                    final ArrayList<InitPost> smallPost = new ArrayList<InitPost>();
-                    final ArrayList<InitPost> bottomPost = new ArrayList<InitPost>();
-                    final ArrayList<InitPost> finalPost = new ArrayList<InitPost>();
-                    Query gotMatched = postRef.orderByChild("location").equalTo(myloc).limitToFirst(100);
-                    //Query gotMatched = postRef.orderByChild("isFinished").equalTo("0").limitToFirst(100);
-                    gotMatched.addValueEventListener(new ValueEventListener() {
-                        @Override
-                        public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                            mPost.clear();
-                            smallPost.clear();
-                            bottomPost.clear();
-                            finalPost.clear();
-                            Log.d(TAG, "Check my dataSnapshot " + dataSnapshot);
-                            if (dataSnapshot.exists()) {
-                                for (DataSnapshot snapshot : dataSnapshot.getChildren()) {
-                                    InitPost post = snapshot.getValue(InitPost.class);//InitPost 객체에 담기
-                                    mPost.add(post); //담은 데이터들을 배열 리스트에 넣고 리사이클러 뷰로 보낼 준비하기
+                        Log.d(TAG, "not Searching and displaying recyclerview");
+                        final ArrayList<InitPost> smallPost = new ArrayList<InitPost>();
+                        final ArrayList<InitPost> bottomPost = new ArrayList<InitPost>();
+                        final ArrayList<InitPost> finalPost = new ArrayList<InitPost>();
+                        Query gotMatched = postRef.orderByChild("location").equalTo(myloc).limitToFirst(100);
+                        //Query gotMatched = postRef.orderByChild("isFinished").equalTo("0").limitToFirst(100);
+                        gotMatched.addValueEventListener(new ValueEventListener() {
+                            @Override
+                            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                                mPost.clear();
+                                smallPost.clear();
+                                bottomPost.clear();
+                                finalPost.clear();
+                                Log.d(TAG, "Check my dataSnapshot " + dataSnapshot);
+                                if (dataSnapshot.exists()) {
+                                    for (DataSnapshot snapshot : dataSnapshot.getChildren()) {
+                                        InitPost post = snapshot.getValue(InitPost.class);//InitPost 객체에 담기
+                                        mPost.add(post); //담은 데이터들을 배열 리스트에 넣고 리사이클러 뷰로 보낼 준비하기
+                                    }
                                 }
-                            }
-                            Log.d(TAG, "Check mPost " + mPost);
-                            mAdapter.notifyDataSetChanged();
-                            //종료 된 것들을 먼저 거름, smallPost에 담기
-                            int cnt=0;
-                            for (InitPost object : mPost) {
-                                Log.d(TAG, "Check how many times i count " + cnt++);
-                                if (object.getIsFinished().equals("0")&&object.getAge().contains(mAge)) {
-                                    smallPost.add(object);
-                                    Log.d(TAG, "Check what is put in smallPost " + object.getPostKey());
+                                Log.d(TAG, "Check mPost " + mPost);
+                                mAdapter.notifyDataSetChanged();
+                                //종료 된 것들을 먼저 거름, smallPost에 담기
+                                int cnt = 0;
+                                for (InitPost object : mPost) {
+                                    Log.d(TAG, "Check how many times i count " + cnt++);
+                                    if (object.getIsFinished().equals("0") && object.getAge().contains(mAge)) {
+                                        smallPost.add(object);
+                                        Log.d(TAG, "Check what is put in smallPost " + object.getPostKey());
+                                    }
+                                    //담은 데이터들을 배열 리스트에 넣고 리사이클러 뷰로 보낼 준비하기
+                                    //매칭이 완료된 것들
+                                    //smallPost.add(object);
                                 }
-                                //담은 데이터들을 배열 리스트에 넣고 리사이클러 뷰로 보낼 준비하기
-                                //매칭이 완료된 것들
-                                //smallPost.add(object);
-                            }
-                            Log.d(TAG, "Check smallPost " + smallPost);
-                            //smallpost에 종료 아직 안된 것들, 내 나이가 포함되어있는 것들이 현재 포함되어있음
-                            //이제 Gender 거를 차례
-                            for (InitPost object : smallPost) {
-                                if (object.getGender().equals("동성")) {
-                                    //동성으로 설정해 놓은 경우
-                                    if (object.getClientGender().equals(mGender)) {
+                                Log.d(TAG, "Check smallPost " + smallPost);
+                                //smallpost에 종료 아직 안된 것들, 내 나이가 포함되어있는 것들이 현재 포함되어있음
+                                //이제 Gender 거를 차례
+                                for (InitPost object : smallPost) {
+                                    if (object.getGender().equals("동성")) {
+                                        //동성으로 설정해 놓은 경우
+                                        if (object.getClientGender().equals(mGender)) {
+                                            Log.d(TAG, "Check what is put in bottomPost " + object.getPostKey());
+                                            bottomPost.add(object);
+                                        }
+                                    } else {
+                                        //무관으로 설정해놓은 경우
                                         Log.d(TAG, "Check what is put in bottomPost " + object.getPostKey());
                                         bottomPost.add(object);
                                     }
+                                }
+                                Log.d(TAG, "Check bottomPost " + bottomPost);
+                                //카테고리에서 거를것들을 넣기
+                                boolean flag = false;
+                                for (InitPost object : bottomPost) {
+                                    //만약 아무것도 선택이 안된 것이라면 이 부분에서 filter를 하지 말고 그냥 바로 노출
+                                    if (checked[0]) {
+                                        //구매 대행(음식)
+                                        flag = true;
+                                        if (object.getCategory().equals("구매 대행(음식)")) {
+                                            finalPost.add(object);
+                                            Log.d(TAG, "Check what is put in finalPost from 구매대행(음식) " + object.getPostKey());
+                                        }
+                                    }
+                                    if (checked[1]) {
+                                        //구매 대행(음식 외 물품)
+                                        flag = true;
+                                        if (object.getCategory().equals("구매 대행(음식 외 물품)")) {
+                                            finalPost.add(object);
+                                            Log.d(TAG, "Check what is put in finalPost from 구매대행(음식 외)" + object.getPostKey());
+                                        }
+                                    }
+                                    if (checked[2]) {
+                                        //배달
+                                        flag = true;
+                                        if (object.getCategory().equals("배달(음식)")) {
+                                            finalPost.add(object);
+                                            Log.d(TAG, "Check what is put in finalPost from 배달(음식) " + object.getPostKey());
+                                        }
+                                    }
+                                    if (checked[3]) {
+                                        //배달(음식 외 물품)
+                                        flag = true;
+                                        if (object.getCategory().equals("배달(음식 외 물품)")) {
+                                            finalPost.add(object);
+                                            Log.d(TAG, "Check what is put in finalPost from 배달(음식 외) " + object.getPostKey());
+                                        }
+                                    }
+                                    if (checked[4]) {
+                                        //청소
+                                        flag = true;
+                                        if (object.getCategory().equals("청소")) {
+                                            finalPost.add(object);
+                                            Log.d(TAG, "Check what is put in finalPost from 청소 " + object.getPostKey());
+                                        }
+                                    }
+                                    if (checked[5]) {
+                                        //과외
+                                        flag = true;
+                                        if (object.getCategory().equals("과외")) {
+                                            finalPost.add(object);
+                                            Log.d(TAG, "Check what is put in finalPost from 과외 " + object.getPostKey());
+                                        }
+                                    }
+                                    if (checked[6]) {
+                                        //기타
+                                        flag = true;
+                                        if (object.getCategory().equals("기타")) {
+                                            finalPost.add(object);
+                                            Log.d(TAG, "Check what is put in finalPost from 기타 " + object.getPostKey());
+                                        }
+                                    }
+                                }
+                                if (flag) {
+                                    if (finalPost.size() == 0) {
+                                        Log.d(TAG, "Check what is showing" + finalPost);
+                                        Toast.makeText(getContext(), "해당 조건에 해당하는 게시글이 존재하지 않습니다.", Toast.LENGTH_SHORT).show();
+                                    }
+                                    mAdapter = new PostAdapter(getActivity(), finalPost);
+                                    recentPostListsView.setAdapter(mAdapter);
+                                    mAdapter.notifyDataSetChanged();
                                 } else {
-                                    //무관으로 설정해놓은 경우
-                                    Log.d(TAG, "Check what is put in bottomPost " + object.getPostKey());
-                                    bottomPost.add(object);
+                                    if (bottomPost.size() == 0) {
+                                        Log.d(TAG, "Check what is showing" + bottomPost);
+                                        Toast.makeText(getContext(), "게시글이 없습니다.", Toast.LENGTH_SHORT).show();
+                                    }
+                                    mAdapter = new PostAdapter(getActivity(), bottomPost);
+                                    recentPostListsView.setAdapter(mAdapter);
+                                    mAdapter.notifyDataSetChanged();
                                 }
                             }
-                            Log.d(TAG, "Check bottomPost " + bottomPost);
-                            //카테고리에서 거를것들을 넣기
-                            boolean flag=false;
-                            for(InitPost object: bottomPost){
-                                //만약 아무것도 선택이 안된 것이라면 이 부분에서 filter를 하지 말고 그냥 바로 노출
-                                if(checked[0]){
-                                    //구매 대행(음식)
-                                    flag=true;
-                                    if(object.getCategory().equals("구매 대행(음식)")){
-                                        finalPost.add(object);
-                                        Log.d(TAG, "Check what is put in finalPost from 구매대행(음식) " + object.getPostKey());
-                                    }
-                                }
-                                if(checked[1]) {
-                                    //구매 대행(음식 외 물품)
-                                    flag = true;
-                                    if (object.getCategory().equals("구매 대행(음식 외 물품)")) {
-                                        finalPost.add(object);
-                                        Log.d(TAG, "Check what is put in finalPost from 구매대행(음식 외)" + object.getPostKey());
-                                    }
-                                }
-                                if(checked[2]){
-                                    //배달
-                                    flag=true;
-                                    if(object.getCategory().equals("배달(음식)")){
-                                        finalPost.add(object);
-                                        Log.d(TAG, "Check what is put in finalPost from 배달(음식) " + object.getPostKey());
-                                    }
-                                }
-                                if(checked[3]){
-                                    //배달(음식 외 물품)
-                                    flag=true;
-                                    if(object.getCategory().equals("배달(음식 외 물품)")){
-                                        finalPost.add(object);
-                                        Log.d(TAG, "Check what is put in finalPost from 배달(음식 외) " + object.getPostKey());
-                                    }
-                                }
-                                if(checked[4]){
-                                    //청소
-                                    flag=true;
-                                    if(object.getCategory().equals("청소")){
-                                        finalPost.add(object);
-                                        Log.d(TAG, "Check what is put in finalPost from 청소 " + object.getPostKey());
-                                    }
-                                }
-                                if(checked[5]){
-                                    //과외
-                                    flag=true;
-                                    if(object.getCategory().equals("과외")){
-                                        finalPost.add(object);
-                                        Log.d(TAG, "Check what is put in finalPost from 과외 " + object.getPostKey());
-                                    }
-                                }
-                                if(checked[6]){
-                                    //기타
-                                    flag=true;
-                                    if(object.getCategory().equals("기타")){
-                                        finalPost.add(object);
-                                        Log.d(TAG, "Check what is put in finalPost from 기타 " + object.getPostKey());
-                                    }
-                                }
-                            }
-                            if(flag){
-                                if(finalPost.size()==0){
-                                    Log.d(TAG, "Check what is showing" + finalPost);
-                                    Toast.makeText(getContext(), "해당 조건에 해당하는 게시글이 존재하지 않습니다.", Toast.LENGTH_SHORT).show();
-                                }
-                                mAdapter = new PostAdapter(getActivity(),finalPost);
-                                recentPostListsView.setAdapter(mAdapter);
-                                mAdapter.notifyDataSetChanged();
-                            }else{
-                                if(bottomPost.size()==0){
-                                    Log.d(TAG, "Check what is showing" + bottomPost);
-                                    Toast.makeText(getContext(), "게시글이 없습니다.", Toast.LENGTH_SHORT).show();
-                                }
-                                mAdapter = new PostAdapter(getActivity(),bottomPost);
-                                recentPostListsView.setAdapter(mAdapter);
-                                mAdapter.notifyDataSetChanged();
-                            }
-                        }
-                        @Override
-                        public void onCancelled(@NonNull DatabaseError databaseError) {
-                            //디비 가져오는 중 에러 발생시
-                            Log.e(TAG, String.valueOf(databaseError.toException()));
-                        }
-                    });
 
-                }
+                            @Override
+                            public void onCancelled(@NonNull DatabaseError databaseError) {
+                                //디비 가져오는 중 에러 발생시
+                                Log.e(TAG, String.valueOf(databaseError.toException()));
+                            }
+                        });
 
-                @Override
-                public void onCancelled(@NonNull DatabaseError databaseError) {
-                }
-            });
-        }else{
-            //user want to look around
-            Query gotMatched = postRef.orderByChild("location").equalTo(myloc).limitToFirst(100);
-            gotMatched.addValueEventListener(new ValueEventListener() {
-                @Override
-                public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                    tempPost.clear();
-                    Log.d(TAG, "Check my dataSnapshot " + dataSnapshot);
-                    if (dataSnapshot.exists()) {
-                        for (DataSnapshot snapshot : dataSnapshot.getChildren()) {
-                            InitPost post = snapshot.getValue(InitPost.class);//InitPost 객체에 담기
-                            tempPost.add(post); //담은 데이터들을 배열 리스트에 넣고 리사이클러 뷰로 보낼 준비하기
-                        }
                     }
-                    Log.d(TAG, "Check mPost " + mPost);
-                    mAdapter.notifyDataSetChanged();
-                }
 
-                @Override
-                public void onCancelled(@NonNull DatabaseError databaseError) {
-
-                }
-
-            });
-            mAdapter = new PostAdapter(getActivity(),tempPost);
-            recentPostListsView.setAdapter(mAdapter);
-            mAdapter.notifyDataSetChanged();
+                    @Override
+                    public void onCancelled(@NonNull DatabaseError databaseError) {
+                    }
+                });
         }
     }
-
 }
 

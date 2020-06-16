@@ -279,9 +279,9 @@ public class PostContentsViewActivity extends AppCompatActivity {
                 mImageUrls.add(image1);
                 mImageUrls.add(image2);
                 mImageUrls.add(image3);
-                Toast.makeText(PostContentsViewActivity.this, "image1 is : this: "+image1, Toast.LENGTH_SHORT).show();
-                Toast.makeText(PostContentsViewActivity.this, "image2 is : this: "+image2, Toast.LENGTH_SHORT).show();
-                Toast.makeText(PostContentsViewActivity.this, "image3 is : this: "+image3, Toast.LENGTH_SHORT).show();
+                //Toast.makeText(PostContentsViewActivity.this, "image1 is : this: "+image1, Toast.LENGTH_SHORT).show();
+                //Toast.makeText(PostContentsViewActivity.this, "image2 is : this: "+image2, Toast.LENGTH_SHORT).show();
+                //Toast.makeText(PostContentsViewActivity.this, "image3 is : this: "+image3, Toast.LENGTH_SHORT).show();
                 if(mImageUrls.size()!=0){
                     chkimgloaded=true;
                 }
@@ -362,7 +362,11 @@ public class PostContentsViewActivity extends AppCompatActivity {
                 String postuserimg = dataSnapshot.child("Image").getValue().toString();
 
                 Log.d(TAG, "check what is Score" + score);
-                nowScore = Float.valueOf(score);
+                if(score.equals("default")){
+                    nowScore=100;
+                }else{
+                    nowScore = Float.valueOf(score);
+                }
                 Log.d(TAG, "check what is Score" + nowScore);
                 scoreBar.setMax(100);
                 progressAnimation(nowScore);

@@ -86,6 +86,7 @@ public class PostAdapter_request extends RecyclerView.Adapter<PostAdapter_reques
                 Intent intent = new Intent(context, PostContentsView_requestActivity.class);
                 //intent.putExtra("postUid",)
                 Bundle bundle = new Bundle();
+                bundle.putSerializable("ismatched",initPosts.get(position).getIsMatched());
                 bundle.putSerializable("useruid",initPosts.get(position).getUid());
                 bundle.putSerializable("post",initPosts.get(position).getPostKey());
                 intent.putExtras(bundle);

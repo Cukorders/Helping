@@ -3,7 +3,8 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:layout_height="match_parent">
+    android:layout_height="match_parent"
+    tools:context=".MainActivity">
 
     <com.google.android.material.appbar.AppBarLayout
         android:layout_width="match_parent"
@@ -36,19 +37,24 @@
             app:tabBackground="@drawable/tab_layout_background"
             android:background="@color/colorWhite"
             >
-        <com.google.android.material.tabs.TabItem
-            android:id="@+id/tab_recent_mission"
-            android:layout_width="wrap_content"
-            android:layout_height="match_parent"
-            android:text="최근 미션"/>
-        <com.google.android.material.tabs.TabItem
-            android:id="@+id/tab_my_calling"
-            android:layout_width="wrap_content"
-            android:layout_height="match_parent"
-            android:text="나의 부름"/>
+            <com.google.android.material.tabs.TabItem
+                android:id="@+id/tab_recent_mission"
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:text="최근 미션"/>
+            <com.google.android.material.tabs.TabItem
+                android:id="@+id/tab_my_calling"
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:text="나의 부름"/>
 
         </com.google.android.material.tabs.TabLayout>
 
+        <LinearLayout
+            android:id="@+id/notCertified"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"/>
     </com.google.android.material.appbar.AppBarLayout>
 
     <androidx.viewpager.widget.ViewPager
@@ -105,20 +111,6 @@
         android:layout_gravity="bottom|end"
         android:layout_marginRight="16dp"
         android:layout_marginBottom="260dp"
-        android:backgroundTint="@color/colorLogo"
-        android:elevation="6dp"
-        android:src="@drawable/chat_icon"
-        android:visibility="invisible"
-        app:backgroundTint="@color/colorAccent"
-        app:pressedTranslationZ="12dp" />
-
-    <com.google.android.material.floatingactionbutton.FloatingActionButton
-        android:id="@+id/fab_chatlist"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_gravity="bottom|end"
-        android:layout_marginRight="16dp"
-        android:layout_marginBottom="320dp"
         android:backgroundTint="@color/colorLogo"
         android:elevation="6dp"
         android:src="@drawable/chat_icon"

@@ -122,49 +122,46 @@ public class HelpingFragment extends Fragment {
 
 
         //TODO 수행중 미션에서 매칭은 아직 안됐지만, 나에게 온 수락 요청이 있는 것도 확인할까?
-        if(flag){
             //아직 파란 상자
-            Query gotMatched = mHelperPostRef.orderByChild("isMatched").equalTo(mUid).limitToFirst(100);
-            gotMatched.addValueEventListener(new ValueEventListener() {
-                @Override
-                public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                    mPost.clear();
-                    Log.d(TAG, "Check my dataSnapshot " + dataSnapshot);
-                    if (dataSnapshot.exists()) {
-                        for (DataSnapshot snapshot : dataSnapshot.getChildren()) {
-                            Log.d(TAG, "Check my snapshot " + snapshot);
-                            //mPost = snapshot.getValue(InitPost.class);//InitPost 객체에 담기
-                            Log.d(TAG, "Check my post " + mPost);
+        Query gotMatched = mHelperPostRef.orderByChild("isMatched").equalTo(mUid).limitToFirst(100);
+        gotMatched.addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                mPost.clear();
+                Log.d(TAG, "Check my dataSnapshot " + dataSnapshot);
+                if (dataSnapshot.exists()) {
+                    for (DataSnapshot snapshot : dataSnapshot.getChildren()) {
+                        Log.d(TAG, "Check my snapshot " + snapshot);
+                        //mPost = snapshot.getValue(InitPost.class);//InitPost 객체에 담기
+                        Log.d(TAG, "Check my post " + mPost);
 
-                            InitPost post = snapshot.getValue(InitPost.class);//InitPost 객체에 담기
-                            mPost.add(post); //담은 데이터들을 배열 리스트에 넣고 리사이클러 뷰로 보낼 준비하기
-                        }
-                        mAdapter.notifyDataSetChanged();
-
-                        Log.d(TAG, "Check my mPost " + mPost);
-                        ArrayList<InitPost> smallPost = new ArrayList<InitPost>();
-                        for (InitPost object : mPost) {
-                            Log.d(TAG, "Check my mPost " + mPost);
-                            Log.d(TAG, "Check mUid " + mUid);
-                            Log.d(TAG, "Check my check we contain mUid " + object.getIsSended().contains(mUid));
-                            Log.d(TAG, "Check uid " + object.getUid().equals(mUid));
-                            if (object.getIsFinished().equals("0")) {
-                                //담은 데이터들을 배열 리스트에 넣고 리사이클러 뷰로 보낼 준비하기
-                                smallPost.add(object);
-                            }
-                        }
-                        mAdapter = new PostAdapter_helping(getActivity(), smallPost);
-                        recentPostListsView.setAdapter(mAdapter);
-                        mAdapter.notifyDataSetChanged();
+                        InitPost post = snapshot.getValue(InitPost.class);//InitPost 객체에 담기
+                        mPost.add(post); //담은 데이터들을 배열 리스트에 넣고 리사이클러 뷰로 보낼 준비하기
                     }
+                    mAdapter.notifyDataSetChanged();
+
+                    Log.d(TAG, "Check my mPost " + mPost);
+                    ArrayList<InitPost> smallPost = new ArrayList<InitPost>();
+                    for (InitPost object : mPost) {
+                        Log.d(TAG, "Check my mPost " + mPost);
+                        Log.d(TAG, "Check mUid " + mUid);
+                        Log.d(TAG, "Check uid " + object.getUid().equals(mUid));
+                        if (object.getIsFinished().equals("0")) {
+                            //담은 데이터들을 배열 리스트에 넣고 리사이클러 뷰로 보낼 준비하기
+                            smallPost.add(object);
+                        }
+                    }
+                    mAdapter = new PostAdapter_helping(getActivity(), smallPost);
+                    recentPostListsView.setAdapter(mAdapter);
+                    mAdapter.notifyDataSetChanged();
                 }
-                @Override
-                public void onCancelled(@NonNull DatabaseError databaseError) {
-                    //디비 가져오는 중 에러 발생시
-                    Log.e(TAG, String.valueOf(databaseError.toException()));
-                }
-            });
-        }
+            }
+            @Override
+            public void onCancelled(@NonNull DatabaseError databaseError) {
+                //디비 가져오는 중 에러 발생시
+                Log.e(TAG, String.valueOf(databaseError.toException()));
+            }
+        });
     }
     private void caution(){
         AlertDialog.Builder builder=new AlertDialog.Builder(HelpingFragment.this.getActivity());

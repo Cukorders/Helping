@@ -29,7 +29,7 @@ public class PostImgView extends AppCompatActivity {
 
         ImageSlider imageSlider = findViewById(R.id.postpicviewpager);
 
-        imgNum = findViewById(R.id.img_num);
+        //imgNum = findViewById(R.id.img_num);
 
         Intent newintent = getIntent();
         ArrayList<String> tempUrls =newintent.getStringArrayListExtra("lists");

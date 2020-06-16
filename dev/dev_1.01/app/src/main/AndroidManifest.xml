@@ -47,6 +47,8 @@
         <activity android:name=".MissionActivity"/>
         <activity android:name=".CustomDialog"/>
         <activity android:name=".FilterActivity"/>
+        <activity android:name=".ChangeTheRegionActivity"/>
+        <activity android:name=".chatting.ChattingActivity"/>
         <activity android:name=".NoticeActivity"/>
         <activity android:name=".SettingActivity"/>
         <activity android:name=".ProfileActivity"/>
@@ -61,6 +63,7 @@
         <activity android:name=".PostContentsViewActivity" />
         <activity android:name=".RegionalCertificationActivity" />
         <activity android:name=".ChargingActivity" />
+        <activity android:name=".PostImgView" />
     </application>
 
 </manifest>

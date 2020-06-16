@@ -95,6 +95,7 @@ public class MyPageActivity extends AppCompatActivity {
                     Log.e("error in getting the nickname","유저 닉네임을 불러오는데 실패하였습니다.");
                 }
             });
+            displayMannerBar();
         }
     }
 

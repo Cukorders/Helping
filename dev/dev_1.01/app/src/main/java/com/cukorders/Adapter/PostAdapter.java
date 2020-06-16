@@ -73,11 +73,11 @@ public class PostAdapter extends RecyclerView.Adapter<PostAdapter.PostViewHolder
     public void onBindViewHolder(@NonNull final PostViewHolder holder, final int position) {
         //각 아이템 매칭
 
-
         Picasso.get().load(initPosts.get(position).getImage1()).into(holder.postPic);
         holder.title.setText(initPosts.get(position).getTitle());
         //holder.place.setText(initPosts.get(position).getPlace());
         holder.time.setText(initPosts.get(position).getEndTime());
+        holder.place.setText(initPosts.get(position).getPlace());
         holder.likes.setText(initPosts.get(position).getLikes());
         holder.chat_number.setText(initPosts.get(position).getChat_number());
         //holder.postUid.setText(initPosts.get(position).getPostKey());

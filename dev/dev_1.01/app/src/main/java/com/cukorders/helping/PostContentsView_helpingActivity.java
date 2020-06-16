@@ -231,7 +231,7 @@ public class PostContentsView_helpingActivity extends AppCompatActivity {
         if(!bundleObject.getString("useruid").isEmpty()){
             clientUid=bundleObject.getString("useruid");
             Log.d(TAG,"getIncomingIntent : check for incoming uid."+clientUid);
-        }
+                    }
         if(!bundleObject.getString("ismatched").isEmpty()){
             chkisMatched=bundleObject.getString("ismatched");
             Log.d(TAG,"getIncomingIntent : check for incoming ismatched."+chkisMatched);
@@ -363,7 +363,11 @@ public class PostContentsView_helpingActivity extends AppCompatActivity {
                 String postuserimg = dataSnapshot.child("Image").getValue().toString();
 
                 Log.d(TAG, "check what is Score" + score);
-                nowScore = Float.valueOf(score);
+                if(score.equals("default")){
+                    nowScore=100;
+                }else{
+                    nowScore = Float.valueOf(score);
+                }
                 Log.d(TAG, "check what is Score" + nowScore);
                 scoreBar.setMax(100);
                 progressAnimation(nowScore);

@@ -26,6 +26,7 @@ import com.google.firebase.database.Query;
 import com.google.firebase.database.ValueEventListener;
 
 import java.util.ArrayList;
+import java.util.HashSet;
 
 public class MissionActivity extends AppCompatActivity {
     private final Context context=this;
@@ -33,6 +34,8 @@ public class MissionActivity extends AppCompatActivity {
 
     private final ArrayList<InitPost> mPost = new ArrayList<>();
     private ArrayList<String> postKeyList = new ArrayList<>();
+    final ArrayList<InitPost> newPost = new ArrayList<>();
+    final HashSet<InitPost> temp = new HashSet<>();
     private PostAdapter mAdapter;
 
     private RecyclerView mylikesListView;
@@ -112,8 +115,6 @@ public class MissionActivity extends AppCompatActivity {
                     }
                     if(flag){
                         //현재 사용자가 있다면
-                        final ArrayList<InitPost> newPost = new ArrayList<>();
-                        final ArrayList<InitPost> tempPost = new ArrayList<>();
                         Query query = likesList.child(mUid);
                         query.addValueEventListener(new ValueEventListener() {
                             @Override
@@ -128,9 +129,9 @@ public class MissionActivity extends AppCompatActivity {
                                     }
                                 }
                                 mAdapter.notifyDataSetChanged();
-                                newPost.clear();
                                 boolean chkanotherflag=false;
                                 final ArrayList<InitPost> finalPost = new ArrayList<>();
+                                finalPost.clear();
                                 for (int i = 0; i < postKeyList.size(); i++) {
                                     Query newquery = mRef.child(postKeyList.get(i));
                                     Log.d(TAG, "Check now pointing key" + postKeyList.get(i));
@@ -141,9 +142,15 @@ public class MissionActivity extends AppCompatActivity {
                                                 Log.d(TAG, "Check dataSnapshot.getValue" + dataSnapshot.getValue());
                                                 InitPost post = dataSnapshot.getValue(InitPost.class);//InitPost 객체에 담기
                                                 newPost.add(post); //담은 데이터들을 배열 리스트에 넣고 리사이클러 뷰로 보낼 준비하기
+                                                //temp.add(newPost);
                                                 chkflag = true;
-                                                Log.d(TAG, "Check now pointing newPost" + newPost);
+                                                Log.d(TAG, "Check now pointing newPost1" + newPost);
+                                                Log.d(TAG, "Check now pointing temp1" + temp);
                                             }
+                                            //ArrayList<InitPost> nowPost = new ArrayList<>(temp);
+                                            //finalPost.addAll(temp);
+                                            Log.d(TAG, "Check now pointing newPost2" + newPost);
+                                            Log.d(TAG, "Check now pointing temp2" + temp);
                                             mAdapter = new PostAdapter(context, newPost);
                                             mylikesListView.setAdapter(mAdapter);
                                             mAdapter.notifyDataSetChanged();

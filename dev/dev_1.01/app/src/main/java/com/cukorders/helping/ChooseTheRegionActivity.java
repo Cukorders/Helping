@@ -63,6 +63,7 @@ public class ChooseTheRegionActivity  extends AppCompatActivity {
     private static FirebaseUser firebaseUser;
     private int select=0;
     private boolean myPlace;
+    private static final String TAG="ChooseTheRegionActivity";
     private int cnt;
     Handler handler=new Handler();
 
@@ -196,6 +197,9 @@ public class ChooseTheRegionActivity  extends AppCompatActivity {
                                 }*/
                                 Log.e("userLocation_search","the value of a parameter called userLocation in ChooseTheRegionActivity is "+userLocation);
                                 user_location=array[select];
+                                userLocation=array[select];
+                                Log.d(TAG,"userLocation의 값: "+userLocation);
+                                Log.d(TAG,"user_location의 값: "+user_location);
                                 ((LoadingActivity)LoadingActivity.loadingActivity).loc.add(user_location);
                                 startActivity(new Intent(context,RegionActivity.class));
                             }
@@ -329,7 +333,10 @@ public class ChooseTheRegionActivity  extends AppCompatActivity {
                                 e.printStackTrace();
                             }
                             user_location=addr.get(0).getThoroughfare();
+                            userLocation=user_location;
                             ((LoadingActivity)LoadingActivity.loadingActivity).loc.add(user_location);
+                            Log.d(TAG,"userLocation의 값: "+userLocation);
+                            Log.d(TAG,"user_location의 값: "+user_location);
                             startActivity(new Intent(context,RegionActivity.class));
                         }
                     }).setNegativeButton("취소",null);
